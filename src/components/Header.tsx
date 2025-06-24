@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
@@ -12,19 +12,29 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Kuajiri AI
+            <Link to="/" className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                <Zap className="h-4 w-4 text-white" />
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Kuajiri AI
+              </span>
             </Link>
           </div>
           
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-gray-600 hover:text-gray-900 transition-colors">Features</a>
-            <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 transition-colors">How It Works</a>
-            <Link to="/pricing" className="text-gray-600 hover:text-gray-900 transition-colors">Pricing</Link>
-            <Button variant="outline" className="mr-2">Sign In</Button>
-            <Button>Get Started</Button>
+          {/* Desktop Navigation - centered */}
+          <nav className="hidden md:flex items-center justify-center flex-1">
+            <div className="flex items-center space-x-8">
+              <a href="#features" className="text-gray-600 hover:text-gray-900 transition-colors text-sm">Features</a>
+              <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 transition-colors text-sm">How It Works</a>
+              <Link to="/pricing" className="text-gray-600 hover:text-gray-900 transition-colors text-sm">Pricing</Link>
+            </div>
           </nav>
+
+          <div className="hidden md:flex items-center space-x-2">
+            <Button variant="outline" className="text-sm">Sign In</Button>
+            <Button className="text-sm">Get Started</Button>
+          </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -42,12 +52,12 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
-              <a href="#features" className="block px-3 py-2 text-gray-600 hover:text-gray-900">Features</a>
-              <a href="#how-it-works" className="block px-3 py-2 text-gray-600 hover:text-gray-900">How It Works</a>
-              <Link to="/pricing" className="block px-3 py-2 text-gray-600 hover:text-gray-900">Pricing</Link>
+              <a href="#features" className="block px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">Features</a>
+              <a href="#how-it-works" className="block px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">How It Works</a>
+              <Link to="/pricing" className="block px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">Pricing</Link>
               <div className="px-3 py-2 space-y-2">
-                <Button variant="outline" className="w-full">Sign In</Button>
-                <Button className="w-full">Get Started</Button>
+                <Button variant="outline" className="w-full text-sm">Sign In</Button>
+                <Button className="w-full text-sm">Get Started</Button>
               </div>
             </div>
           </div>

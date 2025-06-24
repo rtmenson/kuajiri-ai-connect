@@ -1,4 +1,6 @@
 
+import { ArrowUp } from 'lucide-react';
+
 const HowItWorks = () => {
   const jobSeekerSteps = [
     {
@@ -50,10 +52,10 @@ const HowItWorks = () => {
     <section id="how-it-works" className="py-20 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-black">
             How Kuajiri AI Works
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Simple steps to revolutionize your hiring or job search experience
           </p>
         </div>
@@ -61,37 +63,59 @@ const HowItWorks = () => {
         <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {/* Job Seekers */}
           <div className="bg-white rounded-2xl p-8 shadow-sm">
-            <h3 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">For Job Seekers</h3>
-            <div className="space-y-6">
+            <h3 className="text-2xl font-bold mb-8 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">For Job Seekers</h3>
+            <div className="space-y-6 mb-8">
               {jobSeekerSteps.map((item, index) => (
                 <div key={index} className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  <div className="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
                     {item.step}
                   </div>
                   <div>
-                    <h4 className="text-xl font-semibold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{item.title}</h4>
-                    <p className="text-gray-600">{item.description}</p>
+                    <h4 className="text-lg font-semibold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{item.title}</h4>
+                    <p className="text-gray-600 text-sm">{item.description}</p>
                   </div>
                 </div>
               ))}
+            </div>
+            
+            {/* Success Rate Card */}
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 flex items-center space-x-4">
+              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                <ArrowUp className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h4 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Success Rate</h4>
+                <p className="text-gray-700 text-sm">85% of job seekers find their ideal role within 30 days</p>
+              </div>
             </div>
           </div>
 
           {/* Employers */}
           <div className="bg-white rounded-2xl p-8 shadow-sm">
-            <h3 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">For Employers</h3>
-            <div className="space-y-6">
+            <h3 className="text-2xl font-bold mb-8 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">For Employers</h3>
+            <div className="space-y-6 mb-8">
               {employerSteps.map((item, index) => (
                 <div key={index} className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  <div className="flex-shrink-0 w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
                     {item.step}
                   </div>
                   <div>
-                    <h4 className="text-xl font-semibold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{item.title}</h4>
-                    <p className="text-gray-600">{item.description}</p>
+                    <h4 className="text-lg font-semibold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{item.title}</h4>
+                    <p className="text-gray-600 text-sm">{item.description}</p>
                   </div>
                 </div>
               ))}
+            </div>
+            
+            {/* Efficiency Gain Card */}
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 flex items-center space-x-4">
+              <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
+                <ArrowUp className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h4 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Efficiency Gain</h4>
+                <p className="text-gray-700 text-sm">60% reduction in time-to-hire with 40% better retention rate</p>
+              </div>
             </div>
           </div>
         </div>
