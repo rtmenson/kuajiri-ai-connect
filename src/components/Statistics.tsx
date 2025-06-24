@@ -15,13 +15,13 @@ const Statistics = () => {
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
           {stats.map((stat, index) => (
-            <div key={index} className="text-center p-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-              <div className="text-5xl md:text-6xl font-bold text-white mb-4">
+            <div key={index} className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+              <div className="text-3xl md:text-4xl font-bold text-white mb-2">
                 {stat.number}
               </div>
-              <div className="text-xl text-blue-100 font-medium">
+              <div className="text-lg text-blue-100 font-medium">
                 {stat.label}
               </div>
             </div>
