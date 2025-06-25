@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Check, UserPlus, Briefcase } from 'lucide-react';
@@ -37,7 +36,8 @@ const Pricing = () => {
         "Interview preparation tools",
         "Salary insights"
       ],
-      popular: true
+      popular: true,
+      isFree: false
     },
     {
       name: "Premium",
@@ -51,7 +51,8 @@ const Pricing = () => {
         "Advanced analytics",
         "Resume optimization",
         "Career path recommendations"
-      ]
+      ],
+      isFree: false
     }
   ];
 
@@ -66,7 +67,8 @@ const Pricing = () => {
         "Basic candidate screening",
         "Standard AI matching",
         "Email support"
-      ]
+      ],
+      isFree: false
     },
     {
       name: "Professional",
@@ -81,7 +83,8 @@ const Pricing = () => {
         "Analytics dashboard",
         "Custom branding"
       ],
-      popular: true
+      popular: true,
+      isFree: false
     },
     {
       name: "Enterprise",
@@ -95,7 +98,8 @@ const Pricing = () => {
         "Advanced analytics",
         "White-label solution",
         "24/7 priority support"
-      ]
+      ],
+      isFree: false
     }
   ];
 
