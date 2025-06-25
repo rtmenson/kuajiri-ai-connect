@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 
 const CallToAction = () => {
   return (
-    <section className="py-20" style={{ backgroundColor: '#111827' }}>
+    <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
-            Ready to Experience the Future of Hiring?
+            Ready to Experience the Future of Career Finding or Candidate Hiring?
           </h2>
           <p className="text-base text-blue-100 mb-12 max-w-3xl mx-auto">
             Join thousands of job seekers and employers who have already discovered their perfect matches with Kuajiri AI.

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Check, UserPlus, Briefcase } from 'lucide-react';
@@ -98,7 +97,7 @@ const Pricing = () => {
   ];
 
   const TrialBanner = () => (
-    <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 text-center">
+    <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 text-center sticky top-16 z-40">
       <p className="text-sm font-medium">🎉 Start your free 30-day trial with unlimited credits - No credit card required!</p>
     </div>
   );
@@ -108,7 +107,7 @@ const Pricing = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <TrialBanner />
-        <div className="pt-16 min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="max-w-4xl mx-auto">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -162,7 +161,7 @@ const Pricing = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <TrialBanner />
-      <div className="pt-16 py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Button 

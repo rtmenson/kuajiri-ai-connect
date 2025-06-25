@@ -1,20 +1,21 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowDown, UserPlus, Briefcase, Check, Bell, Shield } from 'lucide-react';
+import { ArrowDown, UserPlus, Briefcase, Zap } from 'lucide-react';
 
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden">
       {/* Animated background circles - reduced */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-20 w-24 h-24 bg-blue-200/30 rounded-full animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-20 h-20 bg-purple-300/30 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+        <div className="absolute top-32 left-20 w-16 h-16 bg-blue-200/20 rounded-full animate-pulse"></div>
+        <div className="absolute bottom-32 right-20 w-12 h-12 bg-purple-300/20 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
       </div>
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 pt-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 pt-24">
         <div className="max-w-4xl mx-auto">
           <div className="mb-6">
-            <span className="inline-block px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-xs font-medium mb-6">
+            <span className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-xs font-medium mb-6">
+              <Zap className="h-3 w-3 mr-2" />
               AI-Powered Matching
             </span>
           </div>

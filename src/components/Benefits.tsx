@@ -1,5 +1,5 @@
 
-import { Check, Bell, Shield } from 'lucide-react';
+import { Check, Bell, Users } from 'lucide-react';
 
 const Benefits = () => {
   return (
@@ -31,7 +31,7 @@ const Benefits = () => {
           </div>
           <div className="text-center p-6 bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow">
             <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Shield className="h-6 w-6 text-white" />
+              <Users className="h-6 w-6 text-white" />
             </div>
             <h3 className="text-base font-semibold mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Mutual Benefits</h3>
             <p className="text-xs bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Creating value for both job seekers and employers in one powerful platform.</p>
