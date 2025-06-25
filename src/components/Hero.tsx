@@ -13,14 +13,14 @@ const Hero = () => {
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 pt-24">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-6">
-            <span className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-xs font-medium mb-6">
-              <Zap className="h-3 w-3 mr-2" />
+          <div className="mb-8">
+            <span className="inline-flex items-center px-6 py-3 bg-blue-100/80 text-blue-800 rounded-full text-sm font-medium mb-6 backdrop-blur-sm border border-blue-200/50">
+              <Zap className="h-4 w-4 mr-2" />
               AI-Powered Matching
             </span>
           </div>
           
-          <h1 className="text-3xl md:text-5xl font-bold mb-5 leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Perfect Matches.</span>
             <br />
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -28,16 +28,16 @@ const Hero = () => {
             </span>
           </h1>
           
-          <p className="text-base md:text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-10 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-10 max-w-3xl mx-auto leading-relaxed">
             Our advanced AI proactively connects job seekers with their ideal opportunities and helps employers find the perfect candidates. Experience the future of recruitment today.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-14">
-            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-sm">
+            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-base">
               <UserPlus className="mr-2 h-4 w-4" />
               Find Your Dream Job
             </Button>
-            <Button size="lg" variant="outline" className="px-8 py-3 text-sm border-2">
+            <Button size="lg" variant="outline" className="px-8 py-3 text-base border-2">
               <Briefcase className="mr-2 h-4 w-4" />
               Hire Top Talent
             </Button>

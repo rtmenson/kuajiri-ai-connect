@@ -2,16 +2,23 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Zap } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const handleNavClick = (sectionId: string) => {
     if (location.pathname !== '/') {
-      // Navigate to home page with hash
-      window.location.href = `/#${sectionId}`;
+      // Navigate to home page and then scroll to section
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
     } else {
       // Scroll to section on current page
       const element = document.getElementById(sectionId);
