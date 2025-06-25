@@ -1,8 +1,10 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Check, UserPlus, Briefcase } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import FAQ from '../components/FAQ';
 
 const Pricing = () => {
   const [selectedRole, setSelectedRole] = useState<'jobseeker' | 'employer' | null>(null);
@@ -19,7 +21,8 @@ const Pricing = () => {
         "5 job applications per month",
         "Basic AI matching",
         "Email notifications"
-      ]
+      ],
+      isFree: true
     },
     {
       name: "Pro",
@@ -98,7 +101,7 @@ const Pricing = () => {
 
   const TrialBanner = () => (
     <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 text-center sticky top-16 z-40">
-      <p className="text-sm font-medium">🎉 Start your free 30-day trial with unlimited credits - No credit card required!</p>
+      <p className="text-sm font-medium">🎉 Start your free 30-day trial with unlimited credits - No payment required!</p>
     </div>
   );
 
@@ -111,7 +114,7 @@ const Pricing = () => {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="max-w-4xl mx-auto">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Choose Your Role
+                Choose Your Path to Success
               </h1>
               <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
                 Select your role to see pricing plans tailored for your needs
@@ -126,7 +129,7 @@ const Pricing = () => {
                     <UserPlus className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    Job Seeker
+                    I am a Job Seeker
                   </h3>
                   <p className="text-gray-600">
                     Find your dream job with AI-powered matching
@@ -141,7 +144,7 @@ const Pricing = () => {
                     <Briefcase className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    Employer
+                    I am an Employer/Recruitment Agency
                   </h3>
                   <p className="text-gray-600">
                     Hire top talent with intelligent candidate matching
@@ -151,6 +154,8 @@ const Pricing = () => {
             </div>
           </div>
         </div>
+        <FAQ />
+        <Footer />
       </div>
     );
   }
@@ -205,7 +210,7 @@ const Pricing = () => {
                 key={index} 
                 className={`p-8 bg-white rounded-2xl shadow-lg border-2 ${
                   plan.popular ? 'border-blue-500 relative' : 'border-gray-200'
-                } hover:shadow-xl transition-shadow`}
+                } hover:shadow-xl transition-shadow flex flex-col`}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
@@ -232,7 +237,7 @@ const Pricing = () => {
                   </div>
                 </div>
                 
-                <ul className="space-y-4 mb-8">
+                <ul className="space-y-4 mb-8 flex-grow">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start">
                       <Check className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
@@ -242,20 +247,21 @@ const Pricing = () => {
                 </ul>
                 
                 <Button 
-                  className={`w-full ${
+                  className={`w-full mt-auto ${
                     plan.popular 
                       ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700' 
                       : ''
                   }`}
                   variant={plan.popular ? 'default' : 'outline'}
                 >
-                  Get Started
+                  {plan.isFree ? 'Get Started' : 'Start Free Trial'}
                 </Button>
               </div>
             ))}
           </div>
         </div>
       </div>
+      <FAQ />
       <Footer />
     </div>
   );

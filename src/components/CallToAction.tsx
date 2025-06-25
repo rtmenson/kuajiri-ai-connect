@@ -7,10 +7,10 @@ const CallToAction = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
-            Ready to Experience the Future of Career Finding or Candidate Hiring?
+            Ready to Experience the Future of Finding Your Ideal Job or Perfect Candidate?
           </h2>
           <p className="text-base text-blue-100 mb-12 max-w-3xl mx-auto">
-            Join thousands of job seekers and employers who have already discovered their perfect matches with Kuajiri AI.
+            Join the community of job seekers and employers who have already discovered their perfect matches with Kuajiri AI.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

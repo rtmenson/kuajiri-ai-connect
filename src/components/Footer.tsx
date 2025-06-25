@@ -27,7 +27,7 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="text-center pt-8 border-t border-gray-600">
+        <div className="text-center pt-12 border-t border-gray-600 mt-4">
           <p className="text-gray-300 text-sm">
             © 2025 Kuajiri AI. All rights reserved. Empowering careers with intelligent matching.
           </p>
