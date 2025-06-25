@@ -7,11 +7,13 @@ import Footer from '../components/Footer';
 
 const Pricing = () => {
   const [selectedRole, setSelectedRole] = useState<'jobseeker' | 'employer' | null>(null);
+  const [isAnnual, setIsAnnual] = useState(false);
 
   const jobSeekerPlans = [
     {
       name: "Free",
-      price: "$0",
+      monthlyPrice: "$0",
+      annualPrice: "$0",
       period: "/month",
       features: [
         "Basic profile creation",
@@ -22,7 +24,8 @@ const Pricing = () => {
     },
     {
       name: "Pro",
-      price: "$19",
+      monthlyPrice: "$19",
+      annualPrice: "$15",
       period: "/month",
       features: [
         "Advanced profile optimization",
@@ -36,7 +39,8 @@ const Pricing = () => {
     },
     {
       name: "Premium",
-      price: "$39",
+      monthlyPrice: "$39",
+      annualPrice: "$31",
       period: "/month",
       features: [
         "Everything in Pro",
@@ -52,7 +56,8 @@ const Pricing = () => {
   const employerPlans = [
     {
       name: "Starter",
-      price: "$99",
+      monthlyPrice: "$99",
+      annualPrice: "$79",
       period: "/month",
       features: [
         "Up to 5 job postings",
@@ -63,7 +68,8 @@ const Pricing = () => {
     },
     {
       name: "Professional",
-      price: "$299",
+      monthlyPrice: "$299",
+      annualPrice: "$239",
       period: "/month",
       features: [
         "Up to 25 job postings",
@@ -77,7 +83,8 @@ const Pricing = () => {
     },
     {
       name: "Enterprise",
-      price: "Custom",
+      monthlyPrice: "Custom",
+      annualPrice: "Custom",
       period: "",
       features: [
         "Unlimited job postings",
@@ -90,11 +97,18 @@ const Pricing = () => {
     }
   ];
 
+  const TrialBanner = () => (
+    <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 text-center">
+      <p className="text-sm font-medium">🎉 Start your free 30-day trial with unlimited credits - No credit card required!</p>
+    </div>
+  );
+
   if (!selectedRole) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="pt-20 min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <TrialBanner />
+        <div className="pt-16 min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="max-w-4xl mx-auto">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -147,7 +161,8 @@ const Pricing = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="pt-20 py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <TrialBanner />
+      <div className="pt-16 py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Button 
@@ -160,9 +175,29 @@ const Pricing = () => {
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               {selectedRole === 'jobseeker' ? 'Job Seeker' : 'Employer'} Pricing
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
               Choose the perfect plan to {selectedRole === 'jobseeker' ? 'advance your career' : 'build your team'}
             </p>
+            
+            {/* Monthly/Annual Toggle */}
+            <div className="flex items-center justify-center space-x-4 mb-8">
+              <span className={`text-sm ${!isAnnual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>Monthly</span>
+              <button
+                onClick={() => setIsAnnual(!isAnnual)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  isAnnual ? 'bg-blue-600' : 'bg-gray-300'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    isAnnual ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+              <span className={`text-sm ${isAnnual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
+                Annual <span className="text-green-600 font-semibold">(Save 20%)</span>
+              </span>
+            </div>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -186,8 +221,15 @@ const Pricing = () => {
                     {plan.name}
                   </h3>
                   <div className="mb-6">
-                    <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                    <span className="text-4xl font-bold text-gray-900">
+                      {isAnnual ? plan.annualPrice : plan.monthlyPrice}
+                    </span>
                     <span className="text-gray-600">{plan.period}</span>
+                    {isAnnual && plan.monthlyPrice !== plan.annualPrice && plan.monthlyPrice !== "Custom" && (
+                      <div className="text-sm text-gray-500 mt-1">
+                        <span className="line-through">{plan.monthlyPrice}/month</span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 

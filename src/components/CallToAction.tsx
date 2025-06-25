@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 const CallToAction = () => {
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-700 via-purple-700 to-purple-800">
+    <section className="py-20" style={{ backgroundColor: '#111827' }}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
@@ -17,7 +17,7 @@ const CallToAction = () => {
             <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 text-sm font-medium">
               Get Started for Free
             </Button>
-            <Button size="lg" variant="outline" className="px-8 py-3 text-sm border-2 border-white text-white hover:bg-white/10">
+            <Button size="lg" variant="outline" className="px-8 py-3 text-sm border-2 border-white text-white bg-white/10">
               Access a Demo
             </Button>
           </div>

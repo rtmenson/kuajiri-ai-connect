@@ -13,7 +13,8 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center relative">
+                <div className="absolute inset-0 border-2 border-blue-600 rounded-full"></div>
                 <Zap className="h-4 w-4 text-white" />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -25,15 +26,16 @@ const Header = () => {
           {/* Desktop Navigation - centered */}
           <nav className="hidden md:flex items-center justify-center flex-1">
             <div className="flex items-center space-x-8">
-              <a href="#features" className="text-gray-600 hover:text-gray-900 transition-colors text-sm">Features</a>
-              <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 transition-colors text-sm">How It Works</a>
-              <Link to="/pricing" className="text-gray-600 hover:text-gray-900 transition-colors text-sm">Pricing</Link>
+              <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors text-sm">Features</a>
+              <a href="#benefits" className="text-gray-600 hover:text-blue-600 transition-colors text-sm">Benefits</a>
+              <a href="#how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors text-sm">How It Works</a>
+              <Link to="/pricing" className="text-gray-600 hover:text-blue-600 transition-colors text-sm">Pricing</Link>
             </div>
           </nav>
 
           <div className="hidden md:flex items-center space-x-2">
-            <Button variant="outline" className="text-sm">Sign In</Button>
-            <Button className="text-sm">Get Started</Button>
+            <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
+            <Button className="text-sm">Start Free Trial</Button>
           </div>
 
           {/* Mobile menu button */}
@@ -53,11 +55,12 @@ const Header = () => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
               <a href="#features" className="block px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">Features</a>
+              <a href="#benefits" className="block px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">Benefits</a>
               <a href="#how-it-works" className="block px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">How It Works</a>
               <Link to="/pricing" className="block px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">Pricing</Link>
               <div className="px-3 py-2 space-y-2">
-                <Button variant="outline" className="w-full text-sm">Sign In</Button>
-                <Button className="w-full text-sm">Get Started</Button>
+                <Button variant="outline" className="w-full text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
+                <Button className="w-full text-sm">Start Free Trial</Button>
               </div>
             </div>
           </div>
