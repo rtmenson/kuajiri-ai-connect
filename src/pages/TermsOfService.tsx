@@ -20,67 +20,103 @@ const TermsOfService = () => {
             
             <div className="prose prose-lg max-w-none">
               <p className="text-gray-600 mb-6">
-                Last updated: {new Date().toLocaleDateString()}
+                Effective Date: 26th June, 2025
               </p>
+              
+              <div className="text-gray-700 mb-8">
+                <p className="mb-6">
+                  Welcome to Kuajiri AI! These Terms of Service ("Terms") govern your use of our AI-powered job matching platform. By accessing or using Kuajiri AI, you agree to comply with these Terms.
+                </p>
+              </div>
               
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-900">Acceptance of Terms</h2>
                 <p className="text-gray-600 mb-4">
-                  By accessing and using Kuajiri AI, you accept and agree to be bound by the terms 
-                  and provision of this agreement.
+                  By using Kuajiri AI, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you do not agree, please do not use our services.
                 </p>
               </section>
               
               <section className="mb-8">
-                <h2 className="text-2xl font-semibold mb-4 text-gray-900">Use License</h2>
+                <h2 className="text-2xl font-semibold mb-4 text-gray-900">Services Provided</h2>
                 <p className="text-gray-600 mb-4">
-                  Permission is granted to temporarily use Kuajiri AI for personal, non-commercial 
-                  transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
+                  Kuajiri AI connects job seekers with job opportunities using AI-driven matching algorithms. We do not guarantee employment, job placement, or the accuracy of job listings.
                 </p>
+              </section>
+              
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4 text-gray-900">User Responsibilities</h2>
                 <ul className="list-disc list-inside text-gray-600 space-y-2">
-                  <li>Modify or copy the materials</li>
-                  <li>Use the materials for any commercial purpose or for any public display</li>
-                  <li>Attempt to reverse engineer any software contained on the website</li>
-                  <li>Remove any copyright or other proprietary notations from the materials</li>
+                  <li><strong>For Job Seekers:</strong> You must provide accurate and up-to-date information in your CV and profile.</li>
+                  <li><strong>For Employers & Recruiters:</strong> You must post legitimate job opportunities and comply with applicable employment laws.</li>
+                  <li><strong>Prohibited Activities:</strong> Users must not engage in fraudulent activities, misrepresent themselves, or misuse the platform.</li>
                 </ul>
               </section>
               
               <section className="mb-8">
-                <h2 className="text-2xl font-semibold mb-4 text-gray-900">User Accounts</h2>
+                <h2 className="text-2xl font-semibold mb-4 text-gray-900">Account Registration</h2>
                 <p className="text-gray-600 mb-4">
-                  When you create an account with us, you must provide information that is accurate, 
-                  complete, and current at all times. You are responsible for safeguarding the password 
-                  and for all activities that occur under your account.
+                  Users may be required to create an account to access certain features. You are responsible for maintaining the confidentiality of your account credentials and activities under your account.
                 </p>
               </section>
               
               <section className="mb-8">
-                <h2 className="text-2xl font-semibold mb-4 text-gray-900">Prohibited Uses</h2>
+                <h2 className="text-2xl font-semibold mb-4 text-gray-900">Privacy Policy</h2>
                 <p className="text-gray-600 mb-4">
-                  You may not use our service:
+                  Your use of Kuajiri AI is subject to our Privacy Policy, which explains how we collect, use, and protect your data.
                 </p>
+              </section>
+              
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4 text-gray-900">Fees and Payments</h2>
+                <p className="text-gray-600 mb-4">
+                  Certain services may require payment. Kuajiri AI reserves the right to modify pricing at any time. Payments made are non-refundable unless stated otherwise.
+                </p>
+              </section>
+              
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4 text-gray-900">Intellectual Property</h2>
+                <p className="text-gray-600 mb-4">
+                  Kuajiri AI and its content, including but not limited to logos, text, and software, are the intellectual property of Kuajiri AI. Unauthorized use or reproduction is prohibited.
+                </p>
+              </section>
+              
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4 text-gray-900">Disclaimers and Limitation of Liability</h2>
                 <ul className="list-disc list-inside text-gray-600 space-y-2">
-                  <li>For any unlawful purpose or to solicit others to perform unlawful acts</li>
-                  <li>To violate any international, federal, provincial, or state regulations, rules, laws, or local ordinances</li>
-                  <li>To infringe upon or violate our intellectual property rights or the intellectual property rights of others</li>
-                  <li>To harass, abuse, insult, harm, defame, slander, disparage, intimidate, or discriminate</li>
-                  <li>To submit false or misleading information</li>
+                  <li>Kuajiri AI provides services "as is" without warranties of any kind.</li>
+                  <li>We are not responsible for the accuracy of job postings or the outcome of job applications.</li>
+                  <li>Kuajiri AI is not liable for any damages resulting from your use of the platform.</li>
                 </ul>
               </section>
               
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-900">Termination</h2>
                 <p className="text-gray-600 mb-4">
-                  We may terminate or suspend your account and bar access to the service immediately, 
-                  without prior notice or liability, under our sole discretion, for any reason whatsoever 
-                  and without limitation, including but not limited to a breach of the Terms.
+                  Kuajiri AI reserves the right to suspend or terminate accounts that violate these Terms or engage in prohibited activities.
+                </p>
+              </section>
+              
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4 text-gray-900">Governing Law</h2>
+                <p className="text-gray-600 mb-4">
+                  These Terms shall be governed by and interpreted in accordance with the laws of Ghana.
+                </p>
+              </section>
+              
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4 text-gray-900">Changes to Terms</h2>
+                <p className="text-gray-600 mb-4">
+                  We may update these Terms from time time. Continued use of Kuajiri AI constitutes acceptance of the revised Terms.
                 </p>
               </section>
               
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-900">Contact Information</h2>
+                <p className="text-gray-600 mb-4">
+                  For any questions regarding these Terms, please contact us at contact@kuajiriapp.com.
+                </p>
                 <p className="text-gray-600">
-                  If you have any questions about these Terms of Service, please contact us at legal@kuajiri.ai
+                  By using Kuajiri AI, you acknowledge that you have read and understood these Terms and agree to abide by them.
                 </p>
               </section>
             </div>
