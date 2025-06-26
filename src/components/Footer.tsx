@@ -24,7 +24,7 @@ const Footer = () => {
           <div className="flex flex-wrap justify-center md:justify-end space-x-6 mb-6 md:mb-0">
             <Link to="/privacy-policy" className="text-gray-300 hover:text-white transition-colors text-sm">Privacy Policy</Link>
             <Link to="/terms-of-service" className="text-gray-300 hover:text-white transition-colors text-sm">Terms of Service</Link>
-            <a href="#" className="text-gray-300 hover:text-white transition-colors text-sm">Contact</a>
+            <a href="https://wa.me/233594306366" className="text-gray-300 hover:text-white transition-colors text-sm">Contact</a>
           </div>
         </div>
         
