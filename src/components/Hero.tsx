@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowDown, UserPlus, Briefcase, Zap } from 'lucide-react';
 
@@ -33,14 +32,18 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-14">
-            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-base">
-              <UserPlus className="mr-2 h-4 w-4" />
-              Find Your Dream Job
-            </Button>
-            <Button size="lg" variant="outline" className="px-8 py-3 text-base border-2">
-              <Briefcase className="mr-2 h-4 w-4" />
-              Hire Top Talent
-            </Button>
+            <a href="https://app.kuajiriapp.com/job-seeker/register?tab=signup" target="_blank" rel="noopener noreferrer">
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-base">
+                <UserPlus className="mr-2 h-4 w-4" />
+                Find Your Dream Job
+              </Button>
+            </a>
+            <a href="https://app.kuajiriapp.com/employer/register?tab=signup" target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" className="px-8 py-3 text-base border-2">
+                <Briefcase className="mr-2 h-4 w-4" />
+                Hire Top Talent
+              </Button>
+            </a>
           </div>
         </div>
       </div>

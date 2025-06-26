@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Zap } from 'lucide-react';
@@ -71,8 +70,12 @@ const Header = () => {
           </nav>
 
           <div className="hidden md:flex items-center space-x-2">
+            <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
-            <Button className="text-sm">Start Free Trial</Button>
+            </a>
+            <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
+              <Button className="text-sm">Start Free Trial</Button>
+            </a>
           </div>
 
           {/* Mobile menu button */}
@@ -111,8 +114,12 @@ const Header = () => {
               </button>
               <Link to="/pricing" className="block px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">Pricing</Link>
               <div className="px-3 py-2 space-y-2">
-                <Button variant="outline" className="w-full text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
-                <Button className="w-full text-sm">Start Free Trial</Button>
+                <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
+                </a>
+                <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
+                  <Button className="w-full text-sm">Start Free Trial</Button>
+                </a>
               </div>
             </div>
           </div>
