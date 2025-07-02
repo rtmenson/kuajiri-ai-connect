@@ -13,6 +13,7 @@ import Footer from "@/components/Footer";
 
 interface DemoFormData {
   companyName: string;
+  contactName: string;
   companyEmail: string;
   phoneNumber: string;
 }
@@ -24,6 +25,7 @@ const Demo = () => {
   const form = useForm<DemoFormData>({
     defaultValues: {
       companyName: '',
+      contactName: '',
       companyEmail: '',
       phoneNumber: '',
     },
@@ -55,18 +57,18 @@ const Demo = () => {
           <div className="max-w-md mx-auto">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                Access Demo
+                See Kuajiri AI in Action
               </h1>
               <p className="text-gray-600">
-                Enter your company details to access our demo video
+                Discover how our AI-powered platform can revolutionize your recruitment process and help you find the perfect candidates faster.
               </p>
             </div>
 
             <Card>
               <CardHeader>
-                <CardTitle>Company Information</CardTitle>
+                <CardTitle>Request Your Demo</CardTitle>
                 <CardDescription>
-                  Please provide your company details to proceed
+                  Enter your details below to access our exclusive demo for employers and recruiting professionals
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -88,6 +90,30 @@ const Demo = () => {
                           <FormControl>
                             <Input 
                               placeholder="Enter your company name" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="contactName"
+                      rules={{
+                        required: "Contact name is required",
+                        minLength: {
+                          value: 2,
+                          message: "Contact name must be at least 2 characters"
+                        }
+                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Contact Name</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Your full name" 
                               {...field} 
                             />
                           </FormControl>

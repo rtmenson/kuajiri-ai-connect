@@ -24,10 +24,10 @@ const DemoVideo = () => {
               
               <div className="text-center mb-8">
                 <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                  Kuajiri AI Demo
+                  Kuajiri AI for Employers
                 </h1>
                 <p className="text-gray-600 max-w-2xl mx-auto">
-                  Watch how our AI-powered platform revolutionizes job matching for both job seekers and employers.
+                  See how our AI-powered recruitment platform helps employers, HR teams, and recruiting agencies find the perfect candidates in record time.
                 </p>
               </div>
             </div>
@@ -36,10 +36,10 @@ const DemoVideo = () => {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Play className="mr-2 h-5 w-5 text-blue-600" />
-                  Product Demo Video
+                  Recruitment Demo Video
                 </CardTitle>
                 <CardDescription>
-                  Learn how Kuajiri AI can transform your hiring process
+                  Discover how Kuajiri AI streamlines your hiring process and improves candidate matching
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -48,7 +48,7 @@ const DemoVideo = () => {
                     <Play className="h-16 w-16 mx-auto mb-4 opacity-70" />
                     <p className="text-lg mb-2">Demo Video Coming Soon</p>
                     <p className="text-sm opacity-70">
-                      Our comprehensive product demonstration will be available here
+                      Our comprehensive recruitment platform demonstration will be available here
                     </p>
                   </div>
                 </div>
@@ -58,31 +58,31 @@ const DemoVideo = () => {
             <div className="grid md:grid-cols-2 gap-6 mb-8">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">What You'll Learn</CardTitle>
+                  <CardTitle className="text-lg">What You'll Discover</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-sm text-gray-600">
-                    <li>• How AI matching works</li>
-                    <li>• Setting up your company profile</li>
-                    <li>• Managing job postings</li>
-                    <li>• Reviewing candidate matches</li>
-                    <li>• Analytics and reporting features</li>
+                    <li>• AI-powered candidate matching technology</li>
+                    <li>• Streamlined job posting and management</li>
+                    <li>• Advanced candidate screening features</li>
+                    <li>• Real-time recruitment analytics</li>
+                    <li>• Integration with existing HR systems</li>
                   </ul>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Next Steps</CardTitle>
+                  <CardTitle className="text-lg">Ready to Transform Your Hiring?</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <p className="text-sm text-gray-600">
-                    Ready to get started with Kuajiri AI?
+                    Join hundreds of employers who have revolutionized their recruitment process with Kuajiri AI.
                   </p>
                   <div className="space-y-2">
                     <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
                       <Button className="w-full">
-                        Start Free Trial
+                        Start Hiring Smarter
                       </Button>
                     </a>
                     <Link to="/pricing">
