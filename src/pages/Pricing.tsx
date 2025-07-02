@@ -12,8 +12,8 @@ const Pricing = () => {
   const jobSeekerPlans = [
     {
       name: "Free",
-      monthlyPrice: "$0",
-      annualPrice: "$0",
+      monthlyPrice: "GHS0",
+      annualPrice: "GHS0",
       period: "/month",
       features: [
         "Basic profile creation",
@@ -25,8 +25,8 @@ const Pricing = () => {
     },
     {
       name: "Pro",
-      monthlyPrice: "$19",
-      annualPrice: "$15",
+      monthlyPrice: "GHS19",
+      annualPrice: "GHS15",
       period: "/month",
       features: [
         "Advanced profile optimization",
@@ -41,8 +41,8 @@ const Pricing = () => {
     },
     {
       name: "Premium",
-      monthlyPrice: "$39",
-      annualPrice: "$31",
+      monthlyPrice: "GHS39",
+      annualPrice: "GHS31",
       period: "/month",
       features: [
         "Everything in Pro",
@@ -59,8 +59,8 @@ const Pricing = () => {
   const employerPlans = [
     {
       name: "Starter",
-      monthlyPrice: "$99",
-      annualPrice: "$79",
+      monthlyPrice: "GHS99",
+      annualPrice: "GHS79",
       period: "/month",
       features: [
         "Up to 5 job postings",
@@ -72,8 +72,8 @@ const Pricing = () => {
     },
     {
       name: "Professional",
-      monthlyPrice: "$299",
-      annualPrice: "$239",
+      monthlyPrice: "GHS299",
+      annualPrice: "GHS239",
       period: "/month",
       features: [
         "Up to 25 job postings",
