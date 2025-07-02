@@ -102,15 +102,15 @@ const Demo = () => {
                       control={form.control}
                       name="contactName"
                       rules={{
-                        required: "Contact name is required",
+                        required: "Company contact name is required",
                         minLength: {
                           value: 2,
-                          message: "Contact name must be at least 2 characters"
+                          message: "Company contact name must be at least 2 characters"
                         }
                       }}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Contact Name</FormLabel>
+                          <FormLabel>Company Contact Name</FormLabel>
                           <FormControl>
                             <Input 
                               placeholder="Your full name" 
@@ -151,7 +151,7 @@ const Demo = () => {
                       control={form.control}
                       name="phoneNumber"
                       rules={{
-                        required: "Phone number is required",
+                        required: "Company contact phone number is required",
                         pattern: {
                           value: /^[\+]?[1-9][\d]{0,15}$/,
                           message: "Please enter a valid phone number"
@@ -159,7 +159,7 @@ const Demo = () => {
                       }}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
+                          <FormLabel>Company Contact Phone Number</FormLabel>
                           <FormControl>
                             <Input 
                               type="tel"
