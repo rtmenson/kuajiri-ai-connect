@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Copy, CheckCircle } from "lucide-react";
 
 interface DemoFormData {
   companyName: string;
@@ -21,6 +22,8 @@ interface DemoFormData {
 const Demo = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [accessCode, setAccessCode] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const form = useForm<DemoFormData>({
     defaultValues: {
@@ -31,22 +34,105 @@ const Demo = () => {
     },
   });
 
+  const generateAccessCode = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    toast({
+      title: "Copied!",
+      description: "Access code copied to clipboard",
+    });
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const onSubmit = async (data: DemoFormData) => {
     setIsSubmitting(true);
     
     // Simulate form submission
     setTimeout(() => {
       console.log('Demo form submitted:', data);
+      const code = generateAccessCode();
+      setAccessCode(code);
+      
       toast({
-        title: "Demo Access Granted!",
-        description: "Redirecting you to the demo video...",
+        title: "Demo Access Code Generated!",
+        description: "Use this code to access the demo video",
       });
       
-      // Redirect to demo video page
-      navigate('/demo-video');
       setIsSubmitting(false);
     }, 1000);
   };
+
+  const proceedToDemo = () => {
+    navigate('/demo-video', { state: { accessCode } });
+  };
+
+  if (accessCode) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        
+        <main className="pt-20 pb-16">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-md mx-auto">
+              <div className="text-center mb-8">
+                <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
+                <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                  Access Code Generated!
+                </h1>
+                <p className="text-gray-600">
+                  Your exclusive demo access code is ready. Use this code to access the demo video.
+                </p>
+              </div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Your Demo Access Code</CardTitle>
+                  <CardDescription>
+                    Keep this code safe - you'll need it to access the demo
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="bg-gray-100 p-6 rounded-lg text-center">
+                    <div className="text-3xl font-mono font-bold text-blue-600 mb-2">
+                      {accessCode}
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => copyToClipboard(accessCode)}
+                      className="mt-2"
+                    >
+                      {copied ? (
+                        <>
+                          <CheckCircle className="mr-2 h-4 w-4" />
+                          Copied!
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="mr-2 h-4 w-4" />
+                          Copy Code
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                  
+                  <Button onClick={proceedToDemo} className="w-full">
+                    Access Demo Video
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </main>
+        
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -177,7 +263,7 @@ const Demo = () => {
                       className="w-full" 
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? "Processing..." : "Access Demo"}
+                      {isSubmitting ? "Processing..." : "Generate Access Code"}
                     </Button>
                   </form>
                 </Form>

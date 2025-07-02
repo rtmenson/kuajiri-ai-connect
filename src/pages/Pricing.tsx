@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Check, UserPlus, Briefcase } from 'lucide-react';
@@ -7,99 +8,124 @@ import FAQ from '../components/FAQ';
 
 const Pricing = () => {
   const [selectedRole, setSelectedRole] = useState<'jobseeker' | 'employer' | null>(null);
-  const [isAnnual, setIsAnnual] = useState(false);
 
   const jobSeekerPlans = [
     {
-      name: "Free",
-      monthlyPrice: "$0",
-      annualPrice: "$0",
-      period: "/month",
+      name: "Starter Pack",
+      price: "Free",
+      period: "",
       features: [
+        "5 free credits",
+        "1 unmasking per credit",
         "Basic profile creation",
-        "5 job applications per month",
-        "Basic AI matching",
         "Email notifications"
       ],
-      isFree: true
+      isFree: true,
+      credits: "5 credits"
     },
     {
-      name: "Pro",
-      monthlyPrice: "$19",
-      annualPrice: "$15",
-      period: "/month",
+      name: "Essential",
+      price: "GH₵30",
+      period: "",
       features: [
+        "30 credits",
+        "GH₵1 per credit",
         "Advanced profile optimization",
-        "Unlimited job applications",
-        "Priority AI matching",
         "Real-time notifications",
-        "Interview preparation tools",
-        "Salary insights"
+        "Interview preparation tools"
       ],
       popular: true,
-      isFree: false
+      isFree: false,
+      credits: "30 credits"
     },
     {
-      name: "Premium",
-      monthlyPrice: "$39",
-      annualPrice: "$31",
-      period: "/month",
+      name: "Value Pack",
+      price: "GH₵25",
+      period: "",
       features: [
-        "Everything in Pro",
+        "50 credits",
+        "GH₵0.50 per credit",
+        "Everything in Essential",
+        "Priority support",
+        "Advanced analytics"
+      ],
+      isFree: false,
+      credits: "50 credits"
+    },
+    {
+      name: "Best Value",
+      price: "GH₵25",
+      period: "",
+      features: [
+        "100 credits",
+        "GH₵0.25 per credit",
+        "Everything in Value Pack",
         "Personal career coach",
-        "Direct employer messaging",
-        "Advanced analytics",
         "Resume optimization",
         "Career path recommendations"
       ],
-      isFree: false
+      isFree: false,
+      credits: "100 credits"
     }
   ];
 
   const employerPlans = [
     {
-      name: "Starter",
-      monthlyPrice: "$99",
-      annualPrice: "$79",
-      period: "/month",
+      name: "Free Trial",
+      price: "Free",
+      period: "for 30 days",
       features: [
-        "Up to 5 job postings",
-        "Basic candidate screening",
-        "Standard AI matching",
+        "Unlimited credits for 30 days",
+        "Full platform access",
+        "AI-powered candidate matching",
+        "Advanced screening tools",
+        "Analytics dashboard"
+      ],
+      isFree: true,
+      trialBadge: "30 Days Free"
+    },
+    {
+      name: "Pay as You Go",
+      price: "GH₵5",
+      period: "per credit",
+      features: [
+        "No monthly commitment",
+        "Perfect for occasional hiring",
+        "Full platform features",
         "Email support"
       ],
       isFree: false
     },
     {
-      name: "Professional",
-      monthlyPrice: "$299",
-      annualPrice: "$239",
-      period: "/month",
+      name: "Credit Pack 100",
+      price: "GH₵299",
+      period: "",
       features: [
-        "Up to 25 job postings",
-        "Advanced candidate screening",
-        "Priority AI matching",
-        "Dedicated account manager",
-        "Analytics dashboard",
+        "100 credits",
+        "GH₵3 per credit",
+        "Recurring package",
+        "Priority support",
+        "Advanced analytics",
         "Custom branding"
       ],
       popular: true,
-      isFree: false
+      isFree: false,
+      credits: "100 credits"
     },
     {
-      name: "Enterprise",
-      monthlyPrice: "Custom",
-      annualPrice: "Custom",
+      name: "Credit Pack 200",
+      price: "GH₵499",
       period: "",
       features: [
-        "Unlimited job postings",
-        "AI-powered bulk screening",
-        "Custom integrations",
-        "Advanced analytics",
-        "White-label solution",
-        "24/7 priority support"
+        "200 credits",
+        "GH₵2.50 per credit",
+        "Best value for regular hiring",
+        "Everything in Credit Pack 100",
+        "Dedicated account manager",
+        "Custom integrations"
       ],
-      isFree: false
+      isFree: false,
+      credits: "200 credits"
     }
   ];
 
@@ -186,33 +212,13 @@ const Pricing = () => {
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
               Choose the perfect plan to {selectedRole === 'jobseeker' ? 'advance your career' : 'build your team'}
             </p>
-            
-            {/* Monthly/Annual Toggle */}
-            <div className="flex items-center justify-center space-x-4 mb-8">
-              <span className={`text-sm ${!isAnnual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>Monthly</span>
-              <button
-                onClick={() => setIsAnnual(!isAnnual)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  isAnnual ? 'bg-blue-600' : 'bg-gray-300'
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    isAnnual ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-              <span className={`text-sm ${isAnnual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
-                Annual <span className="text-green-600 font-semibold">(Save 20%)</span>
-              </span>
-            </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className={`grid gap-8 max-w-6xl mx-auto ${selectedRole === 'jobseeker' ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-2 lg:grid-cols-4'}`}>
             {plans.map((plan, index) => (
               <div 
                 key={index} 
-                className={`p-8 bg-white rounded-2xl shadow-lg border-2 ${
+                className={`p-6 bg-white rounded-2xl shadow-lg border-2 ${
                   plan.popular ? 'border-blue-500 relative' : 'border-gray-200'
                 } hover:shadow-xl transition-shadow flex flex-col`}
               >
@@ -224,27 +230,35 @@ const Pricing = () => {
                   </div>
                 )}
                 
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                {plan.trialBadge && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-gradient-to-r from-green-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">
+                      {plan.trialBadge}
+                    </span>
+                  </div>
+                )}
+                
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                     {plan.name}
                   </h3>
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold text-gray-900">
-                      {isAnnual ? plan.annualPrice : plan.monthlyPrice}
+                  <div className="mb-4">
+                    <span className="text-3xl font-bold text-gray-900">
+                      {plan.price}
                     </span>
                     <span className="text-gray-600">{plan.period}</span>
-                    {isAnnual && plan.monthlyPrice !== plan.annualPrice && plan.monthlyPrice !== "Custom" && (
-                      <div className="text-sm text-gray-500 mt-1">
-                        <span className="line-through">{plan.monthlyPrice}/month</span>
+                    {plan.credits && (
+                      <div className="text-sm text-blue-600 font-medium mt-1">
+                        {plan.credits}
                       </div>
                     )}
                   </div>
                 </div>
                 
-                <ul className="space-y-4 mb-8 flex-grow">
+                <ul className="space-y-3 mb-6 flex-grow">
                   {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start">
-                      <Check className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+                    <li key={featureIndex} className="flex items-start text-sm">
+                      <Check className="h-4 w-4 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
                       <span className="text-gray-600">{feature}</span>
                     </li>
                   ))}
@@ -258,7 +272,7 @@ const Pricing = () => {
                   }`}
                   variant={plan.popular ? 'default' : 'outline'}
                 >
-                  {plan.isFree ? 'Get Started' : 'Start Free Trial'}
+                  {plan.isFree ? 'Get Started' : 'Buy Credits'}
                 </Button>
               </div>
             ))}

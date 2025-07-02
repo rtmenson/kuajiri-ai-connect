@@ -1,7 +1,9 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, X, Zap } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import CountryFlag from './CountryFlag';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -69,17 +71,21 @@ const Header = () => {
             </div>
           </nav>
 
-          <div className="hidden md:flex items-center space-x-2">
-            <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
-            </a>
-            <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
-              <Button className="text-sm">Start Free Trial</Button>
-            </a>
+          <div className="hidden md:flex items-center space-x-4">
+            <CountryFlag />
+            <div className="flex items-center space-x-2">
+              <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
+              </a>
+              <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
+                <Button className="text-sm">Start Free Trial</Button>
+              </a>
+            </div>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-2">
+            <CountryFlag />
             <Button
               variant="ghost"
               size="sm"
@@ -115,8 +121,9 @@ const Header = () => {
               <Link to="/pricing" className="block px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">Pricing</Link>
               <div className="px-3 py-2 space-y-2">
                 <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
-                </a><div></div>
+                  <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
+                </a>
+                <div></div>
                 <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
                   <Button className="w-full text-sm">Start Free Trial</Button>
                 </a>
