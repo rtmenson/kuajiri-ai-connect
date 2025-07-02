@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const CallToAction = () => {
   return (
@@ -19,9 +20,11 @@ const CallToAction = () => {
                 Get Started for Free
               </Button>
             </a>
-            <Button size="lg" variant="outline" className="px-8 py-3 text-base border-2 border-white text-white bg-white/10">
-              Access a Demo
-            </Button>
+            <Link to="/demo">
+              <Button size="lg" variant="outline" className="px-8 py-3 text-base border-2 border-white text-white bg-white/10">
+                Access a Demo
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
