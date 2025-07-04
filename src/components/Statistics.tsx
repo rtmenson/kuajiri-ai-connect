@@ -17,7 +17,7 @@ const Statistics = () => {
 
         <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
           {stats.map((stat, index) => (
-            <div key={index} className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+            <div key={index} className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 flex flex-col items-center">
               <div className="text-3xl md:text-4xl font-bold text-white mb-2">
                 {stat.number}
               </div>
