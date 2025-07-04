@@ -1,94 +1,12 @@
 
-import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { ArrowLeft, Play, Lock } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { ArrowLeft, Play } from "lucide-react";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const DemoVideo = () => {
-  const location = useLocation();
-  const [accessCode, setAccessCode] = useState('');
-  const [isValidated, setIsValidated] = useState(false);
-  const [error, setError] = useState('');
-  const passedCode = location.state?.accessCode;
-
-  useEffect(() => {
-    if (passedCode) {
-      setAccessCode(passedCode);
-      setIsValidated(true);
-    }
-  }, [passedCode]);
-
-  const validateCode = () => {
-    // For demo purposes, accept any 6-digit code
-    if (accessCode.length === 6 && /^\d+$/.test(accessCode)) {
-      setIsValidated(true);
-      setError('');
-    } else {
-      setError('Please enter a valid 6-digit access code');
-    }
-  };
-
-  if (!isValidated) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <Header />
-        
-        <main className="pt-20 pb-16">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md mx-auto">
-              <div className="mb-6">
-                <Link to="/demo">
-                  <Button variant="ghost" className="mb-4">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to Demo Form
-                  </Button>
-                </Link>
-              </div>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Lock className="mr-2 h-5 w-5 text-blue-600" />
-                    Access Demo Video
-                  </CardTitle>
-                  <CardDescription>
-                    Enter your 6-digit access code to watch the demo
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <label htmlFor="code" className="text-sm font-medium">
-                      Access Code
-                    </label>
-                    <Input
-                      id="code"
-                      type="text"
-                      placeholder="Enter 6-digit code"
-                      value={accessCode}
-                      onChange={(e) => setAccessCode(e.target.value)}
-                      maxLength={6}
-                      className="text-center text-lg tracking-wider"
-                    />
-                    {error && <p className="text-sm text-red-600">{error}</p>}
-                  </div>
-                  <Button onClick={validateCode} className="w-full">
-                    Access Demo
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </main>
-        
-        <Footer />
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
