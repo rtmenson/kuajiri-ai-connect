@@ -129,9 +129,14 @@ const Pricing = () => {
   ];
 
   const TrialBanner = () => (
-    <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 text-center sticky top-16 z-40">
+    <a 
+      href="https://app.kuajiriapp.com/" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="block bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 text-center sticky top-16 z-40 hover:from-blue-700 hover:to-purple-700 transition-all cursor-pointer"
+    >
       <p className="text-sm font-medium">🎉 Start your free 30-day trial with unlimited credits - No payment required!</p>
-    </div>
+    </a>
   );
 
   if (!selectedRole) {

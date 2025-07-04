@@ -30,6 +30,14 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
+  const handlePricingClick = () => {
+    navigate('/pricing');
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+    setIsMenuOpen(false);
+  };
+
   return (
     <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b z-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,7 +75,7 @@ const Header = () => {
               >
                 How It Works
               </button>
-              <Link to="/pricing" className="text-gray-600 hover:text-blue-600 transition-colors text-sm">Pricing</Link>
+              <button onClick={handlePricingClick} className="text-gray-600 hover:text-blue-600 transition-colors text-sm">Pricing</button>
             </div>
           </nav>
 
@@ -118,7 +126,7 @@ const Header = () => {
               >
                 How It Works
               </button>
-              <Link to="/pricing" className="block px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">Pricing</Link>
+              <button onClick={handlePricingClick} className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">Pricing</button>
               <div className="px-3 py-2 space-y-2">
                 <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
                   <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>

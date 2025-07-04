@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -122,7 +121,7 @@ const PrivacyPolicy = () => {
                   Email: contact@kuajiriapp.com
                 </p>
                 <p className="text-gray-600">
-                  By using our USSD-based application, you acknowledge that you have read and understood this Privacy Policy and agree to its terms.
+                  By using Kuajiri AI, you acknowledge that you have read and understood this Privacy Policy and agree to its terms.
                 </p>
               </section>
             </div>
