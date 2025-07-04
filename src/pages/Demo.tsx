@@ -1,20 +1,20 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { CheckCircle } from "lucide-react";
 
 interface DemoFormData {
   companyName: string;
+  companyWebsite: string;
   contactName: string;
-  companyEmail: string;
-  phoneNumber: string;
+  contactEmail: string;
+  contactPhone: string;
 }
 
 const Demo = () => {
@@ -24,9 +24,10 @@ const Demo = () => {
   const form = useForm<DemoFormData>({
     defaultValues: {
       companyName: '',
+      companyWebsite: '',
       contactName: '',
-      companyEmail: '',
-      phoneNumber: '',
+      contactEmail: '',
+      contactPhone: '',
     },
   });
 
@@ -58,6 +59,8 @@ const Demo = () => {
         <div className="absolute top-64 right-32 w-20 h-20 bg-blue-300/15 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
         <div className="absolute bottom-48 left-32 w-14 h-14 bg-purple-200/20 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
         <div className="absolute top-96 left-1/2 w-10 h-10 bg-blue-400/25 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-20 right-1/4 w-8 h-8 bg-purple-300/15 rounded-full animate-pulse" style={{ animationDelay: '2.5s' }}></div>
+        <div className="absolute bottom-20 left-1/4 w-18 h-18 bg-blue-200/20 rounded-full animate-pulse" style={{ animationDelay: '3s' }}></div>
       </div>
       
       <Header />
@@ -69,121 +72,147 @@ const Demo = () => {
               Request Demo Access
             </h2>
             
-            <form 
-              name="Kuajiri AI Website"
-              method="POST" 
-              data-netlify="true"
-              className="space-y-4"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
-              <input type="hidden" name="form-name" value="Kuajiri AI Website" />
-              
-              <FormField
-                control={form.control}
-                name="companyName"
-                rules={{
-                  required: "Company name is required",
-                  minLength: {
-                    value: 2,
-                    message: "Company name must be at least 2 characters"
-                  }
-                }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company Name</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="Enter your company name" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="contactName"
-                rules={{
-                  required: "Company contact name is required",
-                  minLength: {
-                    value: 2,
-                    message: "Company contact name must be at least 2 characters"
-                  }
-                }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company Contact Name</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="Your full name" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="companyEmail"
-                rules={{
-                  required: "Company email is required",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "Please enter a valid email address"
-                  }
-                }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company Email</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="email"
-                        placeholder="company@example.com" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                rules={{
-                  required: "Company contact phone number is required",
-                  pattern: {
-                    value: /^[\+]?[1-9][\d]{0,15}$/,
-                    message: "Please enter a valid phone number"
-                  }
-                }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company Contact Phone Number</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="tel"
-                        placeholder="+1 (555) 123-4567" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={isSubmitting}
+            <Form {...form}>
+              <form 
+                name="Kuajiri AI Website"
+                method="POST" 
+                data-netlify="true"
+                className="space-y-4"
+                onSubmit={form.handleSubmit(onSubmit)}
               >
-                {isSubmitting ? "Processing..." : "Access Demo"}
-              </Button>
-            </form>
+                <input type="hidden" name="form-name" value="Kuajiri AI Website" />
+                
+                <FormField
+                  control={form.control}
+                  name="companyName"
+                  rules={{
+                    required: "Company name is required",
+                    minLength: {
+                      value: 2,
+                      message: "Company name must be at least 2 characters"
+                    }
+                  }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company Name</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Enter your company name" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="companyWebsite"
+                  rules={{
+                    required: "Company website is required",
+                    pattern: {
+                      value: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
+                      message: "Please enter a valid website URL"
+                    }
+                  }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company Website</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="https://www.yourcompany.com" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="contactName"
+                  rules={{
+                    required: "Company contact name is required",
+                    minLength: {
+                      value: 2,
+                      message: "Company contact name must be at least 2 characters"
+                    }
+                  }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company Contact Name</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Your full name" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="contactEmail"
+                  rules={{
+                    required: "Company contact email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Please enter a valid email address"
+                    }
+                  }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company Contact Email Address</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="email"
+                          placeholder="contact@yourcompany.com" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="contactPhone"
+                  rules={{
+                    required: "Company contact phone number is required",
+                    pattern: {
+                      value: /^[\+]?[1-9][\d]{0,15}$/,
+                      message: "Please enter a valid phone number"
+                    }
+                  }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company Contact Phone Number</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="tel"
+                          placeholder="+1 (555) 123-4567" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button 
+                  type="submit" 
+                  className="w-full" 
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Processing..." : "Access Demo"}
+                </Button>
+              </form>
+            </Form>
           </div>
         </div>
       </main>
