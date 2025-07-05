@@ -1,17 +1,21 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Check, UserPlus, Briefcase } from 'lucide-react';
+import { Switch } from "@/components/ui/switch";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FAQ from '../components/FAQ';
 
 const Pricing = () => {
   const [selectedRole, setSelectedRole] = useState<'jobseeker' | 'employer' | null>(null);
+  const [isAnnual, setIsAnnual] = useState(true);
 
   const jobSeekerPlans = [
     {
       name: "Starter Pack",
-      price: "Free",
+      annualPrice: "Free",
+      monthlyPrice: "Free",
       period: "",
       features: [
         "5 free credits",
@@ -24,10 +28,11 @@ const Pricing = () => {
     },
     {
       name: "Essential",
-      price: "GH₵30",
-      period: "",
+      annualPrice: "GH₵30",
+      monthlyPrice: "GH₵3",
+      period: isAnnual ? "per year" : "per month",
       features: [
-        "30 credits",
+        isAnnual ? "30 credits annually" : "3 credits monthly",
         "GH₵1 per credit",
         "Advanced profile optimization",
         "Real-time notifications",
@@ -35,43 +40,46 @@ const Pricing = () => {
       ],
       popular: true,
       isFree: false,
-      credits: "30 credits"
+      credits: isAnnual ? "30 credits/year" : "3 credits/month"
     },
     {
       name: "Value Pack",
-      price: "GH₵25",
-      period: "",
+      annualPrice: "GH₵25",
+      monthlyPrice: "GH₵3",
+      period: isAnnual ? "per year" : "per month",
       features: [
-        "50 credits",
-        "GH₵0.50 per credit",
+        isAnnual ? "50 credits annually" : "5 credits monthly",
+        isAnnual ? "GH₵0.50 per credit" : "GH₵0.60 per credit",
         "Everything in Essential",
         "Priority support",
         "Advanced analytics"
       ],
       isFree: false,
-      credits: "50 credits"
+      credits: isAnnual ? "50 credits/year" : "5 credits/month"
     },
     {
       name: "Best Value",
-      price: "GH₵25",
-      period: "",
+      annualPrice: "GH₵25",
+      monthlyPrice: "GH₵3",
+      period: isAnnual ? "per year" : "per month",
       features: [
-        "100 credits",
-        "GH₵0.25 per credit",
+        isAnnual ? "100 credits annually" : "10 credits monthly",
+        isAnnual ? "GH₵0.25 per credit" : "GH₵0.30 per credit",
         "Everything in Value Pack",
         "Personal career coach",
         "Resume optimization",
         "Career path recommendations"
       ],
       isFree: false,
-      credits: "100 credits"
+      credits: isAnnual ? "100 credits/year" : "10 credits/month"
     }
   ];
 
   const employerPlans = [
     {
       name: "Free Trial",
-      price: "Free",
+      annualPrice: "Free",
+      monthlyPrice: "Free",
       period: "for 30 days",
       features: [
         "Unlimited credits for 30 days",
@@ -85,7 +93,8 @@ const Pricing = () => {
     },
     {
       name: "Pay as You Go",
-      price: "GH₵5",
+      annualPrice: "GH₵5",
+      monthlyPrice: "GH₵5",
       period: "per credit",
       features: [
         "No monthly commitment",
@@ -97,11 +106,12 @@ const Pricing = () => {
     },
     {
       name: "Credit Pack 100",
-      price: "GH₵299",
-      period: "",
+      annualPrice: "GH₵299",
+      monthlyPrice: "GH₵30",
+      period: isAnnual ? "per year" : "per month",
       features: [
-        "100 credits",
-        "GH₵3 per credit",
+        isAnnual ? "100 credits annually" : "10 credits monthly",
+        isAnnual ? "GH₵3 per credit" : "GH₵3 per credit",
         "Recurring package",
         "Priority support",
         "Advanced analytics",
@@ -109,22 +119,23 @@ const Pricing = () => {
       ],
       popular: true,
       isFree: false,
-      credits: "100 credits"
+      credits: isAnnual ? "100 credits/year" : "10 credits/month"
     },
     {
       name: "Credit Pack 200",
-      price: "GH₵499",
-      period: "",
+      annualPrice: "GH₵499",
+      monthlyPrice: "GH₵50",
+      period: isAnnual ? "per year" : "per month",
       features: [
-        "200 credits",
-        "GH₵2.50 per credit",
+        isAnnual ? "200 credits annually" : "20 credits monthly",
+        isAnnual ? "GH₵2.50 per credit" : "GH₵2.50 per credit",
         "Best value for regular hiring",
         "Everything in Credit Pack 100",
         "Dedicated account manager",
         "Custom integrations"
       ],
       isFree: false,
-      credits: "200 credits"
+      credits: isAnnual ? "200 credits/year" : "20 credits/month"
     }
   ];
 
@@ -216,6 +227,24 @@ const Pricing = () => {
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
               Choose the perfect plan to {selectedRole === 'jobseeker' ? 'advance your career' : 'build your team'}
             </p>
+
+            {/* Billing Toggle */}
+            <div className="flex items-center justify-center space-x-4 mb-8">
+              <span className={`text-sm font-medium ${!isAnnual ? 'text-gray-900' : 'text-gray-500'}`}>
+                Monthly
+              </span>
+              <Switch
+                checked={isAnnual}
+                onCheckedChange={setIsAnnual}
+                className="data-[state=checked]:bg-blue-600"
+              />
+              <span className={`text-sm font-medium ${isAnnual ? 'text-gray-900' : 'text-gray-500'}`}>
+                Annual
+              </span>
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                Save 20%
+              </span>
+            </div>
           </div>
 
           <div className={`grid gap-8 max-w-6xl mx-auto ${selectedRole === 'jobseeker' ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-2 lg:grid-cols-4'}`}>
@@ -248,7 +277,7 @@ const Pricing = () => {
                   </h3>
                   <div className="mb-4">
                     <span className="text-3xl font-bold text-gray-900">
-                      {plan.price}
+                      {isAnnual ? plan.annualPrice : plan.monthlyPrice}
                     </span>
                     <span className="text-gray-600">{plan.period}</span>
                     {plan.credits && (
