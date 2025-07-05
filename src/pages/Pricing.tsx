@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Check, UserPlus, Briefcase } from 'lucide-react';
@@ -9,7 +8,7 @@ import FAQ from '../components/FAQ';
 
 const Pricing = () => {
   const [selectedRole, setSelectedRole] = useState<'jobseeker' | 'employer' | null>(null);
-  const [isAnnual, setIsAnnual] = useState(true);
+  const [isAnnual, setIsAnnual] = useState(false);
 
   const jobSeekerPlans = [
     {
@@ -30,44 +29,34 @@ const Pricing = () => {
       monthlyPrice: 3,
       period: isAnnual ? "per year" : "per month",
       features: [
-        isAnnual ? "30 credits annually" : "3 credits monthly",
-        "GH₵1 per credit",
-        "Advanced profile optimization",
-        "Real-time notifications",
-        "Interview preparation tools"
+        isAnnual ? "36 credits annually" : "3 credits monthly",
+        "GH₵1 per credit"
       ],
       popular: true,
       isFree: false,
-      credits: isAnnual ? "30 credits/year" : "3 credits/month"
+      credits: isAnnual ? "36 credits/year" : "3 credits/month"
     },
     {
       name: "Value Pack",
       monthlyPrice: 25,
       period: isAnnual ? "per year" : "per month",
       features: [
-        isAnnual ? "50 credits annually" : "5 credits monthly",
-        isAnnual ? "GH₵0.50 per credit" : "GH₵0.60 per credit",
-        "Everything in Essential",
-        "Priority support",
-        "Advanced analytics"
+        isAnnual ? "600 credits annually" : "5 credits monthly",
+        isAnnual ? "GH₵0.40 per credit" : "GH₵0.60 per credit"
       ],
       isFree: false,
-      credits: isAnnual ? "50 credits/year" : "5 credits/month"
+      credits: isAnnual ? "600 credits/year" : "5 credits/month"
     },
     {
       name: "Best Value",
       monthlyPrice: 25,
       period: isAnnual ? "per year" : "per month",
       features: [
-        isAnnual ? "100 credits annually" : "10 credits monthly",
-        isAnnual ? "GH₵0.25 per credit" : "GH₵0.30 per credit",
-        "Everything in Value Pack",
-        "Personal career coach",
-        "Resume optimization",
-        "Career path recommendations"
+        isAnnual ? "960 credits annually" : "10 credits monthly",
+        isAnnual ? "GH₵0.25 per credit" : "GH₵0.30 per credit"
       ],
       isFree: false,
-      credits: isAnnual ? "100 credits/year" : "10 credits/month"
+      credits: isAnnual ? "960 credits/year" : "10 credits/month"
     }
   ];
 
@@ -92,9 +81,7 @@ const Pricing = () => {
       period: "per credit",
       features: [
         "No monthly commitment",
-        "Perfect for occasional hiring",
-        "Full platform features",
-        "Email support"
+        "GH₵5 per credit"
       ],
       isFree: false
     },
@@ -103,31 +90,23 @@ const Pricing = () => {
       monthlyPrice: 30,
       period: isAnnual ? "per year" : "per month",
       features: [
-        isAnnual ? "100 credits annually" : "10 credits monthly",
-        isAnnual ? "GH₵3 per credit" : "GH₵3 per credit",
-        "Recurring package",
-        "Priority support",
-        "Advanced analytics",
-        "Custom branding"
+        isAnnual ? "960 credits annually" : "10 credits monthly",
+        isAnnual ? "GH₵2.40 per credit" : "GH₵3 per credit"
       ],
       popular: true,
       isFree: false,
-      credits: isAnnual ? "100 credits/year" : "10 credits/month"
+      credits: isAnnual ? "960 credits/year" : "10 credits/month"
     },
     {
       name: "Credit Pack 200",
       monthlyPrice: 50,
       period: isAnnual ? "per year" : "per month",
       features: [
-        isAnnual ? "200 credits annually" : "20 credits monthly",
-        isAnnual ? "GH₵2.50 per credit" : "GH₵2.50 per credit",
-        "Best value for regular hiring",
-        "Everything in Credit Pack 100",
-        "Dedicated account manager",
-        "Custom integrations"
+        isAnnual ? "1920 credits annually" : "20 credits monthly",
+        isAnnual ? "GH₵2 per credit" : "GH₵2.50 per credit"
       ],
       isFree: false,
-      credits: isAnnual ? "200 credits/year" : "20 credits/month"
+      credits: isAnnual ? "1920 credits/year" : "20 credits/month"
     }
   ];
 
