@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Check, UserPlus, Briefcase } from 'lucide-react';
-import { Switch } from "@/components/ui/switch";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FAQ from '../components/FAQ';
@@ -14,7 +14,6 @@ const Pricing = () => {
   const jobSeekerPlans = [
     {
       name: "Starter Pack",
-      annualPrice: "Free",
       monthlyPrice: "Free",
       period: "",
       features: [
@@ -28,8 +27,7 @@ const Pricing = () => {
     },
     {
       name: "Essential",
-      annualPrice: "GH₵30",
-      monthlyPrice: "GH₵3",
+      monthlyPrice: 3,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "30 credits annually" : "3 credits monthly",
@@ -44,8 +42,7 @@ const Pricing = () => {
     },
     {
       name: "Value Pack",
-      annualPrice: "GH₵25",
-      monthlyPrice: "GH₵3",
+      monthlyPrice: 25,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "50 credits annually" : "5 credits monthly",
@@ -59,8 +56,7 @@ const Pricing = () => {
     },
     {
       name: "Best Value",
-      annualPrice: "GH₵25",
-      monthlyPrice: "GH₵3",
+      monthlyPrice: 25,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "100 credits annually" : "10 credits monthly",
@@ -78,7 +74,6 @@ const Pricing = () => {
   const employerPlans = [
     {
       name: "Free Trial",
-      annualPrice: "Free",
       monthlyPrice: "Free",
       period: "for 30 days",
       features: [
@@ -93,8 +88,7 @@ const Pricing = () => {
     },
     {
       name: "Pay as You Go",
-      annualPrice: "GH₵5",
-      monthlyPrice: "GH₵5",
+      monthlyPrice: 5,
       period: "per credit",
       features: [
         "No monthly commitment",
@@ -106,8 +100,7 @@ const Pricing = () => {
     },
     {
       name: "Credit Pack 100",
-      annualPrice: "GH₵299",
-      monthlyPrice: "GH₵30",
+      monthlyPrice: 30,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "100 credits annually" : "10 credits monthly",
@@ -123,8 +116,7 @@ const Pricing = () => {
     },
     {
       name: "Credit Pack 200",
-      annualPrice: "GH₵499",
-      monthlyPrice: "GH₵50",
+      monthlyPrice: 50,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "200 credits annually" : "20 credits monthly",
@@ -138,6 +130,14 @@ const Pricing = () => {
       credits: isAnnual ? "200 credits/year" : "20 credits/month"
     }
   ];
+
+  const calculatePrice = (monthlyPrice: number | string) => {
+    if (typeof monthlyPrice === 'string') return monthlyPrice;
+    if (isAnnual) {
+      return Math.round(monthlyPrice * 12 * 0.8);
+    }
+    return monthlyPrice;
+  };
 
   const TrialBanner = () => (
     <a 
@@ -230,17 +230,29 @@ const Pricing = () => {
 
             {/* Billing Toggle */}
             <div className="flex items-center justify-center space-x-4 mb-8">
-              <span className={`text-sm font-medium ${!isAnnual ? 'text-gray-900' : 'text-gray-500'}`}>
-                Monthly
-              </span>
-              <Switch
-                checked={isAnnual}
-                onCheckedChange={setIsAnnual}
-                className="data-[state=checked]:bg-blue-600"
-              />
-              <span className={`text-sm font-medium ${isAnnual ? 'text-gray-900' : 'text-gray-500'}`}>
-                Annual
-              </span>
+              <ToggleGroup 
+                type="single" 
+                value={isAnnual ? "annual" : "monthly"}
+                onValueChange={(value) => {
+                  if (value) {
+                    setIsAnnual(value === "annual");
+                  }
+                }}
+                className="bg-gray-100 rounded-full p-1"
+              >
+                <ToggleGroupItem 
+                  value="monthly" 
+                  className="px-6 py-2 rounded-full data-[state=on]:bg-white data-[state=on]:shadow-sm"
+                >
+                  Monthly
+                </ToggleGroupItem>
+                <ToggleGroupItem 
+                  value="annual" 
+                  className="px-6 py-2 rounded-full data-[state=on]:bg-white data-[state=on]:shadow-sm"
+                >
+                  Annual
+                </ToggleGroupItem>
+              </ToggleGroup>
               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                 Save 20%
               </span>
@@ -277,7 +289,7 @@ const Pricing = () => {
                   </h3>
                   <div className="mb-4">
                     <span className="text-3xl font-bold text-gray-900">
-                      {isAnnual ? plan.annualPrice : plan.monthlyPrice}
+                      {typeof plan.monthlyPrice === 'string' ? plan.monthlyPrice : `GH₵${calculatePrice(plan.monthlyPrice)}`}
                     </span>
                     <span className="text-gray-600">{plan.period}</span>
                     {plan.credits && (
