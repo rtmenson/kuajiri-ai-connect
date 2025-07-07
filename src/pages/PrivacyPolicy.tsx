@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -20,20 +19,20 @@ const PrivacyPolicy = () => {
             
             <div className="prose prose-lg max-w-none">
               <p className="text-gray-600 mb-6">
-                Effective Date: 26th June, 2025
+                Effective Date: 4th July, 2025
               </p>
               
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-900">Introduction</h2>
                 <p className="text-gray-600 mb-4">
-                  Kuajiri ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our USSD-based application. By using our services, you consent to the data practices described in this policy.
+                  Kuajiri ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI-based application. By using our services, you consent to the data practices described in this policy.
                 </p>
               </section>
               
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-900">Information We Collect</h2>
                 <p className="text-gray-600 mb-4">
-                  When you interact with our USSD service, we may collect the following personal information:
+                  When you interact with our AI product, we may collect the following personal information:
                 </p>
                 <ul className="list-disc list-inside text-gray-600 space-y-2">
                   <li>Name</li>
@@ -122,7 +121,7 @@ const PrivacyPolicy = () => {
                   Email: contact@kuajiriapp.com
                 </p>
                 <p className="text-gray-600">
-                  By using our USSD-based application, you acknowledge that you have read and understood this Privacy Policy and agree to its terms.
+                  By using Kuajiri AI, you acknowledge that you have read and understood this Privacy Policy and agree to its terms.
                 </p>
               </section>
             </div>
