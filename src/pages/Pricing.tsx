@@ -40,11 +40,11 @@ const Pricing = () => {
     {
       name: "Pro",
       description: "For serious professionals maximizing career opportunities",
-      monthlyPrice: 25,
+      monthlyPrice: 20,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "1200 credits annually" : "100 credits monthly",
-        "GH₵0.25 per credit"
+        "GH₵0.20 per credit"
       ],
       isFree: false,
       credits: isAnnual ? "1200 credits/year" : "100 credits/month"
