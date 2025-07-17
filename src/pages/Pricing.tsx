@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Check, UserPlus, Briefcase } from 'lucide-react';
@@ -19,7 +18,7 @@ const Pricing = () => {
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "360 credits annually" : "30 credits monthly",
-        "GH₵1 per credit"
+        "GH₵ 1 per credit"
       ],
       isFree: false,
       credits: isAnnual ? "360 credits/year" : "30 credits/month"
@@ -31,7 +30,7 @@ const Pricing = () => {
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "600 credits annually" : "50 credits monthly",
-        "GH₵0.50 per credit"
+        "GH₵ 0.50 per credit"
       ],
       popular: true,
       isFree: false,
@@ -44,7 +43,7 @@ const Pricing = () => {
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "1200 credits annually" : "100 credits monthly",
-        "GH₵0.20 per credit"
+        "GH₵ 0.20 per credit"
       ],
       isFree: false,
       credits: isAnnual ? "1200 credits/year" : "100 credits/month"
@@ -59,7 +58,7 @@ const Pricing = () => {
       period: "per credit",
       features: [
         "Pay-as-you-go",
-        "GH₵5 per credit"
+        "GH₵ 5 per credit"
       ],
       isFree: false
     },
@@ -70,7 +69,7 @@ const Pricing = () => {
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "1200 credits annually" : "100 credits monthly",
-        "GH₵3 per credit"
+        "GH₵ 3 per credit"
       ],
       popular: true,
       isFree: false,
@@ -83,7 +82,7 @@ const Pricing = () => {
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "2400 credits annually" : "200 credits monthly",
-        "GH₵2.50 per credit"
+        "GH₵ 2.50 per credit"
       ],
       isFree: false,
       credits: isAnnual ? "2400 credits/year" : "200 credits/month"
@@ -248,7 +247,7 @@ const Pricing = () => {
                   </p>
                   <div className="mb-4">
                     <span className="text-3xl font-bold text-gray-900">
-                      {typeof plan.monthlyPrice === 'string' ? plan.monthlyPrice : `GH₵${calculatePrice(plan.monthlyPrice)}`}
+                      {typeof plan.monthlyPrice === 'string' ? plan.monthlyPrice : `GH₵ ${calculatePrice(plan.monthlyPrice)}`}
                     </span>
                     <span className="text-gray-600"> {plan.period}</span>
                     {plan.credits && (
