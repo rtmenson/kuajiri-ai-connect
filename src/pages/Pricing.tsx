@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Check, UserPlus, Briefcase } from 'lucide-react';
@@ -12,101 +13,74 @@ const Pricing = () => {
 
   const jobSeekerPlans = [
     {
-      name: "Starter Pack",
-      monthlyPrice: "Free",
-      period: "",
-      features: [
-        "5 free credits",
-        "1 unmasking per credit",
-        "Basic profile creation",
-        "Email notifications"
-      ],
-      isFree: true,
-      credits: "5 credits"
-    },
-    {
-      name: "Essential",
-      monthlyPrice: 3,
+      name: "Basic",
+      monthlyPrice: 30,
       period: isAnnual ? "per year" : "per month",
       features: [
-        isAnnual ? "36 credits annually" : "3 credits monthly",
+        isAnnual ? "360 credits annually" : "30 credits monthly",
         "GH₵1 per credit"
+      ],
+      isFree: false,
+      credits: isAnnual ? "360 credits/year" : "30 credits/month"
+    },
+    {
+      name: "Premium",
+      monthlyPrice: 25,
+      period: isAnnual ? "per year" : "per month",
+      features: [
+        isAnnual ? "600 credits annually" : "50 credits monthly",
+        "GH₵0.50 per credit"
       ],
       popular: true,
       isFree: false,
-      credits: isAnnual ? "36 credits/year" : "3 credits/month"
+      credits: isAnnual ? "600 credits/year" : "50 credits/month"
     },
     {
-      name: "Value Pack",
+      name: "Pro",
       monthlyPrice: 25,
       period: isAnnual ? "per year" : "per month",
       features: [
-        isAnnual ? "600 credits annually" : "5 credits monthly",
-        isAnnual ? "GH₵0.40 per credit" : "GH₵0.60 per credit"
+        isAnnual ? "1200 credits annually" : "100 credits monthly",
+        "GH₵0.25 per credit"
       ],
       isFree: false,
-      credits: isAnnual ? "600 credits/year" : "5 credits/month"
-    },
-    {
-      name: "Best Value",
-      monthlyPrice: 25,
-      period: isAnnual ? "per year" : "per month",
-      features: [
-        isAnnual ? "960 credits annually" : "10 credits monthly",
-        isAnnual ? "GH₵0.25 per credit" : "GH₵0.30 per credit"
-      ],
-      isFree: false,
-      credits: isAnnual ? "960 credits/year" : "10 credits/month"
+      credits: isAnnual ? "1200 credits/year" : "100 credits/month"
     }
   ];
 
   const employerPlans = [
     {
-      name: "Free Trial",
-      monthlyPrice: "Free",
-      period: "for 30 days",
-      features: [
-        "Unlimited credits for 30 days",
-        "Full platform access",
-        "AI-powered candidate matching",
-        "Advanced screening tools",
-        "Analytics dashboard"
-      ],
-      isFree: true,
-      trialBadge: "30 Days Free"
-    },
-    {
-      name: "Pay as You Go",
+      name: "Basic",
       monthlyPrice: 5,
       period: "per credit",
       features: [
-        "No monthly commitment",
+        "Pay-as-you-go",
         "GH₵5 per credit"
       ],
       isFree: false
     },
     {
-      name: "Credit Pack 100",
-      monthlyPrice: 30,
+      name: "Premium",
+      monthlyPrice: 299,
       period: isAnnual ? "per year" : "per month",
       features: [
-        isAnnual ? "960 credits annually" : "10 credits monthly",
-        isAnnual ? "GH₵2.40 per credit" : "GH₵3 per credit"
+        isAnnual ? "1200 credits annually" : "100 credits monthly",
+        "GH₵3 per credit"
       ],
       popular: true,
       isFree: false,
-      credits: isAnnual ? "960 credits/year" : "10 credits/month"
+      credits: isAnnual ? "1200 credits/year" : "100 credits/month"
     },
     {
-      name: "Credit Pack 200",
-      monthlyPrice: 50,
+      name: "Pro",
+      monthlyPrice: 499,
       period: isAnnual ? "per year" : "per month",
       features: [
-        isAnnual ? "1920 credits annually" : "20 credits monthly",
-        isAnnual ? "GH₵2 per credit" : "GH₵2.50 per credit"
+        isAnnual ? "2400 credits annually" : "200 credits monthly",
+        "GH₵2.50 per credit"
       ],
       isFree: false,
-      credits: isAnnual ? "1920 credits/year" : "20 credits/month"
+      credits: isAnnual ? "2400 credits/year" : "200 credits/month"
     }
   ];
 
@@ -206,39 +180,44 @@ const Pricing = () => {
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
               Choose the perfect plan to {selectedRole === 'jobseeker' ? 'advance your career' : 'build your team'}
             </p>
+            <p className="text-lg text-blue-600 font-medium mb-8">
+              🎉 30-day free trial available for all plans
+            </p>
 
-            {/* Billing Toggle */}
-            <div className="flex items-center justify-center space-x-4 mb-8">
-              <ToggleGroup 
-                type="single" 
-                value={isAnnual ? "annual" : "monthly"}
-                onValueChange={(value) => {
-                  if (value) {
-                    setIsAnnual(value === "annual");
-                  }
-                }}
-                className="bg-gray-100 rounded-full p-1"
-              >
-                <ToggleGroupItem 
-                  value="monthly" 
-                  className="px-6 py-2 rounded-full data-[state=on]:bg-white data-[state=on]:shadow-sm"
+            {/* Billing Toggle - only show for plans that have monthly/annual options */}
+            {plans.some(plan => plan.period !== 'per credit') && (
+              <div className="flex items-center justify-center space-x-4 mb-8">
+                <ToggleGroup 
+                  type="single" 
+                  value={isAnnual ? "annual" : "monthly"}
+                  onValueChange={(value) => {
+                    if (value) {
+                      setIsAnnual(value === "annual");
+                    }
+                  }}
+                  className="bg-gray-100 rounded-full p-1"
                 >
-                  Monthly
-                </ToggleGroupItem>
-                <ToggleGroupItem 
-                  value="annual" 
-                  className="px-6 py-2 rounded-full data-[state=on]:bg-white data-[state=on]:shadow-sm"
-                >
-                  Annual
-                </ToggleGroupItem>
-              </ToggleGroup>
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Save 20%
-              </span>
-            </div>
+                  <ToggleGroupItem 
+                    value="monthly" 
+                    className="px-6 py-2 rounded-full data-[state=on]:bg-white data-[state=on]:shadow-sm"
+                  >
+                    Monthly
+                  </ToggleGroupItem>
+                  <ToggleGroupItem 
+                    value="annual" 
+                    className="px-6 py-2 rounded-full data-[state=on]:bg-white data-[state=on]:shadow-sm"
+                  >
+                    Annual
+                  </ToggleGroupItem>
+                </ToggleGroup>
+                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  Save 20%
+                </span>
+              </div>
+            )}
           </div>
 
-          <div className={`grid gap-8 max-w-6xl mx-auto ${selectedRole === 'jobseeker' ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-2 lg:grid-cols-4'}`}>
+          <div className="grid gap-8 max-w-4xl mx-auto md:grid-cols-3">
             {plans.map((plan, index) => (
               <div 
                 key={index} 
@@ -254,14 +233,6 @@ const Pricing = () => {
                   </div>
                 )}
                 
-                {plan.trialBadge && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-gradient-to-r from-green-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">
-                      {plan.trialBadge}
-                    </span>
-                  </div>
-                )}
-                
                 <div className="text-center mb-6">
                   <h3 className="text-xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                     {plan.name}
@@ -270,7 +241,7 @@ const Pricing = () => {
                     <span className="text-3xl font-bold text-gray-900">
                       {typeof plan.monthlyPrice === 'string' ? plan.monthlyPrice : `GH₵${calculatePrice(plan.monthlyPrice)}`}
                     </span>
-                    <span className="text-gray-600">{plan.period}</span>
+                    <span className="text-gray-600"> {plan.period}</span>
                     {plan.credits && (
                       <div className="text-sm text-blue-600 font-medium mt-1">
                         {plan.credits}
@@ -296,7 +267,7 @@ const Pricing = () => {
                   }`}
                   variant={plan.popular ? 'default' : 'outline'}
                 >
-                  {plan.isFree ? 'Get Started' : 'Buy Credits'}
+                  {plan.isFree ? 'Start Free Trial' : 'Start Free Trial'}
                 </Button>
               </div>
             ))}
