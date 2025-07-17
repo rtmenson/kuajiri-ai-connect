@@ -14,6 +14,7 @@ const Pricing = () => {
   const jobSeekerPlans = [
     {
       name: "Basic",
+      description: "For job seekers starting their career journey",
       monthlyPrice: 30,
       period: isAnnual ? "per year" : "per month",
       features: [
@@ -25,6 +26,7 @@ const Pricing = () => {
     },
     {
       name: "Premium",
+      description: "For active job seekers applying to multiple positions",
       monthlyPrice: 25,
       period: isAnnual ? "per year" : "per month",
       features: [
@@ -37,6 +39,7 @@ const Pricing = () => {
     },
     {
       name: "Pro",
+      description: "For serious professionals maximizing career opportunities",
       monthlyPrice: 25,
       period: isAnnual ? "per year" : "per month",
       features: [
@@ -51,6 +54,7 @@ const Pricing = () => {
   const employerPlans = [
     {
       name: "Basic",
+      description: "For individuals or explorers just getting started",
       monthlyPrice: 5,
       period: "per credit",
       features: [
@@ -61,6 +65,7 @@ const Pricing = () => {
     },
     {
       name: "Premium",
+      description: "For small teams filling multiple roles a month",
       monthlyPrice: 299,
       period: isAnnual ? "per year" : "per month",
       features: [
@@ -73,6 +78,7 @@ const Pricing = () => {
     },
     {
       name: "Pro",
+      description: "For businesses filling several roles a month",
       monthlyPrice: 499,
       period: isAnnual ? "per year" : "per month",
       features: [
@@ -234,9 +240,12 @@ const Pricing = () => {
                 )}
                 
                 <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                     {plan.name}
                   </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    {plan.description}
+                  </p>
                   <div className="mb-4">
                     <span className="text-3xl font-bold text-gray-900">
                       {typeof plan.monthlyPrice === 'string' ? plan.monthlyPrice : `GH₵${calculatePrice(plan.monthlyPrice)}`}
