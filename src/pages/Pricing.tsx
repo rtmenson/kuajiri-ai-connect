@@ -26,11 +26,11 @@ const Pricing = () => {
     {
       name: "Premium",
       description: "For active job seekers applying to multiple positions",
-      monthlyPrice: 25,
+      monthlyPrice: 45,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "600 credits annually" : "50 credits monthly",
-        "GH₵ 0.50 per credit"
+        "GH₵ 0.90 per credit"
       ],
       popular: true,
       isFree: false,
@@ -39,11 +39,11 @@ const Pricing = () => {
     {
       name: "Pro",
       description: "For serious professionals maximizing career opportunities",
-      monthlyPrice: 20,
+      monthlyPrice: 80,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "1200 credits annually" : "100 credits monthly",
-        "GH₵ 0.20 per credit"
+        "GH₵ 0.80 per credit"
       ],
       isFree: false,
       credits: isAnnual ? "1200 credits/year" : "100 credits/month"

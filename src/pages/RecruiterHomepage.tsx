@@ -13,11 +13,13 @@ const RecruiterHomepage = () => {
       <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Hire Top Talent 5x Faster with AI Matching
-              </span>
-            </h1>
+            <div className="mb-8">
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Hire Top Talent 5x Faster with AI Matching
+                </span>
+              </h1>
+            </div>
             
             <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
               Stop sifting through hundreds of irrelevant resumes. Our AI instantly connects you with pre-qualified candidates who match your exact requirements and company culture.
