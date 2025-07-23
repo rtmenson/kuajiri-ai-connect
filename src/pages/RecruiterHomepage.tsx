@@ -11,7 +11,7 @@ const RecruiterHomepage = () => {
       
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24">
           <div className="max-w-4xl mx-auto">
             <div className="mb-8">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
