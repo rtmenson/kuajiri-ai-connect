@@ -30,7 +30,8 @@ const Pricing = () => {
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "600 credits annually" : "50 credits monthly",
-        "GH₵ 0.90 per credit"
+        "GH₵ 0.90 per credit",
+        "Roll-on credits"
       ],
       popular: true,
       isFree: false,
@@ -43,7 +44,8 @@ const Pricing = () => {
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "1200 credits annually" : "100 credits monthly",
-        "GH₵ 0.80 per credit"
+        "GH₵ 0.80 per credit",
+        "Roll-on credits"
       ],
       isFree: false,
       credits: isAnnual ? "1200 credits/year" : "100 credits/month"
@@ -54,13 +56,14 @@ const Pricing = () => {
     {
       name: "Basic",
       description: "For individuals or explorers just getting started",
-      monthlyPrice: 5,
-      period: "per credit",
+      monthlyPrice: 150,
+      period: isAnnual ? "per year" : "per month",
       features: [
-        "Pay-as-you-go",
+        isAnnual ? "360 credits annually" : "30 credits monthly",
         "GH₵ 5 per credit"
       ],
-      isFree: false
+      isFree: false,
+      credits: isAnnual ? "360 credits/year" : "30 credits/month"
     },
     {
       name: "Premium",
@@ -69,7 +72,8 @@ const Pricing = () => {
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "1200 credits annually" : "100 credits monthly",
-        "GH₵ 4.00 per credit"
+        "GH₵ 4.00 per credit",
+        "Roll-on credits"
       ],
       popular: true,
       isFree: false,
@@ -82,7 +86,8 @@ const Pricing = () => {
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "2400 credits annually" : "200 credits monthly",
-        "GH₵ 3.50 per credit"
+        "GH₵ 3.50 per credit",
+        "Roll-on credits"
       ],
       isFree: false,
       credits: isAnnual ? "2400 credits/year" : "200 credits/month"
