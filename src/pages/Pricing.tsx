@@ -65,11 +65,11 @@ const Pricing = () => {
     {
       name: "Premium",
       description: "For small teams filling multiple roles a month",
-      monthlyPrice: 299,
+      monthlyPrice: 399,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "1200 credits annually" : "100 credits monthly",
-        "GH₵ 3 per credit"
+        "GH₵ 4.00 per credit"
       ],
       popular: true,
       isFree: false,
@@ -78,11 +78,11 @@ const Pricing = () => {
     {
       name: "Pro",
       description: "For businesses filling several roles a month",
-      monthlyPrice: 499,
+      monthlyPrice: 699,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "2400 credits annually" : "200 credits monthly",
-        "GH₵ 2.50 per credit"
+        "GH₵ 3.50 per credit"
       ],
       isFree: false,
       credits: isAnnual ? "2400 credits/year" : "200 credits/month"
