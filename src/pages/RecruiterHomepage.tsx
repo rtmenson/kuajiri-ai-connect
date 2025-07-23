@@ -52,8 +52,8 @@ const RecruiterHomepage = () => {
                   <p className="text-sm text-gray-600">Get qualified candidates in hours</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Building className="h-6 w-6 text-green-600" />
+                  <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Building className="h-6 w-6 text-indigo-600" />
                   </div>
                   <h3 className="font-semibold text-gray-900">Quality Hires</h3>
                   <p className="text-sm text-gray-600">Better matches = longer retention</p>
@@ -130,7 +130,7 @@ const RecruiterHomepage = () => {
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-white font-bold text-xl">3</span>
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Smart Pre-Screening</h3>
@@ -138,7 +138,7 @@ const RecruiterHomepage = () => {
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-violet-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-white font-bold text-xl">4</span>
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Receive Quality Matches</h3>
@@ -151,15 +151,15 @@ const RecruiterHomepage = () => {
               <h3 className="text-2xl font-bold mb-4 text-gray-900">What Makes Our Solution Unbeatable?</h3>
               <ul className="text-left space-y-3">
                 <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-blue-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">Active sourcing - we find passive candidates who aren't actively job hunting</span>
                 </li>
                 <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-purple-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">Culture-fit matching - beyond skills, we match personality and values</span>
                 </li>
                 <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-indigo-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">Predictive analytics - know who's likely to accept before you interview</span>
                 </li>
               </ul>
@@ -207,19 +207,19 @@ const RecruiterHomepage = () => {
               <h3 className="text-2xl font-bold mb-6 text-gray-900">Here's The Reality</h3>
               <div className="space-y-4">
                 <div className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-blue-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">14-day free trial - prove ROI before you pay</span>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-purple-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">Setup in under 10 minutes, first candidates within 48 hours</span>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-indigo-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">Pay only for successful hires, not just applications</span>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-violet-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">Average 40% reduction in time-to-hire</span>
                 </div>
               </div>

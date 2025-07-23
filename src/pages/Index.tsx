@@ -35,7 +35,7 @@ const Index = () => {
             </div>
             
             {/* Visual Aid */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border">
+            <div id="benefits" className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border">
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="text-center">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -52,8 +52,8 @@ const Index = () => {
                   <p className="text-sm text-gray-600">No more endless job board scrolling</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <CheckCircle className="h-6 w-6 text-green-600" />
+                  <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <CheckCircle className="h-6 w-6 text-indigo-600" />
                   </div>
                   <h3 className="font-semibold text-gray-900">Higher Success</h3>
                   <p className="text-sm text-gray-600">Better matches = more interviews</p>
@@ -100,7 +100,7 @@ const Index = () => {
       </section>
 
       {/* Solution Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <section id="how-it-works" className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -129,7 +129,7 @@ const Index = () => {
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-white font-bold text-xl">3</span>
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Smart Matching</h3>
@@ -137,7 +137,7 @@ const Index = () => {
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-violet-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-white font-bold text-xl">4</span>
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Get Matched</h3>
@@ -150,15 +150,15 @@ const Index = () => {
               <h3 className="text-2xl font-bold mb-4 text-gray-900">What Makes Kuajiri AI Different?</h3>
               <ul className="text-left space-y-3">
                 <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-blue-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">Proactive matching - we find jobs for you, not the other way around</span>
                 </li>
                 <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-purple-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">Quality over quantity - fewer, better-matched opportunities</span>
                 </li>
                 <li className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-indigo-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">Real-time market intelligence - know what employers actually want</span>
                 </li>
               </ul>
@@ -180,7 +180,7 @@ const Index = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 mb-16">
-            <div>
+            <div className="ml-4">
               <h3 className="text-2xl font-bold mb-6 text-gray-900">Your Concerns (We've Heard Them All)</h3>
               <div className="space-y-4">
                 <div className="flex items-start">
@@ -206,19 +206,19 @@ const Index = () => {
               <h3 className="text-2xl font-bold mb-6 text-gray-900">Here's The Truth</h3>
               <div className="space-y-4">
                 <div className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-blue-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">30-day free trial - see results before you pay anything</span>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-purple-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">Setup takes 5 minutes, matches start within 24 hours</span>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-indigo-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">Cancel anytime, no long-term contracts</span>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-1 mr-3 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-violet-600 mt-1 mr-3 flex-shrink-0" />
                   <span className="text-gray-700">Access to hidden job market - 70% of our matches aren't publicly posted</span>
                 </div>
               </div>

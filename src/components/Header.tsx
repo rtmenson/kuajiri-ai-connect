@@ -58,12 +58,6 @@ const Header = () => {
           <nav className="hidden md:flex items-center justify-center flex-1">
             <div className="flex items-center space-x-8">
               <button 
-                onClick={() => handleNavClick('features')} 
-                className="text-gray-600 hover:text-blue-600 transition-colors text-sm"
-              >
-                Features
-              </button>
-              <button 
                 onClick={() => handleNavClick('benefits')} 
                 className="text-gray-600 hover:text-blue-600 transition-colors text-sm"
               >
@@ -108,12 +102,6 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
-              <button 
-                onClick={() => handleNavClick('features')} 
-                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 text-sm"
-              >
-                Features
-              </button>
               <button 
                 onClick={() => handleNavClick('benefits')} 
                 className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 text-sm"
