@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Users, Clock, Shield, Star, ArrowRight } from 'lucide-react';
+import { CheckCircle, Users, Clock, Shield, Star, ArrowRight, Zap } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -14,6 +14,17 @@ const Index = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24">
           <div className="max-w-4xl mx-auto">
             <div className="mb-8">
+              <span className="inline-flex items-center px-6 py-3 bg-blue-100/80 text-blue-800 rounded-full text-sm font-medium mb-6 backdrop-blur-sm border border-blue-200/50">
+                <Zap className="h-4 w-4 mr-2" />
+                AI-Powered Matching
+              </span>
+              <div className="flex justify-end mb-4">
+                <a href="/recruiter">
+                  <Button variant="outline" size="sm" className="text-sm">
+                    For Recruiters →
+                  </Button>
+                </a>
+              </div>
               <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   Land Your Dream Job 10x Faster with AI
@@ -180,7 +191,7 @@ const Index = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 mb-16">
-            <div className="ml-4">
+            <div className="ml-8">
               <h3 className="text-2xl font-bold mb-6 text-gray-900">Your Concerns (We've Heard Them All)</h3>
               <div className="space-y-4">
                 <div className="flex items-start">

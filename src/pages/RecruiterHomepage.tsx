@@ -14,6 +14,17 @@ const RecruiterHomepage = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24">
           <div className="max-w-4xl mx-auto">
             <div className="mb-8">
+              <span className="inline-flex items-center px-6 py-3 bg-blue-100/80 text-blue-800 rounded-full text-sm font-medium mb-6 backdrop-blur-sm border border-blue-200/50">
+                <Zap className="h-4 w-4 mr-2" />
+                AI-Powered Matching
+              </span>
+              <div className="flex justify-end mb-4">
+                <a href="/">
+                  <Button variant="outline" size="sm" className="text-sm">
+                    For Job Seekers →
+                  </Button>
+                </a>
+              </div>
               <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   Hire Top Talent 5x Faster with AI Matching
