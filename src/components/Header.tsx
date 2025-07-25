@@ -11,7 +11,15 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleNavClick = (sectionId: string) => {
-    if (location.pathname !== '/') {
+    const currentPath = location.pathname;
+    
+    if (currentPath === '/recruiter') {
+      // On recruiter page, scroll to recruiter sections
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else if (currentPath !== '/') {
       // Navigate to home page and then scroll to section
       navigate('/');
       setTimeout(() => {

@@ -14,39 +14,37 @@ const RecruiterHomepage = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24">
           <div className="max-w-4xl mx-auto">
             <div className="mb-8">
-              <span className="inline-flex items-center px-6 py-3 bg-blue-100/80 text-blue-800 rounded-full text-sm font-medium mb-6 backdrop-blur-sm border border-blue-200/50">
-                <Zap className="h-4 w-4 mr-2" />
-                AI-Powered Matching
-              </span>
-              <div className="flex justify-end mb-4">
-                <a href="/">
-                  <Button variant="outline" size="sm" className="text-sm">
-                    For Job Seekers →
-                  </Button>
-                </a>
-              </div>
               <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   Hire Top Talent 5x Faster with AI Matching
                 </span>
               </h1>
+              <span className="inline-flex items-center px-6 py-3 bg-blue-100/80 text-blue-800 rounded-full text-sm font-medium mb-6 backdrop-blur-sm border border-blue-200/50">
+                <Zap className="h-4 w-4 mr-2" />
+                AI-Powered Matching
+              </span>
             </div>
             
-            <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
               Stop sifting through hundreds of irrelevant resumes. Our AI instantly connects you with pre-qualified candidates who match your exact requirements and company culture.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-14">
+            <div className="flex flex-col gap-4 justify-center items-center mb-14">
               <a href="https://app.kuajiriapp.com/employer/register?tab=signup" target="_blank" rel="noopener noreferrer">
                 <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-base">
                   Start Hiring Today
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </a>
+              <a href="/">
+                <Button variant="outline" size="sm" className="text-sm">
+                  For Job Seekers →
+                </Button>
+              </a>
             </div>
             
             {/* Visual Aid */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border">
+            <div id="benefits" className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border">
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="text-center">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -112,7 +110,7 @@ const RecruiterHomepage = () => {
       </section>
 
       {/* Solution Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <section id="how-it-works" className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">

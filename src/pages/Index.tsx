@@ -14,33 +14,31 @@ const Index = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24">
           <div className="max-w-4xl mx-auto">
             <div className="mb-8">
-              <span className="inline-flex items-center px-6 py-3 bg-blue-100/80 text-blue-800 rounded-full text-sm font-medium mb-6 backdrop-blur-sm border border-blue-200/50">
-                <Zap className="h-4 w-4 mr-2" />
-                AI-Powered Matching
-              </span>
-              <div className="flex justify-end mb-4">
-                <a href="/recruiter">
-                  <Button variant="outline" size="sm" className="text-sm">
-                    For Recruiters →
-                  </Button>
-                </a>
-              </div>
               <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   Land Your Dream Job 10x Faster with AI
                 </span>
               </h1>
+              <span className="inline-flex items-center px-6 py-3 bg-blue-100/80 text-blue-800 rounded-full text-sm font-medium mb-6 backdrop-blur-sm border border-blue-200/50">
+                <Zap className="h-4 w-4 mr-2" />
+                AI-Powered Matching
+              </span>
             </div>
             
-            <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
               Stop wasting months applying to irrelevant jobs. Our AI matches you with opportunities that actually fit your skills, experience, and career goals - automatically.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-14">
+            <div className="flex flex-col gap-4 justify-center items-center mb-14">
               <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
                 <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-base">
                   Start Your Free Trial
                   <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </a>
+              <a href="/recruiter">
+                <Button variant="outline" size="sm" className="text-sm">
+                  For Recruiters →
                 </Button>
               </a>
             </div>
