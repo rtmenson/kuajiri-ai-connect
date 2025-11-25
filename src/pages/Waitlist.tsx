@@ -9,6 +9,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CheckCircle2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const waitlistSchema = z.object({
   userType: z.enum(["jobseeker", "jobposter"], {
@@ -24,6 +26,7 @@ type WaitlistFormData = z.infer<typeof waitlistSchema>;
 const Waitlist = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState<WaitlistFormData | null>(null);
+  const { toast } = useToast();
 
   const {
     register,
@@ -31,6 +34,7 @@ const Waitlist = () => {
     formState: { errors, isSubmitting },
     setValue,
     watch,
+    reset,
   } = useForm<WaitlistFormData>({
     resolver: zodResolver(waitlistSchema),
     defaultValues: {
@@ -41,13 +45,34 @@ const Waitlist = () => {
   const userType = watch("userType");
 
   const onSubmit = async (data: WaitlistFormData) => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setFormData(data);
-    setIsSubmitted(true);
-    
-    // Here you would typically send data to your backend
-    console.log("Waitlist submission:", data);
+    try {
+      const { error } = await supabase
+        .from("waitlist_submissions")
+        .insert({
+          user_type: data.userType,
+          full_name: data.fullName,
+          phone: data.phone,
+          email: data.email,
+        });
+
+      if (error) throw error;
+
+      setFormData(data);
+      setIsSubmitted(true);
+      reset();
+      
+      toast({
+        title: "Success!",
+        description: "You've been added to the waitlist.",
+      });
+    } catch (error) {
+      console.error("Error submitting to waitlist:", error);
+      toast({
+        title: "Error",
+        description: "Failed to join waitlist. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -177,7 +202,10 @@ const Waitlist = () => {
               <div className="pt-4">
                 <Button
                   variant="outline"
-                  onClick={() => setIsSubmitted(false)}
+                  onClick={() => {
+                    setIsSubmitted(false);
+                    reset({ phone: "+233" });
+                  }}
                   className="w-full"
                 >
                   Submit Another Entry
