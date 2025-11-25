@@ -272,16 +272,18 @@ const Pricing = () => {
                   ))}
                 </ul>
                 
-                <Button 
-                  className={`w-full mt-auto ${
-                    plan.popular 
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700' 
-                      : ''
-                  }`}
-                  variant={plan.popular ? 'default' : 'outline'}
-                >
-                  {plan.isFree ? 'Start Free Trial' : 'Start Free Trial'}
-                </Button>
+                <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer" className="w-full">
+                  <Button 
+                    className={`w-full mt-auto ${
+                      plan.popular 
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700' 
+                        : ''
+                    }`}
+                    variant={plan.popular ? 'default' : 'outline'}
+                  >
+                    {plan.isFree ? 'Start Free Trial' : 'Start Free Trial'}
+                  </Button>
+                </a>
               </div>
             ))}
           </div>
