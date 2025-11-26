@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CheckCircle2 } from "lucide-react";
-import Header from "@/components/Header";
+import { CheckCircle2, Zap } from "lucide-react";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -77,7 +76,22 @@ const Waitlist = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5">
-      <Header />
+      {/* Banner with Logo */}
+      <div className="w-full py-8 px-4 border-b border-border/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto flex flex-col items-center gap-4">
+          <div className="flex items-center gap-3">
+            <div className="bg-primary/10 p-2 rounded-lg">
+              <Zap className="w-8 h-8 text-primary" />
+            </div>
+            <span className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+              Kuajiri AI
+            </span>
+          </div>
+          <p className="text-lg md:text-xl font-semibold text-center text-foreground/90">
+            Coming Soon. Sign Up To Be The First To Know.
+          </p>
+        </div>
+      </div>
       
       <main className="flex-1 flex items-center justify-center px-4 py-16">
         <div className="w-full max-w-md">
