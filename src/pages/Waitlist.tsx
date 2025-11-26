@@ -86,8 +86,32 @@ const Waitlist = () => {
       </div>
       
       <main className="flex-1 flex items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md">
-          {!isSubmitted ? (
+        <div className="w-full max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          {/* Hero Content */}
+          <div className="space-y-8 text-center lg:text-left">
+            <div className="space-y-4">
+              <span className="inline-flex items-center px-6 py-3 bg-blue-100/80 text-blue-800 rounded-full text-sm font-medium backdrop-blur-sm border border-blue-200/50">
+                <Zap className="h-4 w-4 mr-2" />
+                AI-Powered Matching
+              </span>
+              
+              <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Perfect Matches.</span>
+                <br />
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Every Time.
+                </span>
+              </h1>
+              
+              <p className="text-lg md:text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                Our advanced AI proactively connects job seekers with their ideal opportunities and helps employers find the perfect candidates. Experience the future of recruitment today.
+              </p>
+            </div>
+          </div>
+
+          {/* Form Section */}
+          <div className="w-full max-w-md mx-auto lg:mx-0">
+            {!isSubmitted ? (
             <div className="bg-card border border-border rounded-2xl shadow-2xl p-8 space-y-8 animate-fade-in">
               <div className="text-center space-y-3">
                 <div className="flex items-center justify-center gap-3">
@@ -224,6 +248,7 @@ const Waitlist = () => {
               </div>
             </div>
           )}
+          </div>
         </div>
       </main>
 
