@@ -229,24 +229,11 @@ const Waitlist = () => {
                 <p className="text-muted-foreground">
                   Thank you for joining our waitlist, {formData?.fullName}!
                 </p>
-                <p className="text-sm text-muted-foreground">
-                  We'll contact you at <span className="font-medium text-foreground">{formData?.email}</span> as soon as the beta is released.
-                </p>
-              </div>
-
-              <div className="pt-4">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setIsSubmitted(false);
-                    reset({ phone: "+233" });
-                  }}
-                  className="w-full"
-                >
-                  Submit Another Entry
-                </Button>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                We'll contact you at <span className="font-medium text-foreground">{formData?.email}</span> as soon as the beta is released.
+              </p>
             </div>
+          </div>
           )}
           </div>
         </div>
