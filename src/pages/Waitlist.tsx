@@ -77,7 +77,7 @@ const Waitlist = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5">
       {/* Banner with Logo */}
-      <div className="w-full py-8 px-4 border-b border-border/50 backdrop-blur-sm">
+      <div className="w-full py-8 px-4 border-b border-border/50 bg-muted/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-4">
           <div className="flex items-center gap-3">
             <div className="bg-primary/10 p-2 rounded-lg">
@@ -87,7 +87,7 @@ const Waitlist = () => {
               Kuajiri AI
             </span>
           </div>
-          <p className="text-lg md:text-xl font-semibold text-center text-foreground/90">
+          <p className="text-sm md:text-base font-normal text-center text-muted-foreground">
             Coming Soon. Sign Up To Be The First To Know.
           </p>
         </div>
