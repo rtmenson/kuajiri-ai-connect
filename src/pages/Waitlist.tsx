@@ -76,18 +76,10 @@ const Waitlist = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5">
-      {/* Banner with Logo */}
-      <div className="w-full py-8 px-4 border-b border-border/50 bg-muted/80 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto flex flex-col items-center gap-4">
-          <div className="flex items-center gap-3">
-            <div className="bg-primary/10 p-2 rounded-lg">
-              <Zap className="w-8 h-8 text-primary" />
-            </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-              Kuajiri AI
-            </span>
-          </div>
-          <p className="text-sm md:text-base font-normal text-center text-muted-foreground">
+      {/* Banner */}
+      <div className="w-full py-3 px-4 border-b border-border/50" style={{ backgroundColor: '#111827' }}>
+        <div className="max-w-7xl mx-auto">
+          <p className="text-xs md:text-sm font-normal text-center text-gray-300">
             Coming Soon. Sign Up To Be The First To Know.
           </p>
         </div>
@@ -97,10 +89,15 @@ const Waitlist = () => {
         <div className="w-full max-w-md">
           {!isSubmitted ? (
             <div className="bg-card border border-border rounded-2xl shadow-2xl p-8 space-y-8 animate-fade-in">
-              <div className="text-center space-y-2">
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                  Join the Waitlist
-                </h1>
+              <div className="text-center space-y-3">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="bg-primary/10 p-2 rounded-lg">
+                    <Zap className="w-8 h-8 text-primary" />
+                  </div>
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                    Join the Waitlist
+                  </h1>
+                </div>
                 <p className="text-muted-foreground">
                   Be the first to know when we launch
                 </p>
