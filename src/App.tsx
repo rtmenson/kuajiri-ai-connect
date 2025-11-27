@@ -26,8 +26,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Waitlist />} />
-          <Route path="/waitlist" element={<WaitlistLanding />} />
+          <Route path="/" element={<WaitlistLanding />} />
+          <Route path="/waitlist" element={<Waitlist />} />
           <Route path="/jobseeker-homepage" element={<JobseekerHomepage />} />
           <Route path="/recruiter" element={<RecruiterHomepage />} />
           <Route path="/recruiter-waitlist" element={<RecruiterWaitlistLanding />} />
