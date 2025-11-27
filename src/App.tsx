@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import JobseekerHomepage from "./pages/JobseekerHomepage";
 import RecruiterHomepage from "./pages/RecruiterHomepage";
+import RecruiterWaitlistLanding from "./pages/RecruiterWaitlistLanding";
 import Pricing from "./pages/Pricing";
 import Demo from "./pages/Demo";
 import DemoVideo from "./pages/DemoVideo";
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/waitlist" element={<WaitlistLanding />} />
           <Route path="/jobseeker-homepage" element={<JobseekerHomepage />} />
           <Route path="/recruiter" element={<RecruiterHomepage />} />
+          <Route path="/recruiter-waitlist" element={<RecruiterWaitlistLanding />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/demo" element={<Demo />} />
           <Route path="/demo-video" element={<DemoVideo />} />
