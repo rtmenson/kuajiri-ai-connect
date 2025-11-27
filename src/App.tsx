@@ -13,6 +13,7 @@ import DemoVideo from "./pages/DemoVideo";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Waitlist from "./pages/Waitlist";
+import WaitlistLanding from "./pages/WaitlistLanding";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Waitlist />} />
+          <Route path="/waitlist" element={<WaitlistLanding />} />
           <Route path="/jobseeker-homepage" element={<JobseekerHomepage />} />
           <Route path="/recruiter" element={<RecruiterHomepage />} />
           <Route path="/pricing" element={<Pricing />} />
