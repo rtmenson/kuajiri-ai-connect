@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Check, UserPlus, Briefcase } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FAQ from '../components/FAQ';
@@ -272,7 +273,7 @@ const Pricing = () => {
                   ))}
                 </ul>
                 
-                <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer" className="w-full">
+                <Link to="/waitlist" className="w-full">
                   <Button 
                     className={`w-full mt-auto ${
                       plan.popular 
@@ -281,9 +282,9 @@ const Pricing = () => {
                     }`}
                     variant={plan.popular ? 'default' : 'outline'}
                   >
-                    {plan.isFree ? 'Start Free Trial' : 'Start Free Trial'}
+                    Join the Waitlist
                   </Button>
-                </a>
+                </Link>
               </div>
             ))}
           </div>
