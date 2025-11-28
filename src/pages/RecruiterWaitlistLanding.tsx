@@ -37,7 +37,7 @@ const RecruiterWaitlistLanding = () => {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <Link to="/waitlist">
+              <Link to="/">
                 <Button variant="outline" size="sm" className="text-sm">
                   For Job Seekers →
                 </Button>
