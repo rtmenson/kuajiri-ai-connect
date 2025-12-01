@@ -85,7 +85,6 @@ const Header = () => {
               >
                 How It Works
               </button>
-              <button onClick={handlePricingClick} className="text-gray-600 hover:text-blue-600 transition-colors text-sm">Pricing</button>
               <button onClick={handleRecruiterClick} className="text-gray-600 hover:text-blue-600 transition-colors text-sm">For Recruiters</button>
             </div>
           </nav>
@@ -131,7 +130,6 @@ const Header = () => {
               >
                 How It Works
               </button>
-              <button onClick={handlePricingClick} className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">Pricing</button>
               <button onClick={handleRecruiterClick} className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">For Recruiters</button>
               <div className="px-3 py-2 space-y-2">
                 <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
