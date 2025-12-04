@@ -1,5 +1,4 @@
 
-import { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import {
   DropdownMenu,
@@ -7,71 +6,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 const CountryFlag = () => {
-  const [currency, setCurrency] = useState<string>('USD');
-  const [flagEmoji, setFlagEmoji] = useState<string>('🇺🇸');
+  const { currency, setCurrency, flagEmoji } = useCurrency();
 
   const currencies = [
-    { code: 'USD', flag: '🇺🇸', country: 'United States' },
-    { code: 'GHS', flag: '🇬🇭', country: 'Ghana' },
-    { code: 'EUR', flag: '🇪🇺', country: 'Europe' },
-    { code: 'GBP', flag: '🇬🇧', country: 'United Kingdom' },
-    { code: 'CAD', flag: '🇨🇦', country: 'Canada' },
-    { code: 'AUD', flag: '🇦🇺', country: 'Australia' },
+    { code: 'USD' as const, flag: '🇺🇸', country: 'United States' },
+    { code: 'GHS' as const, flag: '🇬🇭', country: 'Ghana' },
   ];
-
-  useEffect(() => {
-    // Function to get country from IP and set appropriate currency
-    const getCountryFromIP = async () => {
-      try {
-        const response = await fetch('https://ipapi.co/json/');
-        const data = await response.json();
-        
-        if (data.country_code) {
-          const countryCode = data.country_code?.toUpperCase();
-          
-          // Set currency based on country
-          let detectedCurrency = 'USD';
-          let detectedFlag = '🇺🇸';
-          
-          const currencyMap: { [key: string]: { currency: string, flag: string } } = {
-            'GH': { currency: 'GHS', flag: '🇬🇭' },
-            'GB': { currency: 'GBP', flag: '🇬🇧' },
-            'CA': { currency: 'CAD', flag: '🇨🇦' },
-            'AU': { currency: 'AUD', flag: '🇦🇺' },
-            'DE': { currency: 'EUR', flag: '🇪🇺' },
-            'FR': { currency: 'EUR', flag: '🇪🇺' },
-            'IT': { currency: 'EUR', flag: '🇪🇺' },
-            'ES': { currency: 'EUR', flag: '🇪🇺' },
-          };
-          
-          if (currencyMap[countryCode]) {
-            detectedCurrency = currencyMap[countryCode].currency;
-            detectedFlag = currencyMap[countryCode].flag;
-          }
-          
-          setCurrency(detectedCurrency);
-          setFlagEmoji(detectedFlag);
-        }
-      } catch (error) {
-        console.log('Could not detect country:', error);
-        // Fallback to Ghana
-        setFlagEmoji('🇬🇭');
-        setCurrency('GHS');
-      }
-    };
-
-    getCountryFromIP();
-  }, []);
-
-  const handleCurrencyChange = (newCurrency: string) => {
-    const selectedCurrency = currencies.find(c => c.code === newCurrency);
-    if (selectedCurrency) {
-      setCurrency(newCurrency);
-      setFlagEmoji(selectedCurrency.flag);
-    }
-  };
 
   return (
     <DropdownMenu>
@@ -84,7 +27,7 @@ const CountryFlag = () => {
         {currencies.map((curr) => (
           <DropdownMenuItem
             key={curr.code}
-            onClick={() => handleCurrencyChange(curr.code)}
+            onClick={() => setCurrency(curr.code)}
             className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50"
           >
             <span>{curr.flag}</span>

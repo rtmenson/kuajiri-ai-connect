@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CurrencyProvider } from "./contexts/CurrencyContext";
 import Index from "./pages/Index";
 import JobseekerHomepage from "./pages/JobseekerHomepage";
 import RecruiterHomepage from "./pages/RecruiterHomepage";
@@ -21,27 +22,29 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<WaitlistLanding />} />
-          <Route path="/waitlist" element={<Waitlist />} />
-          <Route path="/jobseeker-homepage" element={<JobseekerHomepage />} />
-          <Route path="/recruiter" element={<RecruiterWaitlistLanding />} />
-          <Route path="/recruiter-waitlist" element={<RecruiterHomepage />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/demo" element={<Demo />} />
-          <Route path="/demo-video" element={<DemoVideo />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/home" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <CurrencyProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<WaitlistLanding />} />
+            <Route path="/waitlist" element={<Waitlist />} />
+            <Route path="/jobseeker-homepage" element={<JobseekerHomepage />} />
+            <Route path="/recruiter" element={<RecruiterWaitlistLanding />} />
+            <Route path="/recruiter-waitlist" element={<RecruiterHomepage />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/demo" element={<Demo />} />
+            <Route path="/demo-video" element={<DemoVideo />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/home" element={<Index />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </CurrencyProvider>
   </QueryClientProvider>
 );
 
