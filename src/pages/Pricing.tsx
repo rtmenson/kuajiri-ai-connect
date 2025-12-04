@@ -6,20 +6,44 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FAQ from '../components/FAQ';
+import { useCurrency } from '@/contexts/CurrencyContext';
+
+// USD base prices
+const USD_PRICES = {
+  jobseeker: { basic: 3, premium: 4.5, pro: 8 },
+  employer: { basic: 10, premium: 25, pro: 45 }
+};
+
+const GHS_RATE = 16;
 
 const Pricing = () => {
   const [selectedRole, setSelectedRole] = useState<'jobseeker' | 'employer' | null>(null);
   const [isAnnual, setIsAnnual] = useState(false);
+  const { currency } = useCurrency();
+
+  const formatPrice = (usdPrice: number) => {
+    if (currency === 'GHS') {
+      return `GH₵ ${Math.round(usdPrice * GHS_RATE)}`;
+    }
+    return `$${usdPrice}`;
+  };
+
+  const formatCreditPrice = (usdPrice: number) => {
+    if (currency === 'GHS') {
+      return `GH₵ ${(usdPrice * GHS_RATE).toFixed(2)}`;
+    }
+    return `$${usdPrice.toFixed(2)}`;
+  };
 
   const jobSeekerPlans = [
     {
       name: "Basic",
       description: "For job seekers starting their career journey",
-      monthlyPrice: 30,
+      monthlyPrice: USD_PRICES.jobseeker.basic,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "360 credits annually" : "30 credits monthly",
-        "GH₵ 1 per credit"
+        `${formatCreditPrice(0.10)} per credit`
       ],
       isFree: false,
       credits: isAnnual ? "360 credits/year" : "30 credits/month"
@@ -27,11 +51,11 @@ const Pricing = () => {
     {
       name: "Premium",
       description: "For active job seekers applying to multiple positions",
-      monthlyPrice: 45,
+      monthlyPrice: USD_PRICES.jobseeker.premium,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "600 credits annually" : "50 credits monthly",
-        "GH₵ 0.90 per credit",
+        `${formatCreditPrice(0.09)} per credit`,
         "Roll-on credits"
       ],
       popular: true,
@@ -41,11 +65,11 @@ const Pricing = () => {
     {
       name: "Pro",
       description: "For serious professionals maximizing career opportunities",
-      monthlyPrice: 80,
+      monthlyPrice: USD_PRICES.jobseeker.pro,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "1200 credits annually" : "100 credits monthly",
-        "GH₵ 0.80 per credit",
+        `${formatCreditPrice(0.08)} per credit`,
         "Roll-on credits"
       ],
       isFree: false,
@@ -57,11 +81,11 @@ const Pricing = () => {
     {
       name: "Basic",
       description: "For individuals or explorers just getting started",
-      monthlyPrice: 150,
+      monthlyPrice: USD_PRICES.employer.basic,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "360 credits annually" : "30 credits monthly",
-        "GH₵ 5 per credit"
+        `${formatCreditPrice(0.33)} per credit`
       ],
       isFree: false,
       credits: isAnnual ? "360 credits/year" : "30 credits/month"
@@ -69,11 +93,11 @@ const Pricing = () => {
     {
       name: "Premium",
       description: "For small teams filling multiple roles a month",
-      monthlyPrice: 399,
+      monthlyPrice: USD_PRICES.employer.premium,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "1200 credits annually" : "100 credits monthly",
-        "GH₵ 4.00 per credit",
+        `${formatCreditPrice(0.25)} per credit`,
         "Roll-on credits"
       ],
       popular: true,
@@ -83,11 +107,11 @@ const Pricing = () => {
     {
       name: "Pro",
       description: "For businesses filling several roles a month",
-      monthlyPrice: 699,
+      monthlyPrice: USD_PRICES.employer.pro,
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "2400 credits annually" : "200 credits monthly",
-        "GH₵ 3.50 per credit",
+        `${formatCreditPrice(0.22)} per credit`,
         "Roll-on credits"
       ],
       isFree: false,
@@ -95,12 +119,9 @@ const Pricing = () => {
     }
   ];
 
-  const calculatePrice = (monthlyPrice: number | string) => {
-    if (typeof monthlyPrice === 'string') return monthlyPrice;
-    if (isAnnual) {
-      return Math.round(monthlyPrice * 12 * 0.8);
-    }
-    return monthlyPrice;
+  const calculatePrice = (monthlyPrice: number) => {
+    const basePrice = isAnnual ? Math.round(monthlyPrice * 12 * 0.8) : monthlyPrice;
+    return formatPrice(basePrice);
   };
 
   const TrialBanner = () => (
@@ -253,7 +274,7 @@ const Pricing = () => {
                   </p>
                   <div className="mb-4">
                     <span className="text-3xl font-bold text-gray-900">
-                      {typeof plan.monthlyPrice === 'string' ? plan.monthlyPrice : `GH₵ ${calculatePrice(plan.monthlyPrice)}`}
+                      {calculatePrice(plan.monthlyPrice)}
                     </span>
                     <span className="text-gray-600"> {plan.period}</span>
                     {plan.credits && (
