@@ -41,7 +41,8 @@ type WaitlistFormData = z.infer<typeof waitlistSchema>;
 const Waitlist = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState<WaitlistFormData | null>(null);
-  const [shareContact, setShareContact] = useState("");
+  const [sharePhone, setSharePhone] = useState("");
+  const [shareEmail, setShareEmail] = useState("");
   const { toast } = useToast();
 
   const {
@@ -64,32 +65,32 @@ const Waitlist = () => {
   const invitationMessage = `Hi, I just signed up for Kuajiri AI. It's a job platform that uses AI to match job seekers with job opportunities. You can join here: ${WAITLIST_URL}`;
 
   const handleShareWhatsApp = () => {
-    if (!shareContact.trim()) {
+    if (!sharePhone.trim()) {
       toast({ title: "Please enter a phone number", variant: "destructive" });
       return;
     }
-    const phone = shareContact.replace(/[^0-9]/g, "");
+    const phone = sharePhone.replace(/[^0-9]/g, "");
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(invitationMessage)}`;
     window.open(url, "_blank");
   };
 
   const handleShareSMS = () => {
-    if (!shareContact.trim()) {
+    if (!sharePhone.trim()) {
       toast({ title: "Please enter a phone number", variant: "destructive" });
       return;
     }
-    const url = `sms:${shareContact}?body=${encodeURIComponent(invitationMessage)}`;
+    const url = `sms:${sharePhone}?body=${encodeURIComponent(invitationMessage)}`;
     window.open(url, "_blank");
   };
 
   const handleShareEmail = () => {
-    if (!shareContact.trim()) {
+    if (!shareEmail.trim()) {
       toast({ title: "Please enter an email address", variant: "destructive" });
       return;
     }
     const subject = encodeURIComponent("Join Kuajiri AI - AI-Powered Job Matching");
     const body = encodeURIComponent(invitationMessage);
-    const url = `mailto:${shareContact}?subject=${subject}&body=${body}`;
+    const url = `mailto:${shareEmail}?subject=${subject}&body=${body}`;
     window.open(url, "_blank");
   };
 
@@ -307,42 +308,59 @@ const Waitlist = () => {
               <div className="border-t border-border pt-6 space-y-4">
                 <p className="text-sm font-medium text-foreground">Share Kuajiri AI with a friend</p>
                 
-                <div className="space-y-3">
-                  <Input
-                    value={shareContact}
-                    onChange={(e) => setShareContact(e.target.value)}
-                    placeholder="Enter phone number or email"
-                    className="h-11"
-                  />
-                  
-                  <div className="grid grid-cols-3 gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleShareWhatsApp}
-                      className="flex items-center gap-2"
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      WhatsApp
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleShareSMS}
-                      className="flex items-center gap-2"
-                    >
-                      <Send className="w-4 h-4" />
-                      SMS
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleShareEmail}
-                      className="flex items-center gap-2"
-                    >
-                      <Mail className="w-4 h-4" />
-                      Email
-                    </Button>
+                <div className="space-y-4">
+                  {/* Phone sharing */}
+                  <div className="space-y-2">
+                    <Label className="text-xs text-muted-foreground">Share via WhatsApp or SMS</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        value={sharePhone}
+                        onChange={(e) => setSharePhone(e.target.value)}
+                        placeholder="Enter phone number"
+                        className="h-10 flex-1"
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleShareWhatsApp}
+                        className="flex items-center gap-1 h-10"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        WhatsApp
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleShareSMS}
+                        className="flex items-center gap-1 h-10"
+                      >
+                        <Send className="w-4 h-4" />
+                        SMS
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Email sharing */}
+                  <div className="space-y-2">
+                    <Label className="text-xs text-muted-foreground">Share via Email</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        value={shareEmail}
+                        onChange={(e) => setShareEmail(e.target.value)}
+                        placeholder="Enter email address"
+                        type="email"
+                        className="h-10 flex-1"
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleShareEmail}
+                        className="flex items-center gap-1 h-10"
+                      >
+                        <Mail className="w-4 h-4" />
+                        Email
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
