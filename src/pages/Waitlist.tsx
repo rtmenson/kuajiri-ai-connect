@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -6,19 +6,45 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CheckCircle2, Zap, MessageCircle, Mail, Send } from "lucide-react";
+import { CheckCircle2, Zap, MessageCircle, Mail, Send, ChevronDown } from "lucide-react";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const WAITLIST_URL = "https://kuajiri.lovable.app/waitlist";
+
+const COUNTRY_CODES = [
+  { code: "+233", country: "Ghana", flag: "🇬🇭" },
+  { code: "+1", country: "USA", flag: "🇺🇸" },
+  { code: "+44", country: "UK", flag: "🇬🇧" },
+  { code: "+234", country: "Nigeria", flag: "🇳🇬" },
+  { code: "+27", country: "South Africa", flag: "🇿🇦" },
+  { code: "+254", country: "Kenya", flag: "🇰🇪" },
+  { code: "+49", country: "Germany", flag: "🇩🇪" },
+  { code: "+33", country: "France", flag: "🇫🇷" },
+  { code: "+91", country: "India", flag: "🇮🇳" },
+  { code: "+86", country: "China", flag: "🇨🇳" },
+];
 
 const baseSchema = {
   userType: z.enum(["jobseeker", "jobposter"], {
     required_error: "Please select your user type",
   }),
   fullName: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
-  phone: z.string().trim().min(9, "Please enter a valid phone number").max(15),
+  phone: z.string().trim().min(5, "Please enter a valid phone number").max(20),
   email: z.string().trim().email("Please enter a valid email address").max(255),
   companyName: z.string().optional(),
 };
@@ -43,7 +69,41 @@ const Waitlist = () => {
   const [formData, setFormData] = useState<WaitlistFormData | null>(null);
   const [sharePhone, setSharePhone] = useState("");
   const [shareEmail, setShareEmail] = useState("");
+  const [countryCode, setCountryCode] = useState("+233");
+  const [shareCountryCode, setShareCountryCode] = useState("+233");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const { toast } = useToast();
+
+  // Detect country from IP
+  useEffect(() => {
+    const detectCountry = async () => {
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        
+        const countryMapping: Record<string, string> = {
+          'GH': '+233',
+          'US': '+1',
+          'GB': '+44',
+          'NG': '+234',
+          'ZA': '+27',
+          'KE': '+254',
+          'DE': '+49',
+          'FR': '+33',
+          'IN': '+91',
+          'CN': '+86',
+        };
+        
+        const detectedCode = countryMapping[data.country_code] || '+1';
+        setCountryCode(detectedCode);
+        setShareCountryCode(detectedCode);
+      } catch (error) {
+        console.log('Could not detect country:', error);
+      }
+    };
+
+    detectCountry();
+  }, []);
 
   const {
     register,
@@ -55,22 +115,28 @@ const Waitlist = () => {
   } = useForm<WaitlistFormData>({
     resolver: zodResolver(waitlistSchema),
     defaultValues: {
-      phone: "+233",
+      phone: "",
       companyName: "",
     },
   });
 
   const userType = watch("userType");
 
+  // Update the phone field when country code or phone number changes
+  useEffect(() => {
+    setValue("phone", `${countryCode}${phoneNumber}`);
+  }, [countryCode, phoneNumber, setValue]);
+
   const invitationMessage = `Hi, I just signed up for Kuajiri AI. It's a job platform that uses AI to match job seekers with job opportunities. You can join here: ${WAITLIST_URL}`;
+  const emailSubject = "Join Kuajiri AI - AI-Powered Job Matching";
 
   const handleShareWhatsApp = () => {
     if (!sharePhone.trim()) {
       toast({ title: "Please enter a phone number", variant: "destructive" });
       return;
     }
-    const phone = sharePhone.replace(/[^0-9]/g, "");
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(invitationMessage)}`;
+    const fullPhone = `${shareCountryCode}${sharePhone}`.replace(/[^0-9]/g, "");
+    const url = `https://wa.me/${fullPhone}?text=${encodeURIComponent(invitationMessage)}`;
     window.open(url, "_blank");
   };
 
@@ -79,18 +145,34 @@ const Waitlist = () => {
       toast({ title: "Please enter a phone number", variant: "destructive" });
       return;
     }
-    const url = `sms:${sharePhone}?body=${encodeURIComponent(invitationMessage)}`;
+    const fullPhone = `${shareCountryCode}${sharePhone}`;
+    const url = `sms:${fullPhone}?body=${encodeURIComponent(invitationMessage)}`;
     window.open(url, "_blank");
   };
 
-  const handleShareEmail = () => {
+  const handleShareEmail = (client: 'default' | 'gmail' | 'outlook' | 'yahoo') => {
     if (!shareEmail.trim()) {
       toast({ title: "Please enter an email address", variant: "destructive" });
       return;
     }
-    const subject = encodeURIComponent("Join Kuajiri AI - AI-Powered Job Matching");
+    
+    const subject = encodeURIComponent(emailSubject);
     const body = encodeURIComponent(invitationMessage);
-    const url = `mailto:${shareEmail}?subject=${subject}&body=${body}`;
+    
+    let url = '';
+    switch (client) {
+      case 'gmail':
+        url = `https://mail.google.com/mail/?view=cm&to=${shareEmail}&su=${subject}&body=${body}`;
+        break;
+      case 'outlook':
+        url = `https://outlook.live.com/mail/0/deeplink/compose?to=${shareEmail}&subject=${subject}&body=${body}`;
+        break;
+      case 'yahoo':
+        url = `https://compose.mail.yahoo.com/?to=${shareEmail}&subject=${subject}&body=${body}`;
+        break;
+      default:
+        url = `mailto:${shareEmail}?subject=${subject}&body=${body}`;
+    }
     window.open(url, "_blank");
   };
 
@@ -124,6 +206,9 @@ const Waitlist = () => {
       });
     }
   };
+
+  const selectedCountry = COUNTRY_CODES.find(c => c.code === countryCode) || COUNTRY_CODES[0];
+  const selectedShareCountry = COUNTRY_CODES.find(c => c.code === shareCountryCode) || COUNTRY_CODES[0];
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5">
@@ -250,12 +335,36 @@ const Waitlist = () => {
                   <Label htmlFor="phone">
                     {userType === "jobposter" ? "Company Phone Number" : "Phone Number"}
                   </Label>
-                  <Input
-                    id="phone"
-                    {...register("phone")}
-                    placeholder="+233 XX XXX XXXX"
-                    className="h-11"
-                  />
+                  <div className="flex gap-2">
+                    <Select value={countryCode} onValueChange={setCountryCode}>
+                      <SelectTrigger className="w-[120px] h-11">
+                        <SelectValue>
+                          <span className="flex items-center gap-1">
+                            <span>{selectedCountry.flag}</span>
+                            <span className="text-sm">{selectedCountry.code}</span>
+                          </span>
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent className="bg-background border border-border z-50">
+                        {COUNTRY_CODES.map((country) => (
+                          <SelectItem key={country.code} value={country.code}>
+                            <span className="flex items-center gap-2">
+                              <span>{country.flag}</span>
+                              <span>{country.code}</span>
+                              <span className="text-muted-foreground text-xs">{country.country}</span>
+                            </span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      id="phone"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      placeholder="XX XXX XXXX"
+                      className="h-11 flex-1"
+                    />
+                  </div>
                   {errors.phone && (
                     <p className="text-sm text-destructive">{errors.phone.message}</p>
                   )}
@@ -313,10 +422,30 @@ const Waitlist = () => {
                   <div className="space-y-2">
                     <Label className="text-xs text-muted-foreground">Share via WhatsApp or SMS</Label>
                     <div className="flex gap-2">
+                      <Select value={shareCountryCode} onValueChange={setShareCountryCode}>
+                        <SelectTrigger className="w-[100px] h-10">
+                          <SelectValue>
+                            <span className="flex items-center gap-1">
+                              <span>{selectedShareCountry.flag}</span>
+                              <span className="text-xs">{selectedShareCountry.code}</span>
+                            </span>
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent className="bg-background border border-border z-50">
+                          {COUNTRY_CODES.map((country) => (
+                            <SelectItem key={country.code} value={country.code}>
+                              <span className="flex items-center gap-2">
+                                <span>{country.flag}</span>
+                                <span>{country.code}</span>
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <Input
                         value={sharePhone}
                         onChange={(e) => setSharePhone(e.target.value)}
-                        placeholder="Enter phone number"
+                        placeholder="Phone number"
                         className="h-10 flex-1"
                       />
                       <Button
@@ -326,7 +455,7 @@ const Waitlist = () => {
                         className="flex items-center gap-1 h-10"
                       >
                         <MessageCircle className="w-4 h-4" />
-                        WhatsApp
+                        <span className="hidden sm:inline">WhatsApp</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -335,7 +464,7 @@ const Waitlist = () => {
                         className="flex items-center gap-1 h-10"
                       >
                         <Send className="w-4 h-4" />
-                        SMS
+                        <span className="hidden sm:inline">SMS</span>
                       </Button>
                     </div>
                   </div>
@@ -351,15 +480,37 @@ const Waitlist = () => {
                         type="email"
                         className="h-10 flex-1"
                       />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleShareEmail}
-                        className="flex items-center gap-1 h-10"
-                      >
-                        <Mail className="w-4 h-4" />
-                        Email
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-1 h-10"
+                          >
+                            <Mail className="w-4 h-4" />
+                            Send
+                            <ChevronDown className="w-3 h-3" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="bg-background border border-border z-50">
+                          <DropdownMenuItem onClick={() => handleShareEmail('default')}>
+                            <Mail className="w-4 h-4 mr-2" />
+                            Default Email App
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleShareEmail('gmail')}>
+                            <span className="w-4 h-4 mr-2 flex items-center justify-center text-sm">📧</span>
+                            Gmail
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleShareEmail('outlook')}>
+                            <span className="w-4 h-4 mr-2 flex items-center justify-center text-sm">📬</span>
+                            Outlook
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleShareEmail('yahoo')}>
+                            <span className="w-4 h-4 mr-2 flex items-center justify-center text-sm">📨</span>
+                            Yahoo Mail
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </div>
                 </div>
