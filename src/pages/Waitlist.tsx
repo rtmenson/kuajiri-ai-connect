@@ -135,8 +135,7 @@ const Waitlist = () => {
       toast({ title: "Please enter a phone number", variant: "destructive" });
       return;
     }
-    const fullPhone = `${shareCountryCode}${sharePhone}`.replace(/[^0-9]/g, "");
-    const url = `https://api.whatsapp.com/send/?phone=${fullPhone}&text=${encodeURIComponent(invitationMessage)}`;
+    const url = `https://api.whatsapp.com/send/?text=${encodeURIComponent(invitationMessage)}`;
     window.open(url, "_blank");
   };
 
@@ -419,7 +418,7 @@ const Waitlist = () => {
                 
                 <div className="space-y-4">
                   {/* Phone sharing */}
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Label className="text-xs text-muted-foreground">Share via WhatsApp or SMS</Label>
                     <div className="flex gap-2">
                       <Select value={shareCountryCode} onValueChange={setShareCountryCode}>
@@ -446,25 +445,27 @@ const Waitlist = () => {
                         value={sharePhone}
                         onChange={(e) => setSharePhone(e.target.value)}
                         placeholder="Phone number"
-                        className="h-10 flex-1 min-w-[140px]"
+                        className="h-10 flex-1"
                       />
+                    </div>
+                    <div className="flex gap-2">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={handleShareWhatsApp}
-                        className="flex items-center gap-1 h-10"
+                        className="flex items-center gap-2 h-10 flex-1"
                       >
                         <MessageCircle className="w-4 h-4" />
-                        <span className="hidden sm:inline">WhatsApp</span>
+                        WhatsApp
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={handleShareSMS}
-                        className="flex items-center gap-1 h-10"
+                        className="flex items-center gap-2 h-10 flex-1"
                       >
                         <Send className="w-4 h-4" />
-                        <span className="hidden sm:inline">SMS</span>
+                        SMS
                       </Button>
                     </div>
                   </div>
