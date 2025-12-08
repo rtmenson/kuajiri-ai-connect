@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const WAITLIST_URL = "https://kuajiri.lovable.app/waitlist";
+const WAITLIST_URL = "https://kuajiriapp.com";
 
 const COUNTRY_CODES = [
   { code: "+233", country: "Ghana", flag: "🇬🇭" },
@@ -136,7 +136,7 @@ const Waitlist = () => {
       return;
     }
     const fullPhone = `${shareCountryCode}${sharePhone}`.replace(/[^0-9]/g, "");
-    const url = `https://wa.me/${fullPhone}?text=${encodeURIComponent(invitationMessage)}`;
+    const url = `https://api.whatsapp.com/send/?phone=${fullPhone}&text=${encodeURIComponent(invitationMessage)}`;
     window.open(url, "_blank");
   };
 
@@ -423,7 +423,7 @@ const Waitlist = () => {
                     <Label className="text-xs text-muted-foreground">Share via WhatsApp or SMS</Label>
                     <div className="flex gap-2">
                       <Select value={shareCountryCode} onValueChange={setShareCountryCode}>
-                        <SelectTrigger className="w-[100px] h-10">
+                        <SelectTrigger className="w-[110px] h-10 flex-shrink-0">
                           <SelectValue>
                             <span className="flex items-center gap-1">
                               <span>{selectedShareCountry.flag}</span>
@@ -446,7 +446,7 @@ const Waitlist = () => {
                         value={sharePhone}
                         onChange={(e) => setSharePhone(e.target.value)}
                         placeholder="Phone number"
-                        className="h-10 flex-1"
+                        className="h-10 flex-1 min-w-[140px]"
                       />
                       <Button
                         variant="outline"
