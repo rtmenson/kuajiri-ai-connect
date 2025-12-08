@@ -66,6 +66,7 @@ type WaitlistFormData = z.infer<typeof waitlistSchema>;
 
 const Waitlist = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isAlreadyOnList, setIsAlreadyOnList] = useState(false);
   const [formData, setFormData] = useState<WaitlistFormData | null>(null);
   const [sharePhone, setSharePhone] = useState("");
   const [shareEmail, setShareEmail] = useState("");
@@ -177,6 +178,22 @@ const Waitlist = () => {
 
   const onSubmit = async (data: WaitlistFormData) => {
     try {
+      // Check if email already exists
+      const { data: existingEntry } = await supabase
+        .from("waitlist_submissions")
+        .select("email, full_name")
+        .eq("email", data.email)
+        .maybeSingle();
+
+      if (existingEntry) {
+        // User already on the list - show friendly message
+        setFormData({ ...data, fullName: existingEntry.full_name });
+        setIsAlreadyOnList(true);
+        setIsSubmitted(true);
+        reset();
+        return;
+      }
+
       const { error } = await supabase
         .from("waitlist_submissions")
         .insert({
@@ -189,6 +206,7 @@ const Waitlist = () => {
       if (error) throw error;
 
       setFormData(data);
+      setIsAlreadyOnList(false);
       setIsSubmitted(true);
       reset();
       
@@ -403,9 +421,13 @@ const Waitlist = () => {
               </div>
               
               <div className="space-y-3">
-                <h2 className="text-2xl font-bold">You're on the list!</h2>
+                <h2 className="text-2xl font-bold">
+                  {isAlreadyOnList ? "Great news! You're already on the list! 🎉" : "You're on the list!"}
+                </h2>
                 <p className="text-muted-foreground">
-                  Thank you for joining our waitlist, {formData?.fullName}!
+                  {isAlreadyOnList 
+                    ? `Hey ${formData?.fullName}, we already have you on our waitlist!` 
+                    : `Thank you for joining our waitlist, ${formData?.fullName}!`}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   We'll contact you at <span className="font-medium text-foreground">{formData?.email}</span> as soon as the beta is released.
