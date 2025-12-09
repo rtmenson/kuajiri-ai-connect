@@ -8,42 +8,60 @@ import Footer from '../components/Footer';
 import FAQ from '../components/FAQ';
 import { useCurrency } from '@/contexts/CurrencyContext';
 
-// USD base prices
-const USD_PRICES = {
-  jobseeker: { basic: 3, premium: 4.5, pro: 8 },
-  employer: { basic: 10, premium: 25, pro: 45 }
+// Independent pricing for USD and GHS
+const PRICES = {
+  jobseeker: {
+    usd: { basic: 3, premium: 4.5, pro: 8 },
+    ghs: { basic: 30, premium: 45, pro: 80 }
+  },
+  employer: {
+    usd: { basic: 10, premium: 25, pro: 45 },
+    ghs: { basic: 160, premium: 400, pro: 720 }
+  }
 };
 
-const GHS_RATE = 16;
+// Credits per plan
+const CREDITS = {
+  jobseeker: { basic: 30, premium: 50, pro: 100 },
+  employer: { basic: 30, premium: 100, pro: 200 }
+};
 
 const Pricing = () => {
   const [selectedRole, setSelectedRole] = useState<'jobseeker' | 'employer' | null>(null);
   const [isAnnual, setIsAnnual] = useState(false);
   const { currency } = useCurrency();
 
-  const formatPrice = (usdPrice: number) => {
+  const getPrice = (role: 'jobseeker' | 'employer', plan: 'basic' | 'premium' | 'pro') => {
     if (currency === 'GHS') {
-      return `GH₵ ${Math.round(usdPrice * GHS_RATE)}`;
+      return PRICES[role].ghs[plan];
     }
-    return `$${usdPrice}`;
+    return PRICES[role].usd[plan];
   };
 
-  const formatCreditPrice = (usdPrice: number) => {
+  const formatPrice = (price: number) => {
     if (currency === 'GHS') {
-      return `GH₵ ${(usdPrice * GHS_RATE).toFixed(2)}`;
+      return `GH₵ ${price}`;
     }
-    return `$${usdPrice.toFixed(2)}`;
+    return `$${price}`;
+  };
+
+  const formatCreditPrice = (price: number, credits: number) => {
+    const perCredit = price / credits;
+    if (currency === 'GHS') {
+      return `GH₵ ${perCredit.toFixed(2)}`;
+    }
+    return `$${perCredit.toFixed(2)}`;
   };
 
   const jobSeekerPlans = [
     {
       name: "Basic",
       description: "For job seekers starting their career journey",
-      monthlyPrice: USD_PRICES.jobseeker.basic,
+      price: getPrice('jobseeker', 'basic'),
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "360 credits annually" : "30 credits monthly",
-        `${formatCreditPrice(0.10)} per credit`
+        `${formatCreditPrice(getPrice('jobseeker', 'basic'), CREDITS.jobseeker.basic)} per credit`
       ],
       isFree: false,
       credits: isAnnual ? "360 credits/year" : "30 credits/month"
@@ -51,11 +69,11 @@ const Pricing = () => {
     {
       name: "Premium",
       description: "For active job seekers applying to multiple positions",
-      monthlyPrice: USD_PRICES.jobseeker.premium,
+      price: getPrice('jobseeker', 'premium'),
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "600 credits annually" : "50 credits monthly",
-        `${formatCreditPrice(0.09)} per credit`,
+        `${formatCreditPrice(getPrice('jobseeker', 'premium'), CREDITS.jobseeker.premium)} per credit`,
         "Roll-on credits"
       ],
       popular: true,
@@ -65,11 +83,11 @@ const Pricing = () => {
     {
       name: "Pro",
       description: "For serious professionals maximizing career opportunities",
-      monthlyPrice: USD_PRICES.jobseeker.pro,
+      price: getPrice('jobseeker', 'pro'),
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "1200 credits annually" : "100 credits monthly",
-        `${formatCreditPrice(0.08)} per credit`,
+        `${formatCreditPrice(getPrice('jobseeker', 'pro'), CREDITS.jobseeker.pro)} per credit`,
         "Roll-on credits"
       ],
       isFree: false,
@@ -81,11 +99,11 @@ const Pricing = () => {
     {
       name: "Basic",
       description: "For individuals or explorers just getting started",
-      monthlyPrice: USD_PRICES.employer.basic,
+      price: getPrice('employer', 'basic'),
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "360 credits annually" : "30 credits monthly",
-        `${formatCreditPrice(0.33)} per credit`
+        `${formatCreditPrice(getPrice('employer', 'basic'), CREDITS.employer.basic)} per credit`
       ],
       isFree: false,
       credits: isAnnual ? "360 credits/year" : "30 credits/month"
@@ -93,11 +111,11 @@ const Pricing = () => {
     {
       name: "Premium",
       description: "For small teams filling multiple roles a month",
-      monthlyPrice: USD_PRICES.employer.premium,
+      price: getPrice('employer', 'premium'),
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "1200 credits annually" : "100 credits monthly",
-        `${formatCreditPrice(0.25)} per credit`,
+        `${formatCreditPrice(getPrice('employer', 'premium'), CREDITS.employer.premium)} per credit`,
         "Roll-on credits"
       ],
       popular: true,
@@ -107,11 +125,11 @@ const Pricing = () => {
     {
       name: "Pro",
       description: "For businesses filling several roles a month",
-      monthlyPrice: USD_PRICES.employer.pro,
+      price: getPrice('employer', 'pro'),
       period: isAnnual ? "per year" : "per month",
       features: [
         isAnnual ? "2400 credits annually" : "200 credits monthly",
-        `${formatCreditPrice(0.22)} per credit`,
+        `${formatCreditPrice(getPrice('employer', 'pro'), CREDITS.employer.pro)} per credit`,
         "Roll-on credits"
       ],
       isFree: false,
@@ -119,8 +137,8 @@ const Pricing = () => {
     }
   ];
 
-  const calculatePrice = (monthlyPrice: number) => {
-    const basePrice = isAnnual ? Math.round(monthlyPrice * 12 * 0.8) : monthlyPrice;
+  const calculatePrice = (price: number) => {
+    const basePrice = isAnnual ? Math.round(price * 12 * 0.8) : price;
     return formatPrice(basePrice);
   };
 
@@ -274,7 +292,7 @@ const Pricing = () => {
                   </p>
                   <div className="mb-4">
                     <span className="text-3xl font-bold text-gray-900">
-                      {calculatePrice(plan.monthlyPrice)}
+                      {calculatePrice(plan.price)}
                     </span>
                     <span className="text-gray-600"> {plan.period}</span>
                     {plan.credits && (
