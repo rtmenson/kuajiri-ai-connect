@@ -11,14 +11,14 @@ serve(async (req) => {
   }
 
   try {
-    const { jobTitle, salaryMin, salaryMax, requirements } = await req.json();
+    const { jobTitle, salaryMin, salaryMax, requirements, brandColor, companyName, hasLogo } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    console.log("Generating job post for:", jobTitle);
+    console.log("Generating job post for:", jobTitle, "with brand color:", brandColor);
 
     // Generate job description and social content
     const textResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -32,12 +32,13 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `You are a professional HR copywriter specializing in engaging job posts for the Ghanaian market. Generate content that is professional yet approachable, and culturally relevant to Ghana.`
+            content: `You are a professional HR copywriter specializing in engaging job posts for the Ghanaian market. Generate content that is professional yet approachable, and culturally relevant to Ghana. The company name is "${companyName}".`
           },
           {
             role: "user",
             content: `Create a job post for the following position:
 
+Company: ${companyName}
 Job Title: ${jobTitle}
 Salary Range: GH₵${salaryMin.toLocaleString()} - GH₵${salaryMax.toLocaleString()}
 Key Requirements:
@@ -48,7 +49,7 @@ Key Requirements:
 Please provide:
 1. A professional job description (150-200 words) including responsibilities, requirements, and a compelling call to action
 2. A witty one-liner for social media posts (max 100 characters, include relevant emoji)
-3. A LinkedIn/Instagram caption (2-3 sentences with hashtags)
+3. A LinkedIn/Instagram caption (2-3 sentences with hashtags, mention the company name)
 
 Format your response as JSON with keys: "description", "oneLiner", "socialCaption"`
           }
@@ -82,7 +83,6 @@ Format your response as JSON with keys: "description", "oneLiner", "socialCaptio
     // Parse the JSON response
     let parsedContent;
     try {
-      // Extract JSON from markdown code blocks if present
       const jsonMatch = generatedText.match(/```json\s*([\s\S]*?)\s*```/) || 
                         generatedText.match(/```\s*([\s\S]*?)\s*```/);
       const jsonStr = jsonMatch ? jsonMatch[1] : generatedText;
@@ -92,23 +92,26 @@ Format your response as JSON with keys: "description", "oneLiner", "socialCaptio
       parsedContent = {
         description: generatedText,
         oneLiner: `🔥 We're hiring! ${jobTitle} | GH₵${salaryMin.toLocaleString()}+ | Apply now!`,
-        socialCaption: `Exciting opportunity! We're looking for a ${jobTitle}. #Hiring #GhanaJobs #Kuajiri`
+        socialCaption: `Exciting opportunity at ${companyName}! We're looking for a ${jobTitle}. #Hiring #GhanaJobs #Kuajiri`
       };
     }
 
-    // Generate social media graphic
+    // Generate social media graphic with brand color
+    const colorName = getColorName(brandColor);
     const imagePrompt = `Create a modern, professional job posting graphic for social media. 
     The design should be:
-    - Clean and corporate with a vibrant accent color (preferably green or blue)
-    - Feature the text "${jobTitle}" prominently
-    - Include "GH₵${salaryMin.toLocaleString()} - GH₵${salaryMax.toLocaleString()}" as salary
-    - Have "WE'RE HIRING!" as a headline
-    - Include a small watermark "Powered by Kuajiri AI" at the bottom
+    - Clean and corporate with ${colorName} (${brandColor}) as the primary accent color
+    - Feature the text "${jobTitle}" prominently in large bold letters
+    - Include "GH₵${salaryMin.toLocaleString()} - GH₵${salaryMax.toLocaleString()}" as salary range
+    - Have "WE'RE HIRING!" as a headline at the top
+    - Include company name "${companyName}" prominently
+    - Include a small watermark "Powered by Kuajiri AI" at the bottom right corner
     - Square format (1:1 ratio) suitable for Instagram and LinkedIn
-    - Modern, minimalist style with geometric elements
-    - Professional business aesthetic suitable for Ghana's corporate environment`;
+    - Modern, minimalist style with geometric elements and clean typography
+    - Professional business aesthetic suitable for Ghana's corporate environment
+    - Use the brand color ${brandColor} for key elements like headers, borders, or accents`;
 
-    console.log("Generating image...");
+    console.log("Generating image with brand color:", brandColor);
     
     const imageResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -158,3 +161,17 @@ Format your response as JSON with keys: "description", "oneLiner", "socialCaptio
     });
   }
 });
+
+function getColorName(hex: string): string {
+  const colors: Record<string, string> = {
+    "#2563eb": "blue",
+    "#7c3aed": "purple",
+    "#16a34a": "green",
+    "#dc2626": "red",
+    "#ea580c": "orange",
+    "#0d9488": "teal",
+    "#db2777": "pink",
+    "#4f46e5": "indigo",
+  };
+  return colors[hex.toLowerCase()] || "vibrant";
+}
