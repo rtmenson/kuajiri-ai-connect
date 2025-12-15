@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, Users, Clock, Shield, Star, ArrowRight, Zap } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { Link } from 'react-router-dom';
 
-const Index = () => {
+const WaitlistLanding = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -30,17 +31,17 @@ const Index = () => {
             </p>
             
             <div className="flex flex-col gap-4 justify-center items-center mb-14">
-              <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
+              <Link to="/waitlist">
                 <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-base">
-                  Start Your Free Trial
+                  Join the Waitlist
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-              </a>
-              <a href="/recruiter">
+              </Link>
+              <Link to="/recruiter">
                 <Button variant="outline" size="sm" className="text-sm">
                   For Recruiters →
                 </Button>
-              </a>
+              </Link>
             </div>
             
             {/* Visual Aid */}
@@ -216,7 +217,7 @@ const Index = () => {
               <div className="space-y-4">
                 <div className="flex items-start">
                   <CheckCircle className="h-5 w-5 text-blue-600 mt-1 mr-3 flex-shrink-0" />
-                  <span className="text-gray-700">30-day free trial - see results before you pay anything</span>
+                  <span className="text-gray-700">Be the first to know when we launch</span>
                 </div>
                 <div className="flex items-start">
                   <CheckCircle className="h-5 w-5 text-purple-600 mt-1 mr-3 flex-shrink-0" />
@@ -224,7 +225,7 @@ const Index = () => {
                 </div>
                 <div className="flex items-start">
                   <CheckCircle className="h-5 w-5 text-indigo-600 mt-1 mr-3 flex-shrink-0" />
-                  <span className="text-gray-700">Cancel anytime, no long-term contracts</span>
+                  <span className="text-gray-700">No commitment required to join</span>
                 </div>
                 <div className="flex items-start">
                   <CheckCircle className="h-5 w-5 text-violet-600 mt-1 mr-3 flex-shrink-0" />
@@ -301,37 +302,33 @@ const Index = () => {
             </p>
             
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-8 max-w-2xl mx-auto">
-              <h3 className="text-xl font-bold text-white mb-4">Why Start Today?</h3>
+              <h3 className="text-xl font-bold text-white mb-4">Why Join Today?</h3>
               <div className="grid md:grid-cols-2 gap-4 text-left">
                 <div className="flex items-start text-white">
                   <CheckCircle className="h-5 w-5 text-blue-200 mt-1 mr-3 flex-shrink-0" />
-                  <span>30-day free trial (no credit card required)</span>
+                  <span>Early access when we launch</span>
                 </div>
                 <div className="flex items-start text-white">
                   <CheckCircle className="h-5 w-5 text-blue-200 mt-1 mr-3 flex-shrink-0" />
-                  <span>Setup takes under 5 minutes</span>
+                  <span>Takes less than 2 minutes</span>
                 </div>
                 <div className="flex items-start text-white">
                   <CheckCircle className="h-5 w-5 text-blue-200 mt-1 mr-3 flex-shrink-0" />
-                  <span>First matches within 24 hours</span>
+                  <span>Be among the first to match</span>
                 </div>
                 <div className="flex items-start text-white">
                   <CheckCircle className="h-5 w-5 text-blue-200 mt-1 mr-3 flex-shrink-0" />
-                  <span>Cancel anytime, zero risk</span>
+                  <span>No commitment required</span>
                 </div>
               </div>
             </div>
             
-            <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
+            <Link to="/waitlist">
               <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 text-lg font-bold">
-                Start Your Free 30-Day Trial
+                Join the Waitlist Now
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            </a>
-            
-            <p className="text-blue-100 mt-4 text-sm">
-              Join 10,000+ professionals already using Kuajiri AI
-            </p>
+            </Link>
           </div>
         </div>
       </section>
@@ -341,4 +338,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default WaitlistLanding;

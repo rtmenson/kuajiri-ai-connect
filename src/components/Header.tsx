@@ -11,7 +11,15 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleNavClick = (sectionId: string) => {
-    if (location.pathname !== '/') {
+    const currentPath = location.pathname;
+    
+    if (currentPath === '/recruiter') {
+      // On recruiter page, scroll to recruiter sections
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else if (currentPath !== '/') {
       // Navigate to home page and then scroll to section
       navigate('/');
       setTimeout(() => {
@@ -38,6 +46,14 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
+  const handleRecruiterClick = () => {
+    navigate('/recruiter');
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+    setIsMenuOpen(false);
+  };
+
   return (
     <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b z-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,12 +74,6 @@ const Header = () => {
           <nav className="hidden md:flex items-center justify-center flex-1">
             <div className="flex items-center space-x-8">
               <button 
-                onClick={() => handleNavClick('features')} 
-                className="text-gray-600 hover:text-blue-600 transition-colors text-sm"
-              >
-                Features
-              </button>
-              <button 
                 onClick={() => handleNavClick('benefits')} 
                 className="text-gray-600 hover:text-blue-600 transition-colors text-sm"
               >
@@ -75,7 +85,7 @@ const Header = () => {
               >
                 How It Works
               </button>
-              <button onClick={handlePricingClick} className="text-gray-600 hover:text-blue-600 transition-colors text-sm">Pricing</button>
+              <button onClick={handleRecruiterClick} className="text-gray-600 hover:text-blue-600 transition-colors text-sm">For Recruiters</button>
             </div>
           </nav>
 
@@ -85,9 +95,9 @@ const Header = () => {
               <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
                 <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
               </a>
-              <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
-                <Button className="text-sm">Start Free Trial</Button>
-              </a>
+              <Link to="/waitlist">
+                <Button className="text-sm">Join the Waitlist</Button>
+              </Link>
             </div>
           </div>
 
@@ -109,12 +119,6 @@ const Header = () => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
               <button 
-                onClick={() => handleNavClick('features')} 
-                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 text-sm"
-              >
-                Features
-              </button>
-              <button 
                 onClick={() => handleNavClick('benefits')} 
                 className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 text-sm"
               >
@@ -126,15 +130,15 @@ const Header = () => {
               >
                 How It Works
               </button>
-              <button onClick={handlePricingClick} className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">Pricing</button>
+              <button onClick={handleRecruiterClick} className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">For Recruiters</button>
               <div className="px-3 py-2 space-y-2">
                 <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
                   <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
                 </a>
                 <div></div>
-                <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
-                  <Button className="w-full text-sm">Start Free Trial</Button>
-                </a>
+                <Link to="/waitlist">
+                  <Button className="w-full text-sm">Join the Waitlist</Button>
+                </Link>
               </div>
             </div>
           </div>
