@@ -6,8 +6,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Copy, Download, Share2, Sparkles, ArrowLeft, Clock, Upload, Palette, X } from "lucide-react";
+import { Loader2, Copy, Download, Share2, Sparkles, ArrowLeft, Clock, Upload, Palette, X, User } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface GeneratedContent {
   description: string;
@@ -18,6 +32,12 @@ interface GeneratedContent {
   salaryMin: number;
   salaryMax: number;
   requirements: string[];
+}
+
+interface JobPosterAccount {
+  fullName: string;
+  email: string;
+  phone: string;
 }
 
 const PRESET_COLORS = [
@@ -31,6 +51,27 @@ const PRESET_COLORS = [
   { name: "Indigo", value: "#4f46e5" },
 ];
 
+const CURRENCIES = [
+  { code: "GHC", symbol: "GH₵", name: "Ghana Cedi" },
+  { code: "USD", symbol: "$", name: "US Dollar" },
+  { code: "EUR", symbol: "€", name: "Euro" },
+  { code: "GBP", symbol: "£", name: "British Pound" },
+  { code: "CFA", symbol: "CFA", name: "CFA Franc" },
+  { code: "AUD", symbol: "A$", name: "Australian Dollar" },
+];
+
+// Helper functions for color conversion
+const hexToRgb = (hex: string): { r: number; g: number; b: number } | null => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
+};
+
 const JobPostGenerator = () => {
   const [jobTitle, setJobTitle] = useState("");
   const [salaryMin, setSalaryMin] = useState("");
@@ -41,9 +82,17 @@ const JobPostGenerator = () => {
   const [brandColor, setBrandColor] = useState("#2563eb");
   const [logo, setLogo] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState("");
+  const [currency, setCurrency] = useState("GHC");
+  const [shortDescription, setShortDescription] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
+  const [showAccountModal, setShowAccountModal] = useState(false);
+  const [account, setAccount] = useState<JobPosterAccount | null>(null);
+  const [accountForm, setAccountForm] = useState({ fullName: "", email: "", phone: "" });
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const rgb = hexToRgb(brandColor);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -84,6 +133,8 @@ const JobPostGenerator = () => {
           brandColor,
           companyName: companyName || "Your Company",
           hasLogo: !!logo,
+          currency,
+          shortDescription,
         },
       });
 
@@ -104,6 +155,57 @@ const JobPostGenerator = () => {
     toast.success(`${label} copied to clipboard!`);
   };
 
+  const handleDownloadClick = () => {
+    if (!account) {
+      setShowAccountModal(true);
+    } else {
+      downloadImage();
+    }
+  };
+
+  const handleCreateAccount = async () => {
+    if (!accountForm.fullName || !accountForm.email || !accountForm.phone) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(accountForm.email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setIsCreatingAccount(true);
+    try {
+      const { error } = await supabase.from("waitlist_submissions").insert({
+        full_name: accountForm.fullName,
+        email: accountForm.email,
+        phone: accountForm.phone,
+        user_type: "job_poster",
+      });
+
+      if (error) throw error;
+
+      setAccount(accountForm);
+      setShowAccountModal(false);
+      toast.success("Account created! You can now download your job post.");
+      downloadImage();
+    } catch (error: any) {
+      console.error("Account creation error:", error);
+      if (error.message?.includes("duplicate")) {
+        // User already exists, allow download
+        setAccount(accountForm);
+        setShowAccountModal(false);
+        toast.success("Welcome back! Downloading your job post...");
+        downloadImage();
+      } else {
+        toast.error("Failed to create account. Please try again.");
+      }
+    } finally {
+      setIsCreatingAccount(false);
+    }
+  };
+
   const downloadImage = () => {
     if (generatedContent?.imageUrl) {
       const link = document.createElement("a");
@@ -122,7 +224,7 @@ const JobPostGenerator = () => {
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
       twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`,
-      instagram: "", // Instagram doesn't have a direct share URL - we'll show instructions
+      instagram: "",
     };
 
     if (platform === "instagram") {
@@ -133,6 +235,8 @@ const JobPostGenerator = () => {
 
     window.open(shareUrls[platform], "_blank", "width=600,height=400");
   };
+
+  const selectedCurrency = CURRENCIES.find(c => c.code === currency);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -238,7 +342,7 @@ const JobPostGenerator = () => {
                 {/* Brand Color */}
                 <div className="space-y-2">
                   <Label>Brand Color</Label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 mb-3">
                     {PRESET_COLORS.map((color) => (
                       <button
                         key={color.value}
@@ -261,6 +365,23 @@ const JobPostGenerator = () => {
                       />
                     </div>
                   </div>
+                  {/* Color Value Display */}
+                  <div className="flex items-center gap-3 p-2 bg-white rounded-lg border text-sm">
+                    <div
+                      className="w-6 h-6 rounded border"
+                      style={{ backgroundColor: brandColor }}
+                    />
+                    <div className="flex-1 grid grid-cols-2 gap-2 text-xs">
+                      <div className="font-mono">
+                        <span className="text-gray-500">HEX:</span> {brandColor.toUpperCase()}
+                      </div>
+                      {rgb && (
+                        <div className="font-mono">
+                          <span className="text-gray-500">RGB:</span> {rgb.r}, {rgb.g}, {rgb.b}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -275,9 +396,39 @@ const JobPostGenerator = () => {
                 />
               </div>
 
+              {/* Short Description */}
+              <div className="space-y-2">
+                <Label htmlFor="shortDescription">Short Description (Optional)</Label>
+                <Textarea
+                  id="shortDescription"
+                  placeholder="Brief overview of the role..."
+                  value={shortDescription}
+                  onChange={(e) => setShortDescription(e.target.value)}
+                  className="resize-none"
+                  rows={2}
+                />
+              </div>
+
+              {/* Currency Selector */}
+              <div className="space-y-2">
+                <Label>Currency</Label>
+                <Select value={currency} onValueChange={setCurrency}>
+                  <SelectTrigger className="h-11">
+                    <SelectValue placeholder="Select currency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CURRENCIES.map((curr) => (
+                      <SelectItem key={curr.code} value={curr.code}>
+                        {curr.symbol} - {curr.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="salaryMin">Min Salary (GH₵) *</Label>
+                  <Label htmlFor="salaryMin">Min Salary ({selectedCurrency?.symbol}) *</Label>
                   <Input
                     id="salaryMin"
                     type="number"
@@ -288,7 +439,7 @@ const JobPostGenerator = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="salaryMax">Max Salary (GH₵) *</Label>
+                  <Label htmlFor="salaryMax">Max Salary ({selectedCurrency?.symbol}) *</Label>
                   <Input
                     id="salaryMax"
                     type="number"
@@ -353,7 +504,7 @@ const JobPostGenerator = () => {
                     <CardHeader className="pb-3 bg-white">
                       <CardTitle className="text-lg flex items-center justify-between">
                         Social Media Graphic
-                        <Button size="sm" variant="outline" onClick={downloadImage}>
+                        <Button size="sm" variant="outline" onClick={handleDownloadClick}>
                           <Download className="w-4 h-4 mr-1" />
                           Download
                         </Button>
@@ -507,6 +658,65 @@ const JobPostGenerator = () => {
           <p>Powered by <span className="font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Kuajiri AI</span> • Create professional job posts in seconds</p>
         </footer>
       </main>
+
+      {/* Account Creation Modal */}
+      <Dialog open={showAccountModal} onOpenChange={setShowAccountModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <User className="w-5 h-5 text-blue-600" />
+              Create Job Poster Account
+            </DialogTitle>
+            <DialogDescription>
+              Create a free account to download your job post and access more features.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-4">
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Full Name *</Label>
+              <Input
+                id="fullName"
+                placeholder="e.g. Kwame Asante"
+                value={accountForm.fullName}
+                onChange={(e) => setAccountForm({ ...accountForm, fullName: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address *</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="e.g. kwame.asante@company.com"
+                value={accountForm.email}
+                onChange={(e) => setAccountForm({ ...accountForm, email: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number *</Label>
+              <Input
+                id="phone"
+                placeholder="e.g. +233 24 123 4567"
+                value={accountForm.phone}
+                onChange={(e) => setAccountForm({ ...accountForm, phone: e.target.value })}
+              />
+            </div>
+            <Button
+              onClick={handleCreateAccount}
+              disabled={isCreatingAccount}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            >
+              {isCreatingAccount ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Creating Account...
+                </>
+              ) : (
+                "Create Account & Download"
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

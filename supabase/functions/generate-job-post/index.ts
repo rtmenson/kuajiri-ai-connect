@@ -11,14 +11,15 @@ serve(async (req) => {
   }
 
   try {
-    const { jobTitle, salaryMin, salaryMax, requirements, brandColor, companyName, hasLogo } = await req.json();
+    const { jobTitle, salaryMin, salaryMax, requirements, brandColor, companyName, hasLogo, currency, shortDescription } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    console.log("Generating job post for:", jobTitle, "with brand color:", brandColor);
+    const currencySymbol = getCurrencySymbol(currency || "GHC");
+    console.log("Generating job post for:", jobTitle, "with brand color:", brandColor, "currency:", currency);
 
     // Generate job description and social content
     const textResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -40,7 +41,8 @@ serve(async (req) => {
 
 Company: ${companyName}
 Job Title: ${jobTitle}
-Salary Range: GH₵${salaryMin.toLocaleString()} - GH₵${salaryMax.toLocaleString()}
+Salary Range: ${currencySymbol}${salaryMin.toLocaleString()} - ${currencySymbol}${salaryMax.toLocaleString()}
+${shortDescription ? `Brief Description: ${shortDescription}` : ''}
 Key Requirements:
 1. ${requirements[0]}
 2. ${requirements[1]}
@@ -91,7 +93,7 @@ Format your response as JSON with keys: "description", "oneLiner", "socialCaptio
       console.error("Failed to parse JSON:", e);
       parsedContent = {
         description: generatedText,
-        oneLiner: `🔥 We're hiring! ${jobTitle} | GH₵${salaryMin.toLocaleString()}+ | Apply now!`,
+        oneLiner: `🔥 We're hiring! ${jobTitle} | ${currencySymbol}${salaryMin.toLocaleString()}+ | Apply now!`,
         socialCaption: `Exciting opportunity at ${companyName}! We're looking for a ${jobTitle}. #Hiring #GhanaJobs #Kuajiri`
       };
     }
@@ -102,13 +104,13 @@ Format your response as JSON with keys: "description", "oneLiner", "socialCaptio
     The design should be:
     - Clean and corporate with ${colorName} (${brandColor}) as the primary accent color
     - Feature the text "${jobTitle}" prominently in large bold letters
-    - Include "GH₵${salaryMin.toLocaleString()} - GH₵${salaryMax.toLocaleString()}" as salary range
+    - Include "${currencySymbol}${salaryMin.toLocaleString()} - ${currencySymbol}${salaryMax.toLocaleString()}" as salary range
     - Have "WE'RE HIRING!" as a headline at the top
     - Include company name "${companyName}" prominently
     - Include a small watermark "Powered by Kuajiri AI" at the bottom right corner
     - Square format (1:1 ratio) suitable for Instagram and LinkedIn
     - Modern, minimalist style with geometric elements and clean typography
-    - Professional business aesthetic suitable for Ghana's corporate environment
+    - Professional business aesthetic
     - Use the brand color ${brandColor} for key elements like headers, borders, or accents`;
 
     console.log("Generating image with brand color:", brandColor);
@@ -153,9 +155,10 @@ Format your response as JSON with keys: "description", "oneLiner", "socialCaptio
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error in generate-job-post:", error);
-    return new Response(JSON.stringify({ error: error.message || "An error occurred" }), {
+    const errorMessage = error instanceof Error ? error.message : "An error occurred";
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
@@ -174,4 +177,16 @@ function getColorName(hex: string): string {
     "#4f46e5": "indigo",
   };
   return colors[hex.toLowerCase()] || "vibrant";
+}
+
+function getCurrencySymbol(currency: string): string {
+  const symbols: Record<string, string> = {
+    "GHC": "GH₵",
+    "USD": "$",
+    "EUR": "€",
+    "GBP": "£",
+    "CFA": "CFA ",
+    "AUD": "A$",
+  };
+  return symbols[currency] || "GH₵";
 }
