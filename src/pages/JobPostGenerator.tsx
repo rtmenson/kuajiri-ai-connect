@@ -6,8 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Copy, Download, Share2, Sparkles, ArrowLeft, Clock, Upload, Palette, X, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Loader2, Copy, Download, Share2, Sparkles, Clock, Upload, Palette, X, User } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -224,11 +223,7 @@ const JobPostGenerator = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </Link>
+        <div className="container mx-auto px-4 py-4 flex items-center justify-center">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-white" />
