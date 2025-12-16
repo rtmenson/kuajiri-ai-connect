@@ -179,21 +179,21 @@ const JobPostGenerator = () => {
       return;
     }
 
-    // Auto-create account for the user
+    // Save job poster information to database
     const fullPhone = `${countryCode}${phoneNumber}`;
     try {
-      await supabase.from("waitlist_submissions").insert({
+      const { error: insertError } = await supabase.from("job_posters").insert({
         full_name: fullName,
         email: email,
         phone: fullPhone,
-        user_type: "job_poster",
       });
+      
+      if (insertError && !insertError.message?.includes("duplicate")) {
+        console.error("Account creation error:", insertError);
+      }
       setAccount({ fullName, email, phone: fullPhone });
     } catch (error: any) {
-      // If duplicate, user already exists - that's fine
-      if (!error.message?.includes("duplicate")) {
-        console.error("Account creation error:", error);
-      }
+      console.error("Account creation error:", error);
       setAccount({ fullName, email, phone: fullPhone });
     }
 
