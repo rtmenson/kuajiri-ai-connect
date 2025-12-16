@@ -9,13 +9,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Copy, Download, Share2, Sparkles, ArrowLeft, Clock, Upload, Palette, X, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -72,7 +65,22 @@ const hexToRgb = (hex: string): { r: number; g: number; b: number } | null => {
     : null;
 };
 
+const COUNTRY_CODES = [
+  { code: "+233", country: "Ghana", flag: "🇬🇭" },
+  { code: "+1", country: "USA", flag: "🇺🇸" },
+  { code: "+44", country: "UK", flag: "🇬🇧" },
+  { code: "+234", country: "Nigeria", flag: "🇳🇬" },
+  { code: "+254", country: "Kenya", flag: "🇰🇪" },
+  { code: "+27", country: "South Africa", flag: "🇿🇦" },
+  { code: "+225", country: "Ivory Coast", flag: "🇨🇮" },
+  { code: "+61", country: "Australia", flag: "🇦🇺" },
+];
+
 const JobPostGenerator = () => {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [countryCode, setCountryCode] = useState("+233");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [salaryMin, setSalaryMin] = useState("");
   const [salaryMax, setSalaryMax] = useState("");
@@ -86,10 +94,7 @@ const JobPostGenerator = () => {
   const [shortDescription, setShortDescription] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
-  const [showAccountModal, setShowAccountModal] = useState(false);
   const [account, setAccount] = useState<JobPosterAccount | null>(null);
-  const [accountForm, setAccountForm] = useState({ fullName: "", email: "", phone: "" });
-  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const rgb = hexToRgb(brandColor);
@@ -117,9 +122,33 @@ const JobPostGenerator = () => {
   };
 
   const handleGenerate = async () => {
-    if (!jobTitle || !salaryMin || !salaryMax || !req1 || !req2 || !req3) {
+    if (!fullName || !email || !phoneNumber || !jobTitle || !salaryMin || !salaryMax || !req1 || !req2 || !req3) {
       toast.error("Please fill in all required fields");
       return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    // Auto-create account for the user
+    const fullPhone = `${countryCode}${phoneNumber}`;
+    try {
+      await supabase.from("waitlist_submissions").insert({
+        full_name: fullName,
+        email: email,
+        phone: fullPhone,
+        user_type: "job_poster",
+      });
+      setAccount({ fullName, email, phone: fullPhone });
+    } catch (error: any) {
+      // If duplicate, user already exists - that's fine
+      if (!error.message?.includes("duplicate")) {
+        console.error("Account creation error:", error);
+      }
+      setAccount({ fullName, email, phone: fullPhone });
     }
 
     setIsGenerating(true);
@@ -156,54 +185,7 @@ const JobPostGenerator = () => {
   };
 
   const handleDownloadClick = () => {
-    if (!account) {
-      setShowAccountModal(true);
-    } else {
-      downloadImage();
-    }
-  };
-
-  const handleCreateAccount = async () => {
-    if (!accountForm.fullName || !accountForm.email || !accountForm.phone) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(accountForm.email)) {
-      toast.error("Please enter a valid email address");
-      return;
-    }
-
-    setIsCreatingAccount(true);
-    try {
-      const { error } = await supabase.from("waitlist_submissions").insert({
-        full_name: accountForm.fullName,
-        email: accountForm.email,
-        phone: accountForm.phone,
-        user_type: "job_poster",
-      });
-
-      if (error) throw error;
-
-      setAccount(accountForm);
-      setShowAccountModal(false);
-      toast.success("Account created! You can now download your job post.");
-      downloadImage();
-    } catch (error: any) {
-      console.error("Account creation error:", error);
-      if (error.message?.includes("duplicate")) {
-        // User already exists, allow download
-        setAccount(accountForm);
-        setShowAccountModal(false);
-        toast.success("Welcome back! Downloading your job post...");
-        downloadImage();
-      } else {
-        toast.error("Failed to create account. Please try again.");
-      }
-    } finally {
-      setIsCreatingAccount(false);
-    }
+    downloadImage();
   };
 
   const downloadImage = () => {
@@ -285,6 +267,63 @@ const JobPostGenerator = () => {
               <CardDescription>Fill in the basics and we'll handle the rest</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              {/* Contact Information */}
+              <div className="p-4 rounded-lg bg-gradient-to-r from-green-50 to-blue-50 border border-green-100 space-y-4">
+                <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                  <User className="w-4 h-4 text-green-600" />
+                  Your Information
+                </h3>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Full Name *</Label>
+                  <Input
+                    id="fullName"
+                    placeholder="e.g. Kwame Asante"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="h-10 bg-white"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="e.g. kwame@company.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="h-10 bg-white"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number *</Label>
+                  <div className="flex gap-2">
+                    <Select value={countryCode} onValueChange={setCountryCode}>
+                      <SelectTrigger className="w-[130px] h-10 bg-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {COUNTRY_CODES.map((country) => (
+                          <SelectItem key={country.code} value={country.code}>
+                            {country.flag} {country.code}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="244 123 456"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      className="h-10 bg-white flex-1"
+                    />
+                  </div>
+                </div>
+              </div>
+
               {/* Brand Customization */}
               <div className="p-4 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 space-y-4">
                 <h3 className="font-semibold text-gray-900 flex items-center gap-2">
@@ -659,64 +698,6 @@ const JobPostGenerator = () => {
         </footer>
       </main>
 
-      {/* Account Creation Modal */}
-      <Dialog open={showAccountModal} onOpenChange={setShowAccountModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <User className="w-5 h-5 text-blue-600" />
-              Create Job Poster Account
-            </DialogTitle>
-            <DialogDescription>
-              Create a free account to download your job post and access more features.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 pt-4">
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name *</Label>
-              <Input
-                id="fullName"
-                placeholder="e.g. Kwame Asante"
-                value={accountForm.fullName}
-                onChange={(e) => setAccountForm({ ...accountForm, fullName: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address *</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="e.g. kwame.asante@company.com"
-                value={accountForm.email}
-                onChange={(e) => setAccountForm({ ...accountForm, email: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number *</Label>
-              <Input
-                id="phone"
-                placeholder="e.g. +233 24 123 4567"
-                value={accountForm.phone}
-                onChange={(e) => setAccountForm({ ...accountForm, phone: e.target.value })}
-              />
-            </div>
-            <Button
-              onClick={handleCreateAccount}
-              disabled={isCreatingAccount}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-            >
-              {isCreatingAccount ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Creating Account...
-                </>
-              ) : (
-                "Create Account & Download"
-              )}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
