@@ -842,23 +842,63 @@ const JobPostGenerator = () => {
                   </CardContent>
                 </Card>
 
-                {/* Social Caption */}
+                {/* Social Post Preview */}
                 <Card className="shadow-lg border-0 bg-white">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-lg flex items-center justify-between">
-                      Social Caption
+                      Social Post Preview
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => copyToClipboard(generatedContent.socialCaption, "Caption")}
                       >
                         <Copy className="w-4 h-4 mr-1" />
-                        Copy
+                        Copy Caption
                       </Button>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600">{generatedContent.socialCaption}</p>
+                  <CardContent className="space-y-4">
+                    {/* Preview Card - mimics social media post */}
+                    <div className="border rounded-lg overflow-hidden bg-gray-50">
+                      {/* Post Header */}
+                      <div className="p-3 flex items-center gap-3 bg-white border-b">
+                        {logo ? (
+                          <img src={logo} alt="Company logo" className="w-10 h-10 rounded-full object-cover" />
+                        ) : (
+                          <div 
+                            className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
+                            style={{ backgroundColor: brandColor }}
+                          >
+                            {companyName ? companyName.charAt(0).toUpperCase() : "C"}
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-semibold text-sm">{companyName || "Your Company"}</p>
+                          <p className="text-xs text-gray-500">Just now • 🌍</p>
+                        </div>
+                      </div>
+                      
+                      {/* Post Caption */}
+                      <div className="p-3 bg-white">
+                        <p className="text-sm text-gray-700 whitespace-pre-wrap">{generatedContent.socialCaption}</p>
+                      </div>
+                      
+                      {/* Post Image */}
+                      {generatedContent.imageUrl && (
+                        <img
+                          src={generatedContent.imageUrl}
+                          alt="Job post graphic"
+                          className="w-full aspect-square object-cover"
+                        />
+                      )}
+                      
+                      {/* Post Actions - decorative */}
+                      <div className="p-3 flex items-center gap-6 bg-white border-t text-gray-500">
+                        <span className="text-xs flex items-center gap-1">👍 Like</span>
+                        <span className="text-xs flex items-center gap-1">💬 Comment</span>
+                        <span className="text-xs flex items-center gap-1">🔄 Share</span>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
 
