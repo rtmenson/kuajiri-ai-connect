@@ -123,7 +123,7 @@ const JobPostGenerator = () => {
   };
 
   const handleGenerate = async () => {
-    if (!fullName || !email || !phoneNumber || !jobTitle || !salaryMin || !salaryMax || !req1 || !req2 || !req3) {
+    if (!fullName || !email || !phoneNumber || !jobTitle || !req1 || !req2 || !req3) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -157,8 +157,8 @@ const JobPostGenerator = () => {
       const { data, error } = await supabase.functions.invoke("generate-job-post", {
         body: {
           jobTitle,
-          salaryMin: parseInt(salaryMin),
-          salaryMax: parseInt(salaryMax),
+          salaryMin: salaryMin ? parseInt(salaryMin) : null,
+          salaryMax: salaryMax ? parseInt(salaryMax) : null,
           requirements: [req1, req2, req3],
           brandColor,
           companyName: companyName || "Your Company",
@@ -466,7 +466,7 @@ const JobPostGenerator = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="salaryMin">Min Salary ({selectedCurrency?.symbol}) *</Label>
+                  <Label htmlFor="salaryMin">Min Salary ({selectedCurrency?.symbol})</Label>
                   <Input
                     id="salaryMin"
                     type="number"
@@ -477,7 +477,7 @@ const JobPostGenerator = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="salaryMax">Max Salary ({selectedCurrency?.symbol}) *</Label>
+                  <Label htmlFor="salaryMax">Max Salary ({selectedCurrency?.symbol})</Label>
                   <Input
                     id="salaryMax"
                     type="number"
