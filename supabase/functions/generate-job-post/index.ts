@@ -41,7 +41,7 @@ serve(async (req) => {
 
 Company: ${companyName}
 Job Title: ${jobTitle}
-Salary Range: ${currencySymbol}${salaryMin.toLocaleString()} - ${currencySymbol}${salaryMax.toLocaleString()}
+${salaryMin && salaryMax ? `Salary Range: ${currencySymbol}${salaryMin.toLocaleString()} - ${currencySymbol}${salaryMax.toLocaleString()}` : ''}
 ${shortDescription ? `Brief Description: ${shortDescription}` : ''}
 Key Requirements:
 1. ${requirements[0]}
@@ -94,18 +94,19 @@ Format your response as JSON with keys: "description", "oneLiner", "socialCaptio
       console.error("Failed to parse JSON:", e);
       parsedContent = {
         description: generatedText,
-        oneLiner: `🔥 We're hiring! ${jobTitle} | ${currencySymbol}${salaryMin.toLocaleString()}+ | Apply now!`,
+        oneLiner: salaryMin ? `🔥 We're hiring! ${jobTitle} | ${currencySymbol}${salaryMin.toLocaleString()}+ | Apply now!` : `🔥 We're hiring! ${jobTitle} | Apply now!`,
         socialCaption: `Exciting opportunity at ${companyName}! We're looking for a ${jobTitle}. #Hiring #GhanaJobs #Kuajiri`
       };
     }
 
     // Generate social media graphic with brand color
     const colorName = getColorName(brandColor);
+    const salaryText = salaryMin && salaryMax ? `- Include "${currencySymbol}${salaryMin.toLocaleString()} - ${currencySymbol}${salaryMax.toLocaleString()}" as salary range` : '';
     const imagePrompt = `Create a modern, professional job posting graphic for social media. 
     The design should be:
     - Clean and corporate with ${colorName} (${brandColor}) as the primary accent color
     - Feature the text "${jobTitle}" prominently in large bold letters
-    - Include "${currencySymbol}${salaryMin.toLocaleString()} - ${currencySymbol}${salaryMax.toLocaleString()}" as salary range
+    ${salaryText}
     - Have "WE'RE HIRING!" as a headline at the top
     - Include company name "${companyName}" prominently
     - Include a small watermark "Powered by Kuajiri AI" at the bottom right corner
