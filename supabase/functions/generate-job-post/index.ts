@@ -101,15 +101,17 @@ Format your response as JSON with keys: "description", "oneLiner", "socialCaptio
 
     // Generate social media graphic with brand color
     const colorName = getColorName(brandColor);
-    const salaryText = salaryMin && salaryMax ? `- Include "${currencySymbol}${salaryMin.toLocaleString()} - ${currencySymbol}${salaryMax.toLocaleString()}" as salary range` : '';
+    const salaryText = salaryMin && salaryMax ? `- Include "${getImageCurrencySymbol(currency || "GHC")}${salaryMin.toLocaleString()} - ${getImageCurrencySymbol(currency || "GHC")}${salaryMax.toLocaleString()}" as salary range` : '';
+    const applyText = applyValue ? `- Include how to apply: "${applyMethod === 'email' ? `Email: ${applyValue}` : applyMethod === 'url' ? `Apply: ${applyValue}` : `Call/WhatsApp: ${applyValue}`}"` : '';
     const imagePrompt = `Create a modern, professional job posting graphic for social media. 
     The design should be:
     - Clean and corporate with ${colorName} (${brandColor}) as the primary accent color
     - Feature the text "${jobTitle}" prominently in large bold letters
     ${salaryText}
+    ${applyText}
     - Have "WE'RE HIRING!" as a headline at the top
     - Include company name "${companyName}" prominently
-    - IMPORTANT: Always include a subtle "Kuajiri AI" watermark text in the bottom right corner of the image
+    - IMPORTANT: Include a subtle branded watermark "Powered by Kuajiri AI" with a sparkle/star icon in the bottom right corner, styled like a professional logo
     - Square format (1:1 ratio) suitable for Instagram and LinkedIn
     - Modern, minimalist style with geometric elements and clean typography
     - Professional business aesthetic
@@ -191,4 +193,16 @@ function getCurrencySymbol(currency: string): string {
     "AUD": "A$",
   };
   return symbols[currency] || "GH₵";
+}
+
+function getImageCurrencySymbol(currency: string): string {
+  const symbols: Record<string, string> = {
+    "GHC": "GHS ",
+    "USD": "$",
+    "EUR": "€",
+    "GBP": "£",
+    "CFA": "CFA ",
+    "AUD": "A$",
+  };
+  return symbols[currency] || "GHS ";
 }
