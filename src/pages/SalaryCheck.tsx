@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, Share2, TrendingUp, TrendingDown, Users, Lock, Unlock, Mail, Briefcase, MapPin, Lightbulb, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Share2, TrendingUp, TrendingDown, Users, Lock, Unlock, Mail, Briefcase, MapPin, Lightbulb, CheckCircle2, Download, Image, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const ghanaLocations = [
@@ -139,6 +139,8 @@ const SalaryCheck = () => {
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isGeneratingGraphic, setIsGeneratingGraphic] = useState(false);
+  const [generatedGraphicUrl, setGeneratedGraphicUrl] = useState<string | null>(null);
   const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
 
   const getExperienceLevel = (years: number): string => {
@@ -368,6 +370,58 @@ const SalaryCheck = () => {
     return `GH₵${amount.toLocaleString()}`;
   };
 
+  const generateShareableGraphic = async () => {
+    if (!result) return;
+
+    setIsGeneratingGraphic(true);
+    setGeneratedGraphicUrl(null);
+
+    try {
+      const response = await supabase.functions.invoke("generate-salary-graphic", {
+        body: {
+          jobTitle: result.jobTitle,
+          location: result.location,
+          experience: result.experience,
+          marketAverage: result.marketAverage,
+          underpaidAmount: result.underpaidAmount,
+          lowRange: result.lowRange,
+          highRange: result.highRange,
+        },
+      });
+
+      if (response.error) throw response.error;
+      
+      const { imageUrl } = response.data;
+      if (imageUrl) {
+        setGeneratedGraphicUrl(imageUrl);
+        toast({
+          title: "Graphic Generated!",
+          description: "Your shareable salary graphic is ready.",
+        });
+      }
+    } catch (error) {
+      console.error("Error generating graphic:", error);
+      toast({
+        title: "Error",
+        description: "Failed to generate graphic. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingGraphic(false);
+    }
+  };
+
+  const downloadGraphic = () => {
+    if (!generatedGraphicUrl) return;
+    
+    const link = document.createElement("a");
+    link.href = generatedGraphicUrl;
+    link.download = `salary-check-${result?.jobTitle?.replace(/\s+/g, "-").toLowerCase() || "result"}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const shareResult = () => {
     if (!result) return;
 
@@ -549,11 +603,66 @@ const SalaryCheck = () => {
                   <span>Based on {result.dataPoints > 0 ? `${result.dataPoints} submissions + ` : ""}market data</span>
                 </div>
 
-                {/* Share Button */}
-                <Button onClick={shareResult} variant="outline" className="w-full gap-2">
-                  <Share2 className="h-4 w-4" />
-                  Share My Salary Check
-                </Button>
+                {/* Share Buttons */}
+                <div className="flex flex-col gap-2">
+                  <Button onClick={shareResult} variant="outline" className="w-full gap-2">
+                    <Share2 className="h-4 w-4" />
+                    Share My Salary Check
+                  </Button>
+                  
+                  {/* Generate Shareable Graphic */}
+                  {!generatedGraphicUrl ? (
+                    <Button 
+                      onClick={generateShareableGraphic} 
+                      variant="secondary" 
+                      className="w-full gap-2"
+                      disabled={isGeneratingGraphic}
+                    >
+                      {isGeneratingGraphic ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Generating Graphic...
+                        </>
+                      ) : (
+                        <>
+                          <Image className="h-4 w-4" />
+                          Create Shareable Graphic
+                        </>
+                      )}
+                    </Button>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="rounded-lg overflow-hidden border border-border">
+                        <img 
+                          src={generatedGraphicUrl} 
+                          alt="Salary comparison graphic" 
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          onClick={downloadGraphic} 
+                          className="flex-1 gap-2"
+                        >
+                          <Download className="h-4 w-4" />
+                          Download
+                        </Button>
+                        <Button 
+                          onClick={generateShareableGraphic} 
+                          variant="outline"
+                          className="gap-2"
+                          disabled={isGeneratingGraphic}
+                        >
+                          {isGeneratingGraphic ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            "Regenerate"
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ) : (
