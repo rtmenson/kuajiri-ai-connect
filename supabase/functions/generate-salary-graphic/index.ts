@@ -44,7 +44,7 @@ Content to include:
   - Market Average: ${formatCurrency(marketAverage)} (highlighted, larger)
   - High: ${formatCurrency(highRange)}
 ${underpaidText}
-- A subtle "Check yours at kuajiri.com" call-to-action at the bottom
+- A subtle "Check yours at kuajiriapp.com/salarycheck" call-to-action at the bottom
 - Small watermark "Powered by Kuajiri AI" with sparkle icon in corner
 
 Style:
