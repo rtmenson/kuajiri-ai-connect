@@ -299,12 +299,15 @@ const SalaryCheck = () => {
     setIsSubmittingEmail(true);
 
     try {
-      // Store in waitlist_submissions
-      const { error } = await supabase.from("waitlist_submissions").insert({
+      // Store in salary_submissions with name and email
+      const { error } = await supabase.from("salary_submissions").insert({
         full_name: fullName,
         email,
-        phone: "N/A",
-        user_type: "salary_check_user",
+        job_title: result?.jobTitle || jobTitle,
+        years_experience: parseInt(yearsExperience),
+        location,
+        current_salary: currentSalary ? parseFloat(currentSalary) : null,
+        expected_salary: result?.marketAverage || null,
       });
 
       if (error && !error.message.includes("duplicate")) {
@@ -680,245 +683,232 @@ const SalaryCheck = () => {
           )}
         </div>
 
-        {/* Email Gate Section - Only show after results */}
-        {result && !isUnlocked && (
-          <Card className="mt-8 border-2 border-primary/30 shadow-xl bg-gradient-to-br from-primary/5 to-background overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-            <CardContent className="pt-8 pb-8 relative">
-              <div className="max-w-2xl mx-auto text-center">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Lock className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-2xl font-bold mb-2">
-                  Want the Full Report + 5 Negotiation Strategies?
-                </h3>
-                <p className="text-muted-foreground mb-6">
-                  Get what you deserve! Unlock detailed insights personalized to your role.
-                </p>
-
-                {/* What's Included */}
-                <div className="grid sm:grid-cols-2 gap-3 text-left mb-6">
-                  <div className="flex items-center gap-2 p-3 bg-card/50 rounded-lg">
-                    <TrendingUp className="h-5 w-5 text-primary flex-shrink-0" />
-                    <span className="text-sm">Detailed breakdown by experience level</span>
-                  </div>
-                  <div className="flex items-center gap-2 p-3 bg-card/50 rounded-lg">
-                    <MapPin className="h-5 w-5 text-primary flex-shrink-0" />
-                    <span className="text-sm">Salary comparison across cities</span>
-                  </div>
-                  <div className="flex items-center gap-2 p-3 bg-card/50 rounded-lg">
-                    <Lightbulb className="h-5 w-5 text-primary flex-shrink-0" />
-                    <span className="text-sm">5 personalized negotiation tips</span>
-                  </div>
-                  <div className="flex items-center gap-2 p-3 bg-card/50 rounded-lg">
-                    <Briefcase className="h-5 w-5 text-primary flex-shrink-0" />
-                    <span className="text-sm">Similar jobs currently hiring</span>
+        {/* Full Report Section - Show blurred when locked, clear when unlocked */}
+        {result && (
+          <div className="mt-8 relative">
+            {/* Blurred Report Preview */}
+            <div className={`space-y-6 transition-all duration-500 ${!isUnlocked ? "blur-md pointer-events-none select-none" : ""}`}>
+              {isUnlocked && (
+                <div className="text-center mb-6">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 text-green-600 rounded-full text-sm font-medium">
+                    <CheckCircle2 className="h-4 w-4" />
+                    Full Report Unlocked!
                   </div>
                 </div>
+              )}
 
-                {/* Email Form */}
-                <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                  <Input
-                    placeholder="Your name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="flex-1"
-                  />
-                  <Input
-                    type="email"
-                    placeholder="Your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1"
-                  />
-                </div>
-                <Button 
-                  onClick={unlockFullReport}
-                  disabled={isSubmittingEmail}
-                  size="lg"
-                  className="mt-4 gap-2"
-                >
-                  {isSubmittingEmail ? (
-                    "Unlocking..."
-                  ) : (
-                    <>
-                      <Unlock className="h-4 w-4" />
-                      Unlock Full Report (Free)
-                    </>
-                  )}
-                </Button>
-                <p className="text-xs text-muted-foreground mt-3">
-                  No spam, ever. We'll send you occasional career tips.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Full Report Section - Only show after email unlock */}
-        {result && isUnlocked && (
-          <div className="mt-8 space-y-6">
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 text-green-600 rounded-full text-sm font-medium">
-                <CheckCircle2 className="h-4 w-4" />
-                Full Report Unlocked!
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Experience Level Breakdown */}
-              <Card className="border-border/50 shadow-lg">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <TrendingUp className="h-5 w-5 text-primary" />
-                    Salary by Experience Level
-                  </CardTitle>
-                  <CardDescription>
-                    {result.jobTitle} in {result.location}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {result.experienceBreakdown.map((item, index) => (
-                    <div 
-                      key={item.level}
-                      className={`flex justify-between items-center p-3 rounded-lg ${
-                        item.level === result.experience 
-                          ? "bg-primary/10 border-2 border-primary/30" 
-                          : "bg-muted/30"
-                      }`}
-                    >
-                      <span className={item.level === result.experience ? "font-semibold text-primary" : "text-muted-foreground"}>
-                        {item.level}
-                      </span>
-                      <span className={item.level === result.experience ? "font-bold text-primary" : "font-medium"}>
-                        {formatCurrency(item.salary)}
-                      </span>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-
-              {/* City Comparison */}
-              <Card className="border-border/50 shadow-lg">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <MapPin className="h-5 w-5 text-primary" />
-                    Salary in Other Cities
-                  </CardTitle>
-                  <CardDescription>
-                    Same role, different locations
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-primary/10 border-2 border-primary/30">
-                    <span className="font-semibold text-primary">{result.location} (You)</span>
-                    <span className="font-bold text-primary">{formatCurrency(result.midRange)}</span>
-                  </div>
-                  {result.cityComparisons.map((city) => (
-                    <div 
-                      key={city.city}
-                      className="flex justify-between items-center p-3 rounded-lg bg-muted/30"
-                    >
-                      <span className="text-muted-foreground">{city.city}</span>
-                      <span className="font-medium">{formatCurrency(city.salary)}</span>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Negotiation Tips */}
-            <Card className="border-border/50 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Lightbulb className="h-5 w-5 text-primary" />
-                  5 Negotiation Strategies for {result.experience} Professionals
-                </CardTitle>
-                <CardDescription>
-                  Personalized tips to help you get what you deserve
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {negotiationTips[result.experienceLevel].map((tip, index) => (
-                    <div key={index} className="flex gap-3 p-4 bg-muted/30 rounded-lg">
-                      <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-primary font-bold text-sm">{index + 1}</span>
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Experience Level Breakdown */}
+                <Card className="border-border/50 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <TrendingUp className="h-5 w-5 text-primary" />
+                      Salary by Experience Level
+                    </CardTitle>
+                    <CardDescription>
+                      {result.jobTitle} in {result.location}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {result.experienceBreakdown.map((item) => (
+                      <div 
+                        key={item.level}
+                        className={`flex justify-between items-center p-3 rounded-lg ${
+                          item.level === result.experience 
+                            ? "bg-primary/10 border-2 border-primary/30" 
+                            : "bg-muted/30"
+                        }`}
+                      >
+                        <span className={item.level === result.experience ? "font-semibold text-primary" : "text-muted-foreground"}>
+                          {item.level}
+                        </span>
+                        <span className={item.level === result.experience ? "font-bold text-primary" : "font-medium"}>
+                          {formatCurrency(item.salary)}
+                        </span>
                       </div>
-                      <p className="text-sm">{tip}</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    ))}
+                  </CardContent>
+                </Card>
 
-            {/* Jobs CTA */}
-            <Card className="border-primary/30 shadow-lg bg-gradient-to-r from-primary/5 to-primary/10">
-              <CardContent className="pt-6 pb-6">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
-                      <Briefcase className="h-6 w-6 text-primary" />
+                {/* City Comparison */}
+                <Card className="border-border/50 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <MapPin className="h-5 w-5 text-primary" />
+                      Salary in Other Cities
+                    </CardTitle>
+                    <CardDescription>
+                      Same role, different locations
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between items-center p-3 rounded-lg bg-primary/10 border-2 border-primary/30">
+                      <span className="font-semibold text-primary">{result.location} (You)</span>
+                      <span className="font-bold text-primary">{formatCurrency(result.midRange)}</span>
                     </div>
-                    <div>
-                      <h3 className="font-semibold">Looking for jobs at this salary range?</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Join our waitlist to be notified when {result.jobTitle} jobs in {result.location} are posted
+                    {result.cityComparisons.map((city) => (
+                      <div 
+                        key={city.city}
+                        className="flex justify-between items-center p-3 rounded-lg bg-muted/30"
+                      >
+                        <span className="text-muted-foreground">{city.city}</span>
+                        <span className="font-medium">{formatCurrency(city.salary)}</span>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Negotiation Tips */}
+              <Card className="border-border/50 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Lightbulb className="h-5 w-5 text-primary" />
+                    5 Negotiation Strategies for {result.experience} Professionals
+                  </CardTitle>
+                  <CardDescription>
+                    Personalized tips to help you get what you deserve
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {negotiationTips[result.experienceLevel].map((tip, index) => (
+                      <div key={index} className="flex gap-3 p-4 bg-muted/30 rounded-lg">
+                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-primary font-bold text-sm">{index + 1}</span>
+                        </div>
+                        <p className="text-sm">{tip}</p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Jobs CTA */}
+              <Card className="border-primary/30 shadow-lg bg-gradient-to-r from-primary/5 to-primary/10">
+                <CardContent className="pt-6 pb-6">
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+                        <Briefcase className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">Looking for jobs at this salary range?</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Join our waitlist to be notified when {result.jobTitle} jobs in {result.location} are posted
+                        </p>
+                      </div>
+                    </div>
+                    <Link to="/waitlist">
+                      <Button className="gap-2">
+                        <Mail className="h-4 w-4" />
+                        Join Waitlist
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Contribute CTA - Only show when unlocked */}
+              {isUnlocked && (
+                !showContribute ? (
+                  <Button 
+                    variant="ghost" 
+                    className="w-full text-muted-foreground"
+                    onClick={() => setShowContribute(true)}
+                  >
+                    Help improve accuracy - contribute your salary anonymously
+                  </Button>
+                ) : (
+                  <Card className="border-border/50">
+                    <CardContent className="pt-6">
+                      <p className="text-sm font-medium mb-3">Contribute Anonymously</p>
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <Input
+                          type="number"
+                          placeholder="Your actual monthly salary (GH₵)"
+                          value={contributeSalary}
+                          onChange={(e) => setContributeSalary(e.target.value)}
+                          className="flex-1"
+                        />
+                        <Input
+                          placeholder="Industry (optional)"
+                          value={industry}
+                          onChange={(e) => setIndustry(e.target.value)}
+                          className="flex-1"
+                        />
+                        <Button onClick={contributeSalaryData}>
+                          Submit
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          onClick={() => setShowContribute(false)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              )}
+            </div>
+
+            {/* Unlock Overlay - Show when locked */}
+            {!isUnlocked && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Card className="border-2 border-primary/30 shadow-2xl bg-background/95 backdrop-blur-sm max-w-lg mx-4">
+                  <CardContent className="pt-8 pb-8">
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Lock className="h-8 w-8 text-primary" />
+                      </div>
+                      <h3 className="text-2xl font-bold mb-2">
+                        Unlock Full Report
+                      </h3>
+                      <p className="text-muted-foreground mb-6">
+                        Enter your details to see the complete salary breakdown and negotiation tips.
+                      </p>
+
+                      {/* Email Form */}
+                      <div className="flex flex-col gap-3 max-w-sm mx-auto">
+                        <Input
+                          placeholder="Your name"
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                        />
+                        <Input
+                          type="email"
+                          placeholder="Your email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <Button 
+                          onClick={unlockFullReport}
+                          disabled={isSubmittingEmail}
+                          size="lg"
+                          className="gap-2"
+                        >
+                          {isSubmittingEmail ? (
+                            "Unlocking..."
+                          ) : (
+                            <>
+                              <Unlock className="h-4 w-4" />
+                              Unlock Full Report (Free)
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-3">
+                        No spam, ever. We'll send you occasional career tips.
                       </p>
                     </div>
-                  </div>
-                  <Link to="/waitlist">
-                    <Button className="gap-2">
-                      <Mail className="h-4 w-4" />
-                      Join Waitlist
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Contribute CTA */}
-            {!showContribute ? (
-              <Button 
-                variant="ghost" 
-                className="w-full text-muted-foreground"
-                onClick={() => setShowContribute(true)}
-              >
-                Help improve accuracy - contribute your salary anonymously
-              </Button>
-            ) : (
-              <Card className="border-border/50">
-                <CardContent className="pt-6">
-                  <p className="text-sm font-medium mb-3">Contribute Anonymously</p>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Input
-                      type="number"
-                      placeholder="Your actual monthly salary (GH₵)"
-                      value={contributeSalary}
-                      onChange={(e) => setContributeSalary(e.target.value)}
-                      className="flex-1"
-                    />
-                    <Input
-                      placeholder="Industry (optional)"
-                      value={industry}
-                      onChange={(e) => setIndustry(e.target.value)}
-                      className="flex-1"
-                    />
-                    <Button onClick={contributeSalaryData}>
-                      Submit
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      onClick={() => setShowContribute(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </div>
             )}
           </div>
         )}
+
 
         {/* Info Section */}
         <div className="mt-12 grid md:grid-cols-3 gap-6">
