@@ -45,7 +45,9 @@ export type Database = {
         Row: {
           created_at: string
           current_salary: number | null
+          email: string | null
           expected_salary: number | null
+          full_name: string | null
           id: string
           industry: string | null
           job_title: string
@@ -55,7 +57,9 @@ export type Database = {
         Insert: {
           created_at?: string
           current_salary?: number | null
+          email?: string | null
           expected_salary?: number | null
+          full_name?: string | null
           id?: string
           industry?: string | null
           job_title: string
@@ -65,7 +69,9 @@ export type Database = {
         Update: {
           created_at?: string
           current_salary?: number | null
+          email?: string | null
           expected_salary?: number | null
+          full_name?: string | null
           id?: string
           industry?: string | null
           job_title?: string
