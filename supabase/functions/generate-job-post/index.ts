@@ -109,7 +109,7 @@ Format your response as JSON with keys: "description", "oneLiner", "socialCaptio
     ${salaryText}
     - Have "WE'RE HIRING!" as a headline at the top
     - Include company name "${companyName}" prominently
-    - Include a small watermark "Powered by Kuajiri AI" at the bottom right corner
+    - IMPORTANT: Always include a subtle "Kuajiri AI" watermark text in the bottom right corner of the image
     - Square format (1:1 ratio) suitable for Instagram and LinkedIn
     - Modern, minimalist style with geometric elements and clean typography
     - Professional business aesthetic
