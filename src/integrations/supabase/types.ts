@@ -41,6 +41,39 @@ export type Database = {
         }
         Relationships: []
       }
+      salary_submissions: {
+        Row: {
+          created_at: string
+          current_salary: number | null
+          expected_salary: number | null
+          id: string
+          industry: string | null
+          job_title: string
+          location: string
+          years_experience: number
+        }
+        Insert: {
+          created_at?: string
+          current_salary?: number | null
+          expected_salary?: number | null
+          id?: string
+          industry?: string | null
+          job_title: string
+          location: string
+          years_experience: number
+        }
+        Update: {
+          created_at?: string
+          current_salary?: number | null
+          expected_salary?: number | null
+          id?: string
+          industry?: string | null
+          job_title?: string
+          location?: string
+          years_experience?: number
+        }
+        Relationships: []
+      }
       waitlist_submissions: {
         Row: {
           created_at: string
