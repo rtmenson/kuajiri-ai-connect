@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { jobTitle, salaryMin, salaryMax, requirements, brandColor, companyName, hasLogo, currency, shortDescription } = await req.json();
+    const { jobTitle, salaryMin, salaryMax, requirements, brandColor, companyName, hasLogo, currency, shortDescription, applyMethod, applyValue } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
@@ -47,9 +47,10 @@ Key Requirements:
 1. ${requirements[0]}
 2. ${requirements[1]}
 3. ${requirements[2]}
+${applyValue ? `How to Apply: ${applyMethod === 'email' ? `Send CV to ${applyValue}` : `Apply at ${applyValue}`}` : ''}
 
 Please provide:
-1. A professional job description (150-200 words) including responsibilities, requirements, and a compelling call to action
+1. A professional job description (150-200 words) including responsibilities, requirements, and a compelling call to action${applyValue ? ` (include the application method at the end)` : ''}
 2. A witty one-liner for social media posts (max 100 characters, include relevant emoji)
 3. A LinkedIn/Instagram caption (2-3 sentences with hashtags, mention the company name)
 

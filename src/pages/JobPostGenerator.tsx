@@ -91,6 +91,8 @@ const JobPostGenerator = () => {
   const [companyName, setCompanyName] = useState("");
   const [currency, setCurrency] = useState("GHC");
   const [shortDescription, setShortDescription] = useState("");
+  const [applyMethod, setApplyMethod] = useState<"email" | "url">("email");
+  const [applyValue, setApplyValue] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
   const [account, setAccount] = useState<JobPosterAccount | null>(null);
@@ -163,6 +165,8 @@ const JobPostGenerator = () => {
           hasLogo: !!logo,
           currency,
           shortDescription,
+          applyMethod,
+          applyValue,
         },
       });
 
@@ -503,6 +507,40 @@ const JobPostGenerator = () => {
                   placeholder="3. e.g. Bachelor's degree in Computer Science"
                   value={req3}
                   onChange={(e) => setReq3(e.target.value)}
+                  className="h-11"
+                />
+              </div>
+
+              {/* How to Apply */}
+              <div className="space-y-3">
+                <Label>How to Apply (Optional)</Label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="applyMethod"
+                      checked={applyMethod === "email"}
+                      onChange={() => setApplyMethod("email")}
+                      className="w-4 h-4 text-blue-600"
+                    />
+                    <span className="text-sm">Email CV to</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="applyMethod"
+                      checked={applyMethod === "url"}
+                      onChange={() => setApplyMethod("url")}
+                      className="w-4 h-4 text-blue-600"
+                    />
+                    <span className="text-sm">Apply at URL</span>
+                  </label>
+                </div>
+                <Input
+                  placeholder={applyMethod === "email" ? "careers@company.com" : "https://company.com/careers"}
+                  value={applyValue}
+                  onChange={(e) => setApplyValue(e.target.value)}
+                  type={applyMethod === "email" ? "email" : "url"}
                   className="h-11"
                 />
               </div>
