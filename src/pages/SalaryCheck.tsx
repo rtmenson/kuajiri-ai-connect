@@ -606,6 +606,17 @@ const SalaryCheck = () => {
                   <span>Based on {result.dataPoints > 0 ? `${result.dataPoints} submissions + ` : ""}market data</span>
                 </div>
 
+                {/* Unlock Detailed Report CTA */}
+                {!isUnlocked && (
+                  <Button 
+                    onClick={() => document.getElementById('full-report')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="w-full gap-2"
+                  >
+                    <Unlock className="h-4 w-4" />
+                    Unlock Detailed Report
+                  </Button>
+                )}
+
                 {/* Share Buttons */}
                 <div className="flex flex-col gap-2">
                   <Button onClick={shareResult} variant="outline" className="w-full gap-2">
@@ -685,7 +696,7 @@ const SalaryCheck = () => {
 
         {/* Full Report Section - Show blurred when locked, clear when unlocked */}
         {result && (
-          <div className="mt-8 relative">
+          <div id="full-report" className="mt-8 relative scroll-mt-4">
             {/* Blurred Report Preview */}
             <div className={`space-y-6 transition-all duration-500 ${!isUnlocked ? "blur-md pointer-events-none select-none" : ""}`}>
               {isUnlocked && (
