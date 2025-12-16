@@ -91,7 +91,7 @@ const JobPostGenerator = () => {
   const [companyName, setCompanyName] = useState("");
   const [currency, setCurrency] = useState("GHC");
   const [shortDescription, setShortDescription] = useState("");
-  const [applyMethod, setApplyMethod] = useState<"email" | "url">("email");
+  const [applyMethod, setApplyMethod] = useState<"email" | "url" | "phone">("email");
   const [applyValue, setApplyValue] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
@@ -514,7 +514,7 @@ const JobPostGenerator = () => {
               {/* How to Apply */}
               <div className="space-y-3">
                 <Label>How to Apply (Optional)</Label>
-                <div className="flex gap-4">
+                <div className="flex flex-wrap gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
@@ -535,12 +535,28 @@ const JobPostGenerator = () => {
                     />
                     <span className="text-sm">Apply at URL</span>
                   </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="applyMethod"
+                      checked={applyMethod === "phone"}
+                      onChange={() => setApplyMethod("phone")}
+                      className="w-4 h-4 text-blue-600"
+                    />
+                    <span className="text-sm">Call/WhatsApp</span>
+                  </label>
                 </div>
                 <Input
-                  placeholder={applyMethod === "email" ? "careers@company.com" : "https://company.com/careers"}
+                  placeholder={
+                    applyMethod === "email" 
+                      ? "careers@company.com" 
+                      : applyMethod === "url" 
+                        ? "https://company.com/careers" 
+                        : "+233 XX XXX XXXX"
+                  }
                   value={applyValue}
                   onChange={(e) => setApplyValue(e.target.value)}
-                  type={applyMethod === "email" ? "email" : "url"}
+                  type={applyMethod === "email" ? "email" : applyMethod === "url" ? "url" : "tel"}
                   className="h-11"
                 />
               </div>

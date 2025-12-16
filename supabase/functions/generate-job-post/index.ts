@@ -47,7 +47,7 @@ Key Requirements:
 1. ${requirements[0]}
 2. ${requirements[1]}
 3. ${requirements[2]}
-${applyValue ? `How to Apply: ${applyMethod === 'email' ? `Send CV to ${applyValue}` : `Apply at ${applyValue}`}` : ''}
+${applyValue ? `How to Apply: ${applyMethod === 'email' ? `Send CV to ${applyValue}` : applyMethod === 'url' ? `Apply at ${applyValue}` : `Call/WhatsApp ${applyValue}`}` : ''}
 
 Please provide:
 1. A professional job description (150-200 words) including responsibilities, requirements, and a compelling call to action${applyValue ? ` (include the application method at the end)` : ''}
