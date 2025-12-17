@@ -11,7 +11,22 @@ serve(async (req) => {
   }
 
   try {
-    const { jobTitle, salaryMin, salaryMax, requirements, brandColor, companyName, hasLogo, currency, shortDescription, applyMethod, applyValue } = await req.json();
+    const { 
+      jobTitle, 
+      salaryMin, 
+      salaryMax, 
+      requirements, 
+      primaryColor, 
+      secondaryColor, 
+      companyName, 
+      hasLogo, 
+      currency, 
+      shortDescription, 
+      applyMethod, 
+      applyValue,
+      imageContentOptions = ["jobTitle", "companyName", "salary", "hiringBadge"]
+    } = await req.json();
+    
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
@@ -19,7 +34,7 @@ serve(async (req) => {
     }
 
     const currencySymbol = getCurrencySymbol(currency || "GHC");
-    console.log("Generating job post for:", jobTitle, "with brand color:", brandColor, "currency:", currency);
+    console.log("Generating job post for:", jobTitle, "with colors:", primaryColor, secondaryColor, "options:", imageContentOptions);
 
     // Generate job description and social content
     const textResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -99,25 +114,48 @@ Format your response as JSON with keys: "description", "oneLiner", "socialCaptio
       };
     }
 
-    // Generate social media graphic with brand color
-    const colorName = getColorName(brandColor);
-    const salaryText = salaryMin && salaryMax ? `- Include "${getImageCurrencySymbol(currency || "GHC")}${salaryMin.toLocaleString()} - ${getImageCurrencySymbol(currency || "GHC")}${salaryMax.toLocaleString()}" as salary range` : '';
-    const applyText = applyValue ? `- Include how to apply: "${applyMethod === 'email' ? `Email: ${applyValue}` : applyMethod === 'url' ? `Apply: ${applyValue}` : `Call/WhatsApp: ${applyValue}`}"` : '';
+    // Build image prompt based on selected content options
+    const primaryColorName = getColorName(primaryColor);
+    const secondaryColorName = secondaryColor ? getColorName(secondaryColor) : null;
+    
+    const colorScheme = secondaryColor 
+      ? `${primaryColorName} (${primaryColor}) as the primary color and ${secondaryColorName} (${secondaryColor}) as an accent/secondary color`
+      : `${primaryColorName} (${primaryColor}) as the primary accent color`;
+
+    // Build content elements based on user selection
+    const contentElements: string[] = [];
+    
+    if (imageContentOptions.includes("hiringBadge")) {
+      contentElements.push('- Have "WE\'RE HIRING!" as a headline at the top');
+    }
+    if (imageContentOptions.includes("jobTitle")) {
+      contentElements.push(`- Feature the text "${jobTitle}" prominently in large bold letters`);
+    }
+    if (imageContentOptions.includes("companyName")) {
+      contentElements.push(`- Include company name "${companyName}" prominently`);
+    }
+    if (imageContentOptions.includes("salary") && salaryMin && salaryMax) {
+      contentElements.push(`- Include "${getImageCurrencySymbol(currency || "GHC")}${salaryMin.toLocaleString()} - ${getImageCurrencySymbol(currency || "GHC")}${salaryMax.toLocaleString()}" as salary range`);
+    }
+    if (imageContentOptions.includes("requirements") && requirements?.length > 0) {
+      contentElements.push(`- Include key requirements: "${requirements[0]}", "${requirements[1]}", "${requirements[2]}"`);
+    }
+    if (imageContentOptions.includes("applyMethod") && applyValue) {
+      const applyText = applyMethod === 'email' ? `Email: ${applyValue}` : applyMethod === 'url' ? `Apply: ${applyValue}` : `Call/WhatsApp: ${applyValue}`;
+      contentElements.push(`- Include how to apply: "${applyText}"`);
+    }
+
     const imagePrompt = `Create a modern, professional job posting graphic for social media. 
     The design should be:
-    - Clean and corporate with ${colorName} (${brandColor}) as the primary accent color
-    - Feature the text "${jobTitle}" prominently in large bold letters
-    ${salaryText}
-    ${applyText}
-    - Have "WE'RE HIRING!" as a headline at the top
-    - Include company name "${companyName}" prominently
+    - Clean and corporate with ${colorScheme}
+    ${contentElements.join('\n    ')}
     - IMPORTANT: Include a subtle branded watermark "Powered by Kuajiri AI" with a sparkle/star icon in the bottom right corner, styled like a professional logo
     - Square format (1:1 ratio) suitable for Instagram and LinkedIn
     - Modern, minimalist style with geometric elements and clean typography
     - Professional business aesthetic
-    - Use the brand color ${brandColor} for key elements like headers, borders, or accents`;
+    - Use the brand colors for key elements like headers, borders, or accents${secondaryColor ? ` - use ${secondaryColorName} for accents and highlights` : ''}`;
 
-    console.log("Generating image with brand color:", brandColor);
+    console.log("Generating image with prompt:", imagePrompt);
     
     const imageResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
