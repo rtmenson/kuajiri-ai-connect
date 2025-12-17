@@ -114,8 +114,8 @@ const JobPostGenerator = () => {
   const [companyName, setCompanyName] = useState("");
   const [currency, setCurrency] = useState("GHC");
   const [shortDescription, setShortDescription] = useState("");
-  const [applyMethod, setApplyMethod] = useState<"email" | "url" | "phone">("email");
-  const [applyValue, setApplyValue] = useState("");
+  const [applyMethods, setApplyMethods] = useState<("email" | "url" | "phone")[]>(["email"]);
+  const [applyValues, setApplyValues] = useState<{ email: string; url: string; phone: string }>({ email: "", url: "", phone: "" });
   const [isGenerating, setIsGenerating] = useState(false);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
@@ -157,10 +157,10 @@ const JobPostGenerator = () => {
 
   // Pre-populate Call/WhatsApp field when phone method is selected
   useEffect(() => {
-    if (applyMethod === "phone" && phoneNumber && !applyValue) {
-      setApplyValue(`${countryCode}${phoneNumber}`);
+    if (applyMethods.includes("phone") && phoneNumber && !applyValues.phone) {
+      setApplyValues(prev => ({ ...prev, phone: `${countryCode}${phoneNumber}` }));
     }
-  }, [applyMethod, phoneNumber, countryCode]);
+  }, [applyMethods, phoneNumber, countryCode]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -243,8 +243,8 @@ const JobPostGenerator = () => {
           hasLogo: !!logo,
           currency,
           shortDescription,
-          applyMethod,
-          applyValue,
+          applyMethods,
+          applyValues,
           imageContentOptions,
         },
       });
@@ -643,52 +643,92 @@ const JobPostGenerator = () => {
 
                   {/* How to Apply */}
                   <div className="space-y-3">
-                    <Label>How to Apply (Optional)</Label>
-                    <div className="flex flex-wrap gap-4">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="applyMethod"
-                          checked={applyMethod === "email"}
-                          onChange={() => setApplyMethod("email")}
-                          className="w-4 h-4 text-blue-600"
-                        />
-                        <span className="text-sm">Email CV to</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="applyMethod"
-                          checked={applyMethod === "url"}
-                          onChange={() => setApplyMethod("url")}
-                          className="w-4 h-4 text-blue-600"
-                        />
-                        <span className="text-sm">Apply at URL</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="applyMethod"
-                          checked={applyMethod === "phone"}
-                          onChange={() => setApplyMethod("phone")}
-                          className="w-4 h-4 text-blue-600"
-                        />
-                        <span className="text-sm">Call/WhatsApp</span>
-                      </label>
+                    <Label>How to Apply (Select one or more)</Label>
+                    <div className="space-y-3">
+                      {/* Email Option */}
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={applyMethods.includes("email")}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setApplyMethods(prev => [...prev, "email"]);
+                              } else {
+                                setApplyMethods(prev => prev.filter(m => m !== "email"));
+                              }
+                            }}
+                            className="w-4 h-4 text-blue-600 rounded"
+                          />
+                          <span className="text-sm">Email CV to</span>
+                        </label>
+                        {applyMethods.includes("email") && (
+                          <Input
+                            placeholder="careers@company.com"
+                            value={applyValues.email}
+                            onChange={(e) => setApplyValues(prev => ({ ...prev, email: e.target.value }))}
+                            type="email"
+                            className="h-10 ml-6"
+                          />
+                        )}
+                      </div>
+
+                      {/* URL Option */}
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={applyMethods.includes("url")}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setApplyMethods(prev => [...prev, "url"]);
+                              } else {
+                                setApplyMethods(prev => prev.filter(m => m !== "url"));
+                              }
+                            }}
+                            className="w-4 h-4 text-blue-600 rounded"
+                          />
+                          <span className="text-sm">Apply at URL</span>
+                        </label>
+                        {applyMethods.includes("url") && (
+                          <Input
+                            placeholder="https://company.com/careers"
+                            value={applyValues.url}
+                            onChange={(e) => setApplyValues(prev => ({ ...prev, url: e.target.value }))}
+                            type="url"
+                            className="h-10 ml-6"
+                          />
+                        )}
+                      </div>
+
+                      {/* Phone Option */}
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={applyMethods.includes("phone")}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setApplyMethods(prev => [...prev, "phone"]);
+                              } else {
+                                setApplyMethods(prev => prev.filter(m => m !== "phone"));
+                              }
+                            }}
+                            className="w-4 h-4 text-blue-600 rounded"
+                          />
+                          <span className="text-sm">Call/WhatsApp</span>
+                        </label>
+                        {applyMethods.includes("phone") && (
+                          <Input
+                            placeholder="+233 XX XXX XXXX"
+                            value={applyValues.phone}
+                            onChange={(e) => setApplyValues(prev => ({ ...prev, phone: e.target.value }))}
+                            type="tel"
+                            className="h-10 ml-6"
+                          />
+                        )}
+                      </div>
                     </div>
-                    <Input
-                      placeholder={
-                        applyMethod === "email" 
-                          ? "careers@company.com" 
-                          : applyMethod === "url" 
-                            ? "https://company.com/careers" 
-                            : "+233 XX XXX XXXX"
-                      }
-                      value={applyValue}
-                      onChange={(e) => setApplyValue(e.target.value)}
-                      type={applyMethod === "email" ? "email" : applyMethod === "url" ? "url" : "tel"}
-                      className="h-11"
-                    />
                   </div>
 
                   <Button
