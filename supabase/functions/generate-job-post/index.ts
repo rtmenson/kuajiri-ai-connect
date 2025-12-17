@@ -22,8 +22,8 @@ serve(async (req) => {
       hasLogo, 
       currency, 
       shortDescription, 
-      applyMethod, 
-      applyValue,
+      applyMethods = [], 
+      applyValues = {},
       imageContentOptions = ["jobTitle", "companyName", "salary", "hiringBadge"]
     } = await req.json();
     
@@ -62,10 +62,10 @@ Key Requirements:
 1. ${requirements[0]}
 2. ${requirements[1]}
 3. ${requirements[2]}
-${applyValue ? `How to Apply: ${applyMethod === 'email' ? `Send CV to ${applyValue}` : applyMethod === 'url' ? `Apply at ${applyValue}` : `Call/WhatsApp ${applyValue}`}` : ''}
+${formatApplyMethodsForPrompt(applyMethods, applyValues)}
 
 Please provide:
-1. A professional job description (150-200 words) including responsibilities, requirements, and a compelling call to action${applyValue ? ` (include the application method at the end)` : ''}
+1. A professional job description (150-200 words) including responsibilities, requirements, and a compelling call to action${applyMethods.length > 0 ? ` (include the application method(s) at the end)` : ''}
 2. A witty one-liner for social media posts (max 100 characters, include relevant emoji)
 3. A LinkedIn/Instagram caption (2-3 sentences with hashtags, mention the company name)
 
@@ -140,9 +140,11 @@ Format your response as JSON with keys: "description", "oneLiner", "socialCaptio
     if (imageContentOptions.includes("requirements") && requirements?.length > 0) {
       contentElements.push(`- Include key requirements: "${requirements[0]}", "${requirements[1]}", "${requirements[2]}"`);
     }
-    if (imageContentOptions.includes("applyMethod") && applyValue) {
-      const applyText = applyMethod === 'email' ? `Email: ${applyValue}` : applyMethod === 'url' ? `Apply: ${applyValue}` : `Call/WhatsApp: ${applyValue}`;
-      contentElements.push(`- Include how to apply: "${applyText}"`);
+    if (imageContentOptions.includes("applyMethod") && applyMethods.length > 0) {
+      const applyTexts = formatApplyMethodsForImage(applyMethods, applyValues);
+      if (applyTexts) {
+        contentElements.push(`- Include how to apply: "${applyTexts}"`);
+      }
     }
 
     const imagePrompt = `Create a modern, professional job posting graphic for social media. 
@@ -231,6 +233,41 @@ function getCurrencySymbol(currency: string): string {
     "AUD": "A$",
   };
   return symbols[currency] || "GH₵";
+}
+
+function formatApplyMethodsForPrompt(methods: string[], values: Record<string, string>): string {
+  if (!methods || methods.length === 0) return '';
+  
+  const parts: string[] = [];
+  if (methods.includes('email') && values.email) {
+    parts.push(`Send CV to ${values.email}`);
+  }
+  if (methods.includes('url') && values.url) {
+    parts.push(`Apply at ${values.url}`);
+  }
+  if (methods.includes('phone') && values.phone) {
+    parts.push(`Call/WhatsApp ${values.phone}`);
+  }
+  
+  if (parts.length === 0) return '';
+  return `How to Apply: ${parts.join(' OR ')}`;
+}
+
+function formatApplyMethodsForImage(methods: string[], values: Record<string, string>): string {
+  if (!methods || methods.length === 0) return '';
+  
+  const parts: string[] = [];
+  if (methods.includes('email') && values.email) {
+    parts.push(`Email: ${values.email}`);
+  }
+  if (methods.includes('url') && values.url) {
+    parts.push(`Apply: ${values.url}`);
+  }
+  if (methods.includes('phone') && values.phone) {
+    parts.push(`Call/WhatsApp: ${values.phone}`);
+  }
+  
+  return parts.join(' | ');
 }
 
 function getImageCurrencySymbol(currency: string): string {
