@@ -30,21 +30,242 @@ const experienceLevels = [
   { value: "11", label: "11+ years (Expert)" },
 ];
 
-// Baseline salary data for Ghana (in GHS monthly)
+// Baseline salary data for Ghana (in GHS monthly) - Updated for 2025
 const baselineSalaries: Record<string, Record<string, number>> = {
-  "software developer": { entry: 3500, junior: 5500, mid: 8500, senior: 14000, expert: 22000 },
-  "software engineer": { entry: 3500, junior: 5500, mid: 8500, senior: 14000, expert: 22000 },
-  "data analyst": { entry: 3000, junior: 4500, mid: 7000, senior: 11000, expert: 18000 },
-  "accountant": { entry: 2500, junior: 3800, mid: 5500, senior: 8500, expert: 14000 },
-  "marketing manager": { entry: 2800, junior: 4200, mid: 6500, senior: 10000, expert: 16000 },
-  "nurse": { entry: 2200, junior: 3200, mid: 4500, senior: 6500, expert: 9000 },
-  "teacher": { entry: 1800, junior: 2500, mid: 3500, senior: 5000, expert: 7500 },
-  "project manager": { entry: 3500, junior: 5500, mid: 8000, senior: 13000, expert: 20000 },
-  "hr manager": { entry: 2800, junior: 4200, mid: 6500, senior: 10000, expert: 15000 },
-  "graphic designer": { entry: 2200, junior: 3500, mid: 5000, senior: 7500, expert: 11000 },
-  "sales executive": { entry: 2000, junior: 3200, mid: 5000, senior: 8000, expert: 13000 },
-  "banker": { entry: 3000, junior: 4500, mid: 7000, senior: 11000, expert: 17000 },
-  "default": { entry: 2500, junior: 3800, mid: 5500, senior: 8500, expert: 13000 },
+  // Technology & Engineering
+  "software developer": { entry: 4000, junior: 6500, mid: 10000, senior: 16000, expert: 25000 },
+  "software engineer": { entry: 4200, junior: 6800, mid: 10500, senior: 17000, expert: 26000 },
+  "frontend developer": { entry: 3800, junior: 6000, mid: 9500, senior: 15000, expert: 23000 },
+  "backend developer": { entry: 4000, junior: 6500, mid: 10000, senior: 16000, expert: 25000 },
+  "full stack developer": { entry: 4200, junior: 7000, mid: 11000, senior: 17500, expert: 27000 },
+  "mobile developer": { entry: 4000, junior: 6500, mid: 10500, senior: 16500, expert: 25000 },
+  "devops engineer": { entry: 4500, junior: 7500, mid: 12000, senior: 18000, expert: 28000 },
+  "cloud engineer": { entry: 4500, junior: 7500, mid: 12000, senior: 18500, expert: 29000 },
+  "data scientist": { entry: 4500, junior: 7500, mid: 12000, senior: 18000, expert: 28000 },
+  "data analyst": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  "data engineer": { entry: 4200, junior: 7000, mid: 11000, senior: 17000, expert: 26000 },
+  "machine learning engineer": { entry: 5000, junior: 8000, mid: 13000, senior: 20000, expert: 32000 },
+  "ai engineer": { entry: 5000, junior: 8500, mid: 14000, senior: 22000, expert: 35000 },
+  "cybersecurity analyst": { entry: 4000, junior: 6500, mid: 10500, senior: 16000, expert: 24000 },
+  "network engineer": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 19000 },
+  "system administrator": { entry: 3200, junior: 5000, mid: 7500, senior: 11000, expert: 16000 },
+  "database administrator": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 19000 },
+  "qa engineer": { entry: 3200, junior: 5000, mid: 8000, senior: 12000, expert: 18000 },
+  "product manager": { entry: 4500, junior: 7500, mid: 12000, senior: 18000, expert: 28000 },
+  "technical writer": { entry: 2800, junior: 4200, mid: 6500, senior: 9500, expert: 14000 },
+  "it support": { entry: 2200, junior: 3200, mid: 4800, senior: 7000, expert: 10000 },
+  "it manager": { entry: 5000, junior: 7500, mid: 11000, senior: 16000, expert: 24000 },
+  "ui designer": { entry: 3000, junior: 4800, mid: 7500, senior: 11000, expert: 16000 },
+  "ux designer": { entry: 3200, junior: 5200, mid: 8000, senior: 12000, expert: 18000 },
+  "ui/ux designer": { entry: 3200, junior: 5200, mid: 8000, senior: 12000, expert: 18000 },
+  
+  // Finance & Accounting
+  "accountant": { entry: 2800, junior: 4200, mid: 6500, senior: 10000, expert: 16000 },
+  "senior accountant": { entry: 4000, junior: 5500, mid: 7500, senior: 11000, expert: 17000 },
+  "financial analyst": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  "finance manager": { entry: 5000, junior: 7500, mid: 11000, senior: 16000, expert: 24000 },
+  "auditor": { entry: 3000, junior: 4500, mid: 7000, senior: 11000, expert: 17000 },
+  "banker": { entry: 3200, junior: 5000, mid: 8000, senior: 12500, expert: 19000 },
+  "investment analyst": { entry: 4000, junior: 6500, mid: 10000, senior: 15000, expert: 23000 },
+  "tax consultant": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  "credit analyst": { entry: 3200, junior: 5000, mid: 7500, senior: 11000, expert: 16000 },
+  "treasury analyst": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 19000 },
+  "risk analyst": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  
+  // Marketing & Sales
+  "marketing manager": { entry: 3200, junior: 5000, mid: 8000, senior: 12000, expert: 18000 },
+  "digital marketing": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
+  "digital marketer": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
+  "content creator": { entry: 2000, junior: 3500, mid: 5500, senior: 8500, expert: 13000 },
+  "social media manager": { entry: 2200, junior: 3800, mid: 6000, senior: 9000, expert: 14000 },
+  "seo specialist": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
+  "brand manager": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  "sales executive": { entry: 2200, junior: 3800, mid: 6000, senior: 9500, expert: 15000 },
+  "sales manager": { entry: 4000, junior: 6000, mid: 9000, senior: 14000, expert: 21000 },
+  "business development": { entry: 3000, junior: 5000, mid: 8000, senior: 12500, expert: 19000 },
+  "account manager": { entry: 3000, junior: 4800, mid: 7500, senior: 11500, expert: 17000 },
+  "customer success": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
+  "public relations": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
+  
+  // Human Resources
+  "hr manager": { entry: 3200, junior: 5000, mid: 7500, senior: 11500, expert: 17000 },
+  "hr officer": { entry: 2200, junior: 3500, mid: 5200, senior: 7500, expert: 11000 },
+  "recruiter": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 13000 },
+  "talent acquisition": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
+  "compensation analyst": { entry: 3000, junior: 4800, mid: 7500, senior: 11000, expert: 16000 },
+  "training manager": { entry: 3000, junior: 4800, mid: 7500, senior: 11000, expert: 16000 },
+  
+  // Operations & Project Management
+  "project manager": { entry: 4000, junior: 6500, mid: 9500, senior: 15000, expert: 23000 },
+  "operations manager": { entry: 3800, junior: 6000, mid: 9000, senior: 14000, expert: 21000 },
+  "supply chain manager": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  "logistics manager": { entry: 3200, junior: 5000, mid: 7800, senior: 12000, expert: 18000 },
+  "procurement officer": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
+  "quality assurance": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
+  "business analyst": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  "management consultant": { entry: 4500, junior: 7500, mid: 12000, senior: 18000, expert: 28000 },
+  
+  // Healthcare
+  "doctor": { entry: 5500, junior: 8500, mid: 12000, senior: 18000, expert: 28000 },
+  "physician": { entry: 5500, junior: 8500, mid: 12000, senior: 18000, expert: 28000 },
+  "nurse": { entry: 2500, junior: 3800, mid: 5500, senior: 8000, expert: 11000 },
+  "registered nurse": { entry: 2800, junior: 4200, mid: 6000, senior: 8500, expert: 12000 },
+  "pharmacist": { entry: 4000, junior: 6000, mid: 8500, senior: 12000, expert: 17000 },
+  "lab technician": { entry: 2200, junior: 3500, mid: 5000, senior: 7500, expert: 11000 },
+  "medical officer": { entry: 5000, junior: 7500, mid: 10500, senior: 15000, expert: 22000 },
+  "dentist": { entry: 5000, junior: 7500, mid: 11000, senior: 16000, expert: 24000 },
+  "physiotherapist": { entry: 2800, junior: 4500, mid: 6500, senior: 9500, expert: 14000 },
+  
+  // Education
+  "teacher": { entry: 2000, junior: 2800, mid: 4000, senior: 5800, expert: 8500 },
+  "lecturer": { entry: 3500, junior: 5000, mid: 7000, senior: 10000, expert: 15000 },
+  "professor": { entry: 6000, junior: 8000, mid: 11000, senior: 15000, expert: 22000 },
+  "headteacher": { entry: 3500, junior: 5000, mid: 7000, senior: 10000, expert: 14000 },
+  "education administrator": { entry: 3000, junior: 4500, mid: 6500, senior: 9500, expert: 14000 },
+  "trainer": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 13000 },
+  
+  // Legal
+  "lawyer": { entry: 4000, junior: 6500, mid: 10000, senior: 16000, expert: 25000 },
+  "legal officer": { entry: 3500, junior: 5500, mid: 8000, senior: 12000, expert: 18000 },
+  "paralegal": { entry: 2200, junior: 3500, mid: 5200, senior: 7500, expert: 11000 },
+  "company secretary": { entry: 4000, junior: 6000, mid: 9000, senior: 14000, expert: 21000 },
+  
+  // Engineering (Non-Software)
+  "civil engineer": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  "mechanical engineer": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  "electrical engineer": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  "chemical engineer": { entry: 4000, junior: 6500, mid: 10000, senior: 15000, expert: 23000 },
+  "petroleum engineer": { entry: 6000, junior: 10000, mid: 16000, senior: 24000, expert: 38000 },
+  "mining engineer": { entry: 5000, junior: 8500, mid: 13000, senior: 20000, expert: 32000 },
+  "structural engineer": { entry: 3800, junior: 6000, mid: 9000, senior: 14000, expert: 21000 },
+  "architect": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  "quantity surveyor": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  
+  // Creative & Design
+  "graphic designer": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 13000 },
+  "creative director": { entry: 5000, junior: 7500, mid: 11000, senior: 16000, expert: 24000 },
+  "video editor": { entry: 2200, junior: 3500, mid: 5500, senior: 8500, expert: 13000 },
+  "photographer": { entry: 2000, junior: 3200, mid: 5000, senior: 8000, expert: 12000 },
+  "animator": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
+  "interior designer": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
+  "fashion designer": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
+  
+  // Administration & Support
+  "administrative assistant": { entry: 1800, junior: 2500, mid: 3500, senior: 5000, expert: 7500 },
+  "executive assistant": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 13000 },
+  "office manager": { entry: 2800, junior: 4200, mid: 6500, senior: 9500, expert: 14000 },
+  "receptionist": { entry: 1500, junior: 2000, mid: 2800, senior: 4000, expert: 5500 },
+  "personal assistant": { entry: 2200, junior: 3500, mid: 5200, senior: 7800, expert: 11000 },
+  "secretary": { entry: 1800, junior: 2600, mid: 3800, senior: 5500, expert: 8000 },
+  
+  // Customer Service
+  "customer service": { entry: 1800, junior: 2600, mid: 3800, senior: 5500, expert: 8000 },
+  "call center agent": { entry: 1600, junior: 2200, mid: 3200, senior: 4500, expert: 6500 },
+  "customer support": { entry: 1800, junior: 2600, mid: 3800, senior: 5500, expert: 8000 },
+  
+  // Hospitality & Tourism
+  "hotel manager": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  "chef": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 14000 },
+  "tour guide": { entry: 1500, junior: 2200, mid: 3200, senior: 4800, expert: 7000 },
+  "event planner": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 14000 },
+  "restaurant manager": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
+  
+  // Media & Communications
+  "journalist": { entry: 2200, junior: 3500, mid: 5500, senior: 8500, expert: 13000 },
+  "editor": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 14000 },
+  "communications manager": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  "copywriter": { entry: 2200, junior: 3500, mid: 5500, senior: 8500, expert: 13000 },
+  "broadcast journalist": { entry: 2500, junior: 4000, mid: 6000, senior: 9500, expert: 15000 },
+  
+  // Agriculture & Environment
+  "agronomist": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
+  "environmental officer": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 14000 },
+  "farm manager": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
+  
+  // Executive & Senior Management
+  "ceo": { entry: 15000, junior: 22000, mid: 32000, senior: 45000, expert: 65000 },
+  "cto": { entry: 12000, junior: 18000, mid: 26000, senior: 38000, expert: 55000 },
+  "cfo": { entry: 12000, junior: 18000, mid: 26000, senior: 38000, expert: 55000 },
+  "coo": { entry: 11000, junior: 17000, mid: 25000, senior: 36000, expert: 52000 },
+  "general manager": { entry: 7000, junior: 10000, mid: 15000, senior: 22000, expert: 32000 },
+  "director": { entry: 8000, junior: 12000, mid: 18000, senior: 26000, expert: 38000 },
+  "managing director": { entry: 10000, junior: 15000, mid: 22000, senior: 32000, expert: 45000 },
+  
+  // Banking & Insurance Specific
+  "bank teller": { entry: 2200, junior: 3200, mid: 4500, senior: 6500, expert: 9000 },
+  "relationship manager": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  "loan officer": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
+  "insurance agent": { entry: 2000, junior: 3200, mid: 5000, senior: 8000, expert: 12000 },
+  "underwriter": { entry: 3200, junior: 5000, mid: 7800, senior: 12000, expert: 18000 },
+  "claims officer": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 14000 },
+  
+  // Telecom
+  "telecom engineer": { entry: 3800, junior: 6000, mid: 9500, senior: 14500, expert: 22000 },
+  "network administrator": { entry: 3200, junior: 5000, mid: 7800, senior: 12000, expert: 18000 },
+  
+  // Oil & Gas
+  "drilling engineer": { entry: 7000, junior: 12000, mid: 18000, senior: 28000, expert: 42000 },
+  "geologist": { entry: 4500, junior: 7500, mid: 12000, senior: 18000, expert: 28000 },
+  "hse officer": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
+  
+  // Construction & Real Estate
+  "construction manager": { entry: 4500, junior: 7000, mid: 10500, senior: 16000, expert: 24000 },
+  "site engineer": { entry: 3200, junior: 5000, mid: 7800, senior: 12000, expert: 18000 },
+  "real estate agent": { entry: 2000, junior: 3500, mid: 5500, senior: 8500, expert: 13000 },
+  "property manager": { entry: 3000, junior: 4800, mid: 7500, senior: 11000, expert: 17000 },
+  
+  // Drivers & Logistics
+  "driver": { entry: 1500, junior: 2000, mid: 2800, senior: 3800, expert: 5000 },
+  "dispatch rider": { entry: 1200, junior: 1600, mid: 2200, senior: 3000, expert: 4000 },
+  "warehouse supervisor": { entry: 2500, junior: 3800, mid: 5500, senior: 8000, expert: 12000 },
+  
+  // Internships (for completeness)
+  "intern": { entry: 800, junior: 1200, mid: 1500, senior: 2000, expert: 2500 },
+  "graduate trainee": { entry: 1800, junior: 2500, mid: 3500, senior: 4500, expert: 6000 },
+  
+  // Default for unlisted jobs
+  "default": { entry: 2800, junior: 4200, mid: 6500, senior: 10000, expert: 15000 },
+};
+
+// Salary validation thresholds - max multipliers from baseline by experience level
+const salaryValidationMultipliers: Record<string, number> = {
+  entry: 2.0,    // Max 2x the baseline for entry level
+  junior: 1.8,   // Max 1.8x the baseline for junior
+  mid: 1.6,      // Max 1.6x the baseline for mid-level
+  senior: 1.5,   // Max 1.5x the baseline for senior
+  expert: 1.4,   // Max 1.4x the baseline for expert
+};
+
+// Function to validate if a salary submission is within reasonable range
+const isValidSalarySubmission = (
+  jobTitle: string,
+  yearsExperience: number,
+  salary: number,
+  location: string
+): boolean => {
+  const normalizedTitle = jobTitle.toLowerCase().trim();
+  const experienceLevel = yearsExperience <= 1 ? "entry" : yearsExperience <= 3 ? "junior" : yearsExperience <= 6 ? "mid" : yearsExperience <= 10 ? "senior" : "expert";
+  
+  // Find baseline salary for this job
+  let baseSalaryData = baselineSalaries["default"];
+  for (const [key, values] of Object.entries(baselineSalaries)) {
+    if (key === "default") continue;
+    if (normalizedTitle.includes(key) || key.includes(normalizedTitle)) {
+      baseSalaryData = values;
+      break;
+    }
+  }
+  
+  const baseSalary = baseSalaryData[experienceLevel];
+  const locationMultiplier = locationMultipliers[location] || 1.0;
+  const adjustedBaseline = baseSalary * locationMultiplier;
+  
+  // Get max allowed multiplier for this experience level
+  const maxMultiplier = salaryValidationMultipliers[experienceLevel];
+  const maxAllowedSalary = adjustedBaseline * maxMultiplier;
+  const minAllowedSalary = adjustedBaseline * 0.4; // Minimum 40% of baseline
+  
+  return salary >= minAllowedSalary && salary <= maxAllowedSalary;
 };
 
 // Location multipliers
@@ -194,7 +415,7 @@ const SalaryCheck = () => {
       // Fetch crowdsourced data for better accuracy
       const { data: crowdsourcedData, error } = await supabase
         .from("salary_submissions")
-        .select("current_salary, expected_salary")
+        .select("current_salary, expected_salary, years_experience")
         .ilike("job_title", `%${normalizedTitle}%`)
         .eq("location", location)
         .gte("years_experience", years - 2)
@@ -204,10 +425,22 @@ const SalaryCheck = () => {
       let crowdsourcedAverage = adjustedSalary;
 
       if (!error && crowdsourcedData && crowdsourcedData.length > 0) {
-        dataPoints = crowdsourcedData.length;
+        // Filter out outliers using validation logic
         const validSalaries = crowdsourcedData
-          .filter((d) => d.current_salary)
+          .filter((d) => {
+            if (!d.current_salary) return false;
+            const salary = Number(d.current_salary);
+            // Validate salary is within reasonable range for this job/experience
+            return isValidSalarySubmission(
+              normalizedTitle, 
+              d.years_experience, 
+              salary, 
+              location
+            );
+          })
           .map((d) => Number(d.current_salary));
+        
+        dataPoints = validSalaries.length;
         if (validSalaries.length > 0) {
           crowdsourcedAverage = validSalaries.reduce((a, b) => a + b, 0) / validSalaries.length;
         }
@@ -341,12 +574,32 @@ const SalaryCheck = () => {
       return;
     }
 
+    const salaryAmount = parseFloat(contributeSalary);
+    const years = parseInt(yearsExperience);
+    
+    // Validate the salary submission before storing
+    const isValidSubmission = isValidSalarySubmission(
+      jobTitle,
+      years,
+      salaryAmount,
+      location
+    );
+
+    if (!isValidSubmission) {
+      // Still store it but flag it - or show a warning
+      toast({
+        title: "Unusual Salary",
+        description: "Your salary seems outside the typical range for this role. We'll still record it for review.",
+        variant: "default",
+      });
+    }
+
     try {
       const { error } = await supabase.from("salary_submissions").insert({
         job_title: jobTitle,
-        years_experience: parseInt(yearsExperience),
+        years_experience: years,
         location,
-        current_salary: parseFloat(contributeSalary),
+        current_salary: salaryAmount,
         expected_salary: result?.marketAverage || null,
         industry: industry || null,
       });
@@ -355,7 +608,9 @@ const SalaryCheck = () => {
 
       toast({
         title: "Thank You!",
-        description: "Your contribution helps others get accurate salary data.",
+        description: isValidSubmission 
+          ? "Your contribution helps others get accurate salary data."
+          : "Your data has been recorded for review.",
       });
       setShowContribute(false);
       setContributeSalary("");
