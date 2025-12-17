@@ -4,9 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Copy, Download, Share2, Sparkles, Clock, Upload, Palette, X, User, ArrowRight, ArrowLeft, Briefcase, Wand2 } from "lucide-react";
+import { Loader2, Copy, Download, Share2, Sparkles, Clock, Upload, Palette, X, User, ArrowRight, ArrowLeft, Briefcase, Wand2, CheckCircle2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -97,6 +99,7 @@ const IMAGE_CONTENT_OPTIONS = [
 ];
 
 const JobPostGenerator = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -114,14 +117,25 @@ const JobPostGenerator = () => {
   const [companyName, setCompanyName] = useState("");
   const [currency, setCurrency] = useState("GHC");
   const [shortDescription, setShortDescription] = useState("");
-  const [applyMethod, setApplyMethod] = useState<"email" | "url" | "phone">("email");
-  const [applyValue, setApplyValue] = useState("");
+  const [applyMethods, setApplyMethods] = useState<("email" | "url" | "phone")[]>(["email"]);
+  const [applyValues, setApplyValues] = useState<{ email: string; url: string; phone: string }>({ email: "", url: "", phone: "" });
   const [isGenerating, setIsGenerating] = useState(false);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
   const [account, setAccount] = useState<JobPosterAccount | null>(null);
   const [imageContentOptions, setImageContentOptions] = useState<string[]>(["jobTitle", "companyName", "salary", "hiringBadge"]);
+  const [showWaitlistPopup, setShowWaitlistPopup] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Show waitlist popup after content is generated
+  useEffect(() => {
+    if (generatedContent && !showWaitlistPopup) {
+      const timer = setTimeout(() => {
+        setShowWaitlistPopup(true);
+      }, 12000); // Show after 12 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [generatedContent]);
 
   const rgb = hexToRgb(primaryColor);
 
@@ -157,10 +171,10 @@ const JobPostGenerator = () => {
 
   // Pre-populate Call/WhatsApp field when phone method is selected
   useEffect(() => {
-    if (applyMethod === "phone" && phoneNumber && !applyValue) {
-      setApplyValue(`${countryCode}${phoneNumber}`);
+    if (applyMethods.includes("phone") && phoneNumber && !applyValues.phone) {
+      setApplyValues(prev => ({ ...prev, phone: `${countryCode}${phoneNumber}` }));
     }
-  }, [applyMethod, phoneNumber, countryCode]);
+  }, [applyMethods, phoneNumber, countryCode]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -243,8 +257,8 @@ const JobPostGenerator = () => {
           hasLogo: !!logo,
           currency,
           shortDescription,
-          applyMethod,
-          applyValue,
+          applyMethods,
+          applyValues,
           imageContentOptions,
         },
       });
@@ -600,9 +614,15 @@ const JobPostGenerator = () => {
                       <Input
                         id="salaryMin"
                         type="number"
+                        min="0"
                         placeholder="3,000"
                         value={salaryMin}
-                        onChange={(e) => setSalaryMin(e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === '' || parseFloat(value) >= 0) {
+                            setSalaryMin(value);
+                          }
+                        }}
                         className="h-11"
                       />
                     </div>
@@ -611,9 +631,15 @@ const JobPostGenerator = () => {
                       <Input
                         id="salaryMax"
                         type="number"
+                        min="0"
                         placeholder="5,000"
                         value={salaryMax}
-                        onChange={(e) => setSalaryMax(e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === '' || parseFloat(value) >= 0) {
+                            setSalaryMax(value);
+                          }
+                        }}
                         className="h-11"
                       />
                     </div>
@@ -643,52 +669,92 @@ const JobPostGenerator = () => {
 
                   {/* How to Apply */}
                   <div className="space-y-3">
-                    <Label>How to Apply (Optional)</Label>
-                    <div className="flex flex-wrap gap-4">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="applyMethod"
-                          checked={applyMethod === "email"}
-                          onChange={() => setApplyMethod("email")}
-                          className="w-4 h-4 text-blue-600"
-                        />
-                        <span className="text-sm">Email CV to</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="applyMethod"
-                          checked={applyMethod === "url"}
-                          onChange={() => setApplyMethod("url")}
-                          className="w-4 h-4 text-blue-600"
-                        />
-                        <span className="text-sm">Apply at URL</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="applyMethod"
-                          checked={applyMethod === "phone"}
-                          onChange={() => setApplyMethod("phone")}
-                          className="w-4 h-4 text-blue-600"
-                        />
-                        <span className="text-sm">Call/WhatsApp</span>
-                      </label>
+                    <Label>How to Apply (Select one or more)</Label>
+                    <div className="space-y-3">
+                      {/* Email Option */}
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={applyMethods.includes("email")}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setApplyMethods(prev => [...prev, "email"]);
+                              } else {
+                                setApplyMethods(prev => prev.filter(m => m !== "email"));
+                              }
+                            }}
+                            className="w-4 h-4 text-blue-600 rounded"
+                          />
+                          <span className="text-sm">Email CV to</span>
+                        </label>
+                        {applyMethods.includes("email") && (
+                          <Input
+                            placeholder="careers@company.com"
+                            value={applyValues.email}
+                            onChange={(e) => setApplyValues(prev => ({ ...prev, email: e.target.value }))}
+                            type="email"
+                            className="h-10 ml-6"
+                          />
+                        )}
+                      </div>
+
+                      {/* URL Option */}
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={applyMethods.includes("url")}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setApplyMethods(prev => [...prev, "url"]);
+                              } else {
+                                setApplyMethods(prev => prev.filter(m => m !== "url"));
+                              }
+                            }}
+                            className="w-4 h-4 text-blue-600 rounded"
+                          />
+                          <span className="text-sm">Apply at URL</span>
+                        </label>
+                        {applyMethods.includes("url") && (
+                          <Input
+                            placeholder="https://company.com/careers"
+                            value={applyValues.url}
+                            onChange={(e) => setApplyValues(prev => ({ ...prev, url: e.target.value }))}
+                            type="url"
+                            className="h-10 ml-6"
+                          />
+                        )}
+                      </div>
+
+                      {/* Phone Option */}
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={applyMethods.includes("phone")}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setApplyMethods(prev => [...prev, "phone"]);
+                              } else {
+                                setApplyMethods(prev => prev.filter(m => m !== "phone"));
+                              }
+                            }}
+                            className="w-4 h-4 text-blue-600 rounded"
+                          />
+                          <span className="text-sm">Call/WhatsApp</span>
+                        </label>
+                        {applyMethods.includes("phone") && (
+                          <Input
+                            placeholder="+233 XX XXX XXXX"
+                            value={applyValues.phone}
+                            onChange={(e) => setApplyValues(prev => ({ ...prev, phone: e.target.value }))}
+                            type="tel"
+                            className="h-10 ml-6"
+                          />
+                        )}
+                      </div>
                     </div>
-                    <Input
-                      placeholder={
-                        applyMethod === "email" 
-                          ? "careers@company.com" 
-                          : applyMethod === "url" 
-                            ? "https://company.com/careers" 
-                            : "+233 XX XXX XXXX"
-                      }
-                      value={applyValue}
-                      onChange={(e) => setApplyValue(e.target.value)}
-                      type={applyMethod === "email" ? "email" : applyMethod === "url" ? "url" : "tel"}
-                      className="h-11"
-                    />
                   </div>
 
                   <Button
@@ -1055,6 +1121,53 @@ const JobPostGenerator = () => {
         </footer>
       </main>
 
+      {/* Waitlist Popup for Job Posters */}
+      <Dialog open={showWaitlistPopup} onOpenChange={setShowWaitlistPopup}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                <Briefcase className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <DialogTitle className="text-center text-xl">
+              Supercharge Your Hiring with Kuajiri AI
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Join our waitlist to access AI-powered recruitment tools that help you find the best candidates faster.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                <span>AI-powered candidate matching</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                <span>Automated job post distribution</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                <span>Smart applicant screening</span>
+              </div>
+            </div>
+            <Button 
+              onClick={() => navigate("/waitlist")}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            >
+              Join the Waitlist
+              <Sparkles className="w-4 h-4 ml-2" />
+            </Button>
+            <button 
+              onClick={() => setShowWaitlistPopup(false)}
+              className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Maybe later
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
