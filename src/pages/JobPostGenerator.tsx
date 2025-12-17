@@ -4,9 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Copy, Download, Share2, Sparkles, Clock, Upload, Palette, X, User, ArrowRight, ArrowLeft, Briefcase, Wand2 } from "lucide-react";
+import { Loader2, Copy, Download, Share2, Sparkles, Clock, Upload, Palette, X, User, ArrowRight, ArrowLeft, Briefcase, Wand2, CheckCircle2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -97,6 +99,7 @@ const IMAGE_CONTENT_OPTIONS = [
 ];
 
 const JobPostGenerator = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -121,7 +124,18 @@ const JobPostGenerator = () => {
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
   const [account, setAccount] = useState<JobPosterAccount | null>(null);
   const [imageContentOptions, setImageContentOptions] = useState<string[]>(["jobTitle", "companyName", "salary", "hiringBadge"]);
+  const [showWaitlistPopup, setShowWaitlistPopup] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Show waitlist popup after content is generated
+  useEffect(() => {
+    if (generatedContent && !showWaitlistPopup) {
+      const timer = setTimeout(() => {
+        setShowWaitlistPopup(true);
+      }, 5000); // Show after 5 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [generatedContent]);
 
   const rgb = hexToRgb(primaryColor);
 
@@ -1095,6 +1109,53 @@ const JobPostGenerator = () => {
         </footer>
       </main>
 
+      {/* Waitlist Popup for Job Posters */}
+      <Dialog open={showWaitlistPopup} onOpenChange={setShowWaitlistPopup}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                <Briefcase className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <DialogTitle className="text-center text-xl">
+              Supercharge Your Hiring with Kuajiri AI
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Join our waitlist to access AI-powered recruitment tools that help you find the best candidates faster.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                <span>AI-powered candidate matching</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                <span>Automated job post distribution</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                <span>Smart applicant screening</span>
+              </div>
+            </div>
+            <Button 
+              onClick={() => navigate("/waitlist")}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            >
+              Join the Waitlist
+              <Sparkles className="w-4 h-4 ml-2" />
+            </Button>
+            <button 
+              onClick={() => setShowWaitlistPopup(false)}
+              className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Maybe later
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
