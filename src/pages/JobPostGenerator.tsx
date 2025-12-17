@@ -614,9 +614,15 @@ const JobPostGenerator = () => {
                       <Input
                         id="salaryMin"
                         type="number"
+                        min="0"
                         placeholder="3,000"
                         value={salaryMin}
-                        onChange={(e) => setSalaryMin(e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === '' || parseFloat(value) >= 0) {
+                            setSalaryMin(value);
+                          }
+                        }}
                         className="h-11"
                       />
                     </div>
@@ -625,9 +631,15 @@ const JobPostGenerator = () => {
                       <Input
                         id="salaryMax"
                         type="number"
+                        min="0"
                         placeholder="5,000"
                         value={salaryMax}
-                        onChange={(e) => setSalaryMax(e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === '' || parseFloat(value) >= 0) {
+                            setSalaryMax(value);
+                          }
+                        }}
                         className="h-11"
                       />
                     </div>

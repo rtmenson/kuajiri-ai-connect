@@ -806,9 +806,15 @@ const SalaryCheck = () => {
                 <Input
                   id="currentSalary"
                   type="number"
+                  min="0"
                   placeholder="Optional - to see if you're underpaid"
                   value={currentSalary}
-                  onChange={(e) => setCurrentSalary(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || parseFloat(value) >= 0) {
+                      setCurrentSalary(value);
+                    }
+                  }}
                 />
               </div>
 
@@ -1107,9 +1113,15 @@ const SalaryCheck = () => {
                       <div className="flex flex-col sm:flex-row gap-3">
                         <Input
                           type="number"
+                          min="0"
                           placeholder="Your actual monthly salary (GH₵)"
                           value={contributeSalary}
-                          onChange={(e) => setContributeSalary(e.target.value)}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === '' || parseFloat(value) >= 0) {
+                              setContributeSalary(value);
+                            }
+                          }}
                           className="flex-1"
                         />
                         <Input
