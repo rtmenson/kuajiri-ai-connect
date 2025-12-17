@@ -14,6 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
+      job_posters: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          phone: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      salary_submissions: {
+        Row: {
+          created_at: string
+          current_salary: number | null
+          email: string | null
+          expected_salary: number | null
+          full_name: string | null
+          id: string
+          industry: string | null
+          job_title: string
+          location: string
+          years_experience: number
+        }
+        Insert: {
+          created_at?: string
+          current_salary?: number | null
+          email?: string | null
+          expected_salary?: number | null
+          full_name?: string | null
+          id?: string
+          industry?: string | null
+          job_title: string
+          location: string
+          years_experience: number
+        }
+        Update: {
+          created_at?: string
+          current_salary?: number | null
+          email?: string | null
+          expected_salary?: number | null
+          full_name?: string | null
+          id?: string
+          industry?: string | null
+          job_title?: string
+          location?: string
+          years_experience?: number
+        }
+        Relationships: []
+      }
       waitlist_submissions: {
         Row: {
           created_at: string

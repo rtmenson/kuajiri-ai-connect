@@ -2,3 +2,6 @@ project_id = "piblzcgefnsqsdsuprpk"
 
 [functions.generate-job-post]
 verify_jwt = false
+
+[functions.generate-salary-graphic]
+verify_jwt = false

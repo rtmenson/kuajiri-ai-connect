@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { jobTitle, salaryMin, salaryMax, requirements, brandColor, companyName, hasLogo, currency, shortDescription } = await req.json();
+    const { jobTitle, salaryMin, salaryMax, requirements, brandColor, companyName, hasLogo, currency, shortDescription, applyMethod, applyValue } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
@@ -41,15 +41,16 @@ serve(async (req) => {
 
 Company: ${companyName}
 Job Title: ${jobTitle}
-Salary Range: ${currencySymbol}${salaryMin.toLocaleString()} - ${currencySymbol}${salaryMax.toLocaleString()}
+${salaryMin && salaryMax ? `Salary Range: ${currencySymbol}${salaryMin.toLocaleString()} - ${currencySymbol}${salaryMax.toLocaleString()}` : ''}
 ${shortDescription ? `Brief Description: ${shortDescription}` : ''}
 Key Requirements:
 1. ${requirements[0]}
 2. ${requirements[1]}
 3. ${requirements[2]}
+${applyValue ? `How to Apply: ${applyMethod === 'email' ? `Send CV to ${applyValue}` : applyMethod === 'url' ? `Apply at ${applyValue}` : `Call/WhatsApp ${applyValue}`}` : ''}
 
 Please provide:
-1. A professional job description (150-200 words) including responsibilities, requirements, and a compelling call to action
+1. A professional job description (150-200 words) including responsibilities, requirements, and a compelling call to action${applyValue ? ` (include the application method at the end)` : ''}
 2. A witty one-liner for social media posts (max 100 characters, include relevant emoji)
 3. A LinkedIn/Instagram caption (2-3 sentences with hashtags, mention the company name)
 
@@ -93,21 +94,24 @@ Format your response as JSON with keys: "description", "oneLiner", "socialCaptio
       console.error("Failed to parse JSON:", e);
       parsedContent = {
         description: generatedText,
-        oneLiner: `🔥 We're hiring! ${jobTitle} | ${currencySymbol}${salaryMin.toLocaleString()}+ | Apply now!`,
+        oneLiner: salaryMin ? `🔥 We're hiring! ${jobTitle} | ${currencySymbol}${salaryMin.toLocaleString()}+ | Apply now!` : `🔥 We're hiring! ${jobTitle} | Apply now!`,
         socialCaption: `Exciting opportunity at ${companyName}! We're looking for a ${jobTitle}. #Hiring #GhanaJobs #Kuajiri`
       };
     }
 
     // Generate social media graphic with brand color
     const colorName = getColorName(brandColor);
+    const salaryText = salaryMin && salaryMax ? `- Include "${getImageCurrencySymbol(currency || "GHC")}${salaryMin.toLocaleString()} - ${getImageCurrencySymbol(currency || "GHC")}${salaryMax.toLocaleString()}" as salary range` : '';
+    const applyText = applyValue ? `- Include how to apply: "${applyMethod === 'email' ? `Email: ${applyValue}` : applyMethod === 'url' ? `Apply: ${applyValue}` : `Call/WhatsApp: ${applyValue}`}"` : '';
     const imagePrompt = `Create a modern, professional job posting graphic for social media. 
     The design should be:
     - Clean and corporate with ${colorName} (${brandColor}) as the primary accent color
     - Feature the text "${jobTitle}" prominently in large bold letters
-    - Include "${currencySymbol}${salaryMin.toLocaleString()} - ${currencySymbol}${salaryMax.toLocaleString()}" as salary range
+    ${salaryText}
+    ${applyText}
     - Have "WE'RE HIRING!" as a headline at the top
     - Include company name "${companyName}" prominently
-    - Include a small watermark "Powered by Kuajiri AI" at the bottom right corner
+    - IMPORTANT: Include a subtle branded watermark "Powered by Kuajiri AI" with a sparkle/star icon in the bottom right corner, styled like a professional logo
     - Square format (1:1 ratio) suitable for Instagram and LinkedIn
     - Modern, minimalist style with geometric elements and clean typography
     - Professional business aesthetic
@@ -189,4 +193,16 @@ function getCurrencySymbol(currency: string): string {
     "AUD": "A$",
   };
   return symbols[currency] || "GH₵";
+}
+
+function getImageCurrencySymbol(currency: string): string {
+  const symbols: Record<string, string> = {
+    "GHC": "GHS ",
+    "USD": "$",
+    "EUR": "€",
+    "GBP": "£",
+    "CFA": "CFA ",
+    "AUD": "A$",
+  };
+  return symbols[currency] || "GHS ";
 }

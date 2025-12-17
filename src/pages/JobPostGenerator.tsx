@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -6,15 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Copy, Download, Share2, Sparkles, ArrowLeft, Clock, Upload, Palette, X, User } from "lucide-react";
-import { Link } from "react-router-dom";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Loader2, Copy, Download, Share2, Sparkles, Clock, Upload, Palette, X, User, ArrowRight, ArrowLeft, Briefcase, Wand2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -60,6 +52,17 @@ const CURRENCIES = [
   { code: "AUD", symbol: "A$", name: "Australian Dollar" },
 ];
 
+const LOADING_MESSAGES = [
+  { text: "Analyzing job requirements...", emoji: "🔍" },
+  { text: "Crafting compelling copy...", emoji: "✍️" },
+  { text: "Adding a sprinkle of creativity...", emoji: "✨" },
+  { text: "Making it Ghana-ready...", emoji: "🇬🇭" },
+  { text: "Designing eye-catching graphics...", emoji: "🎨" },
+  { text: "Optimizing for social media...", emoji: "📱" },
+  { text: "Adding the perfect hashtags...", emoji: "#️⃣" },
+  { text: "Almost there, polishing the final touches...", emoji: "💎" },
+];
+
 // Helper functions for color conversion
 const hexToRgb = (hex: string): { r: number; g: number; b: number } | null => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -72,7 +75,23 @@ const hexToRgb = (hex: string): { r: number; g: number; b: number } | null => {
     : null;
 };
 
+const COUNTRY_CODES = [
+  { code: "+233", country: "Ghana", flag: "🇬🇭" },
+  { code: "+1", country: "USA", flag: "🇺🇸" },
+  { code: "+44", country: "UK", flag: "🇬🇧" },
+  { code: "+234", country: "Nigeria", flag: "🇳🇬" },
+  { code: "+254", country: "Kenya", flag: "🇰🇪" },
+  { code: "+27", country: "South Africa", flag: "🇿🇦" },
+  { code: "+225", country: "Ivory Coast", flag: "🇨🇮" },
+  { code: "+61", country: "Australia", flag: "🇦🇺" },
+];
+
 const JobPostGenerator = () => {
+  const [step, setStep] = useState(1);
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [countryCode, setCountryCode] = useState("+233");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [salaryMin, setSalaryMin] = useState("");
   const [salaryMax, setSalaryMax] = useState("");
@@ -84,15 +103,33 @@ const JobPostGenerator = () => {
   const [companyName, setCompanyName] = useState("");
   const [currency, setCurrency] = useState("GHC");
   const [shortDescription, setShortDescription] = useState("");
+  const [applyMethod, setApplyMethod] = useState<"email" | "url" | "phone">("email");
+  const [applyValue, setApplyValue] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
-  const [showAccountModal, setShowAccountModal] = useState(false);
   const [account, setAccount] = useState<JobPosterAccount | null>(null);
-  const [accountForm, setAccountForm] = useState({ fullName: "", email: "", phone: "" });
-  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const rgb = hexToRgb(brandColor);
+
+  // Cycle through loading messages
+  useEffect(() => {
+    if (!isGenerating) return;
+    
+    const interval = setInterval(() => {
+      setLoadingMessageIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [isGenerating]);
+
+  // Pre-populate Call/WhatsApp field when phone method is selected
+  useEffect(() => {
+    if (applyMethod === "phone" && phoneNumber && !applyValue) {
+      setApplyValue(`${countryCode}${phoneNumber}`);
+    }
+  }, [applyMethod, phoneNumber, countryCode]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -116,25 +153,66 @@ const JobPostGenerator = () => {
     }
   };
 
+  const validateStep1 = () => {
+    if (!jobTitle || !req1 || !req2 || !req3) {
+      toast.error("Please fill in job title and all 3 requirements");
+      return false;
+    }
+    return true;
+  };
+
+  const handleNextStep = () => {
+    if (validateStep1()) {
+      setStep(2);
+    }
+  };
+
   const handleGenerate = async () => {
-    if (!jobTitle || !salaryMin || !salaryMax || !req1 || !req2 || !req3) {
+    if (!fullName || !email || !phoneNumber) {
       toast.error("Please fill in all required fields");
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    // Save job poster information to database
+    const fullPhone = `${countryCode}${phoneNumber}`;
+    try {
+      const { error: insertError } = await supabase.from("job_posters").insert({
+        full_name: fullName,
+        email: email,
+        phone: fullPhone,
+      });
+      
+      if (insertError && !insertError.message?.includes("duplicate")) {
+        console.error("Account creation error:", insertError);
+      }
+      setAccount({ fullName, email, phone: fullPhone });
+    } catch (error: any) {
+      console.error("Account creation error:", error);
+      setAccount({ fullName, email, phone: fullPhone });
+    }
+
     setIsGenerating(true);
+    setLoadingMessageIndex(0);
     try {
       const { data, error } = await supabase.functions.invoke("generate-job-post", {
         body: {
           jobTitle,
-          salaryMin: parseInt(salaryMin),
-          salaryMax: parseInt(salaryMax),
+          salaryMin: salaryMin ? parseInt(salaryMin) : null,
+          salaryMax: salaryMax ? parseInt(salaryMax) : null,
           requirements: [req1, req2, req3],
           brandColor,
           companyName: companyName || "Your Company",
           hasLogo: !!logo,
           currency,
           shortDescription,
+          applyMethod,
+          applyValue,
         },
       });
 
@@ -156,54 +234,7 @@ const JobPostGenerator = () => {
   };
 
   const handleDownloadClick = () => {
-    if (!account) {
-      setShowAccountModal(true);
-    } else {
-      downloadImage();
-    }
-  };
-
-  const handleCreateAccount = async () => {
-    if (!accountForm.fullName || !accountForm.email || !accountForm.phone) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(accountForm.email)) {
-      toast.error("Please enter a valid email address");
-      return;
-    }
-
-    setIsCreatingAccount(true);
-    try {
-      const { error } = await supabase.from("waitlist_submissions").insert({
-        full_name: accountForm.fullName,
-        email: accountForm.email,
-        phone: accountForm.phone,
-        user_type: "job_poster",
-      });
-
-      if (error) throw error;
-
-      setAccount(accountForm);
-      setShowAccountModal(false);
-      toast.success("Account created! You can now download your job post.");
-      downloadImage();
-    } catch (error: any) {
-      console.error("Account creation error:", error);
-      if (error.message?.includes("duplicate")) {
-        // User already exists, allow download
-        setAccount(accountForm);
-        setShowAccountModal(false);
-        toast.success("Welcome back! Downloading your job post...");
-        downloadImage();
-      } else {
-        toast.error("Failed to create account. Please try again.");
-      }
-    } finally {
-      setIsCreatingAccount(false);
-    }
+    downloadImage();
   };
 
   const downloadImage = () => {
@@ -238,15 +269,13 @@ const JobPostGenerator = () => {
 
   const selectedCurrency = CURRENCIES.find(c => c.code === currency);
 
+  const currentLoadingMessage = LOADING_MESSAGES[loadingMessageIndex];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </Link>
+        <div className="container mx-auto px-4 py-4 flex items-center justify-center">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-white" />
@@ -274,229 +303,449 @@ const JobPostGenerator = () => {
           </p>
         </div>
 
+        {/* Step Indicator */}
+        <div className="flex items-center justify-center mb-8">
+          <div className="flex items-center gap-3">
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
+              step === 1 ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" : "bg-gray-100 text-gray-500"
+            }`}>
+              <Briefcase className="w-4 h-4" />
+              <span className="font-medium text-sm">Job Details</span>
+            </div>
+            <div className="w-8 h-0.5 bg-gray-200" />
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
+              step === 2 ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" : "bg-gray-100 text-gray-500"
+            }`}>
+              <User className="w-4 h-4" />
+              <span className="font-medium text-sm">Your Info</span>
+            </div>
+          </div>
+        </div>
+
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Input Form */}
           <Card className="shadow-lg border-0 bg-white">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-blue-600" />
-                Job Details
-              </CardTitle>
-              <CardDescription>Fill in the basics and we'll handle the rest</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Brand Customization */}
-              <div className="p-4 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 space-y-4">
-                <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-purple-600" />
-                  Brand Customization
-                </h3>
-                
-                {/* Company Name */}
-                <div className="space-y-2">
-                  <Label htmlFor="companyName">Company Name (Optional)</Label>
-                  <Input
-                    id="companyName"
-                    placeholder="e.g. Shell Ghana Ltd"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    className="h-10 bg-white"
-                  />
-                </div>
-
-                {/* Logo Upload */}
-                <div className="space-y-2">
-                  <Label>Company Logo (Optional)</Label>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    accept="image/*"
-                    onChange={handleLogoUpload}
-                    className="hidden"
-                  />
-                  {logo ? (
-                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg border">
-                      <img src={logo} alt="Logo" className="w-12 h-12 object-contain rounded" />
-                      <span className="text-sm text-gray-600 flex-1">Logo uploaded</span>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={removeLogo}
-                        className="text-gray-500 hover:text-red-500"
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="w-full h-10 bg-white"
-                    >
-                      <Upload className="w-4 h-4 mr-2" />
-                      Upload Logo
-                    </Button>
-                  )}
-                </div>
-
-                {/* Brand Color */}
-                <div className="space-y-2">
-                  <Label>Brand Color</Label>
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {PRESET_COLORS.map((color) => (
-                      <button
-                        key={color.value}
-                        onClick={() => setBrandColor(color.value)}
-                        className={`w-8 h-8 rounded-full border-2 transition-all ${
-                          brandColor === color.value
-                            ? "border-gray-900 scale-110"
-                            : "border-transparent hover:scale-105"
-                        }`}
-                        style={{ backgroundColor: color.value }}
-                        title={color.name}
-                      />
-                    ))}
-                    <div className="relative">
-                      <input
-                        type="color"
-                        value={brandColor}
-                        onChange={(e) => setBrandColor(e.target.value)}
-                        className="w-8 h-8 rounded-full cursor-pointer border-2 border-gray-200"
-                      />
-                    </div>
-                  </div>
-                  {/* Color Value Display */}
-                  <div className="flex items-center gap-3 p-2 bg-white rounded-lg border text-sm">
-                    <div
-                      className="w-6 h-6 rounded border"
-                      style={{ backgroundColor: brandColor }}
-                    />
-                    <div className="flex-1 grid grid-cols-2 gap-2 text-xs">
-                      <div className="font-mono">
-                        <span className="text-gray-500">HEX:</span> {brandColor.toUpperCase()}
-                      </div>
-                      {rgb && (
-                        <div className="font-mono">
-                          <span className="text-gray-500">RGB:</span> {rgb.r}, {rgb.g}, {rgb.b}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="jobTitle">Job Title *</Label>
-                <Input
-                  id="jobTitle"
-                  placeholder="e.g. Senior Software Engineer"
-                  value={jobTitle}
-                  onChange={(e) => setJobTitle(e.target.value)}
-                  className="h-11"
-                />
-              </div>
-
-              {/* Short Description */}
-              <div className="space-y-2">
-                <Label htmlFor="shortDescription">Short Description (Optional)</Label>
-                <Textarea
-                  id="shortDescription"
-                  placeholder="Brief overview of the role..."
-                  value={shortDescription}
-                  onChange={(e) => setShortDescription(e.target.value)}
-                  className="resize-none"
-                  rows={2}
-                />
-              </div>
-
-              {/* Currency Selector */}
-              <div className="space-y-2">
-                <Label>Currency</Label>
-                <Select value={currency} onValueChange={setCurrency}>
-                  <SelectTrigger className="h-11">
-                    <SelectValue placeholder="Select currency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CURRENCIES.map((curr) => (
-                      <SelectItem key={curr.code} value={curr.code}>
-                        {curr.symbol} - {curr.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="salaryMin">Min Salary ({selectedCurrency?.symbol}) *</Label>
-                  <Input
-                    id="salaryMin"
-                    type="number"
-                    placeholder="3,000"
-                    value={salaryMin}
-                    onChange={(e) => setSalaryMin(e.target.value)}
-                    className="h-11"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="salaryMax">Max Salary ({selectedCurrency?.symbol}) *</Label>
-                  <Input
-                    id="salaryMax"
-                    type="number"
-                    placeholder="5,000"
-                    value={salaryMax}
-                    onChange={(e) => setSalaryMax(e.target.value)}
-                    className="h-11"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <Label>3 Key Requirements *</Label>
-                <Input
-                  placeholder="1. e.g. 3+ years of experience in React"
-                  value={req1}
-                  onChange={(e) => setReq1(e.target.value)}
-                  className="h-11"
-                />
-                <Input
-                  placeholder="2. e.g. Strong communication skills"
-                  value={req2}
-                  onChange={(e) => setReq2(e.target.value)}
-                  className="h-11"
-                />
-                <Input
-                  placeholder="3. e.g. Bachelor's degree in Computer Science"
-                  value={req3}
-                  onChange={(e) => setReq3(e.target.value)}
-                  className="h-11"
-                />
-              </div>
-
-              <Button
-                onClick={handleGenerate}
-                disabled={isGenerating}
-                className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                size="lg"
-              >
-                {isGenerating ? (
+                {step === 1 ? (
                   <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Generating Magic...
+                    <Briefcase className="w-5 h-5 text-blue-600" />
+                    Job Details
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-5 h-5 mr-2" />
-                    Generate Job Post
+                    <User className="w-5 h-5 text-blue-600" />
+                    Your Information
                   </>
                 )}
-              </Button>
+              </CardTitle>
+              <CardDescription>
+                {step === 1 ? "Tell us about the role and your brand" : "Almost there! Just need your details"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {step === 1 ? (
+                <>
+                  {/* Brand Customization */}
+                  <div className="p-4 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 space-y-4">
+                    <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                      <Palette className="w-4 h-4 text-purple-600" />
+                      Brand Customization
+                    </h3>
+                    
+                    {/* Company Name */}
+                    <div className="space-y-2">
+                      <Label htmlFor="companyName">Company Name (Optional)</Label>
+                      <Input
+                        id="companyName"
+                        placeholder="e.g. Shell Ghana Ltd"
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        className="h-10 bg-white"
+                      />
+                    </div>
+
+                    {/* Logo Upload */}
+                    <div className="space-y-2">
+                      <Label>Company Logo (Optional)</Label>
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        accept="image/*"
+                        onChange={handleLogoUpload}
+                        className="hidden"
+                      />
+                      {logo ? (
+                        <div className="flex items-center gap-3 p-3 bg-white rounded-lg border">
+                          <img src={logo} alt="Logo" className="w-12 h-12 object-contain rounded" />
+                          <span className="text-sm text-gray-600 flex-1">Logo uploaded</span>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={removeLogo}
+                            className="text-gray-500 hover:text-red-500"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="w-full h-10 bg-white"
+                        >
+                          <Upload className="w-4 h-4 mr-2" />
+                          Upload Logo
+                        </Button>
+                      )}
+                    </div>
+
+                    {/* Brand Color */}
+                    <div className="space-y-2">
+                      <Label>Brand Color</Label>
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {PRESET_COLORS.map((color) => (
+                          <button
+                            key={color.value}
+                            onClick={() => setBrandColor(color.value)}
+                            className={`w-8 h-8 rounded-full border-2 transition-all ${
+                              brandColor === color.value
+                                ? "border-gray-900 scale-110"
+                                : "border-transparent hover:scale-105"
+                            }`}
+                            style={{ backgroundColor: color.value }}
+                            title={color.name}
+                          />
+                        ))}
+                        <div className="relative">
+                          <input
+                            type="color"
+                            value={brandColor}
+                            onChange={(e) => setBrandColor(e.target.value)}
+                            className="w-8 h-8 rounded-full cursor-pointer border-2 border-gray-200"
+                          />
+                        </div>
+                      </div>
+                      {/* Color Value Display */}
+                      <div className="flex items-center gap-3 p-2 bg-white rounded-lg border text-sm">
+                        <div
+                          className="w-6 h-6 rounded border"
+                          style={{ backgroundColor: brandColor }}
+                        />
+                        <div className="flex-1 grid grid-cols-2 gap-2 text-xs">
+                          <div className="font-mono">
+                            <span className="text-gray-500">HEX:</span> {brandColor.toUpperCase()}
+                          </div>
+                          {rgb && (
+                            <div className="font-mono">
+                              <span className="text-gray-500">RGB:</span> {rgb.r}, {rgb.g}, {rgb.b}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="jobTitle">Job Title *</Label>
+                    <Input
+                      id="jobTitle"
+                      placeholder="e.g. Senior Software Engineer"
+                      value={jobTitle}
+                      onChange={(e) => setJobTitle(e.target.value)}
+                      className="h-11"
+                    />
+                  </div>
+
+                  {/* Short Description */}
+                  <div className="space-y-2">
+                    <Label htmlFor="shortDescription">Short Description (Optional)</Label>
+                    <Textarea
+                      id="shortDescription"
+                      placeholder="Brief overview of the role..."
+                      value={shortDescription}
+                      onChange={(e) => setShortDescription(e.target.value)}
+                      className="resize-none"
+                      rows={2}
+                    />
+                  </div>
+
+                  {/* Currency Selector */}
+                  <div className="space-y-2">
+                    <Label>Currency</Label>
+                    <Select value={currency} onValueChange={setCurrency}>
+                      <SelectTrigger className="h-11">
+                        <SelectValue placeholder="Select currency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {CURRENCIES.map((curr) => (
+                          <SelectItem key={curr.code} value={curr.code}>
+                            {curr.symbol} - {curr.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="salaryMin">Min Salary ({selectedCurrency?.symbol})</Label>
+                      <Input
+                        id="salaryMin"
+                        type="number"
+                        placeholder="3,000"
+                        value={salaryMin}
+                        onChange={(e) => setSalaryMin(e.target.value)}
+                        className="h-11"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="salaryMax">Max Salary ({selectedCurrency?.symbol})</Label>
+                      <Input
+                        id="salaryMax"
+                        type="number"
+                        placeholder="5,000"
+                        value={salaryMax}
+                        onChange={(e) => setSalaryMax(e.target.value)}
+                        className="h-11"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label>3 Key Requirements *</Label>
+                    <Input
+                      placeholder="1. e.g. 3+ years of experience in React"
+                      value={req1}
+                      onChange={(e) => setReq1(e.target.value)}
+                      className="h-11"
+                    />
+                    <Input
+                      placeholder="2. e.g. Strong communication skills"
+                      value={req2}
+                      onChange={(e) => setReq2(e.target.value)}
+                      className="h-11"
+                    />
+                    <Input
+                      placeholder="3. e.g. Bachelor's degree in Computer Science"
+                      value={req3}
+                      onChange={(e) => setReq3(e.target.value)}
+                      className="h-11"
+                    />
+                  </div>
+
+                  {/* How to Apply */}
+                  <div className="space-y-3">
+                    <Label>How to Apply (Optional)</Label>
+                    <div className="flex flex-wrap gap-4">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="applyMethod"
+                          checked={applyMethod === "email"}
+                          onChange={() => setApplyMethod("email")}
+                          className="w-4 h-4 text-blue-600"
+                        />
+                        <span className="text-sm">Email CV to</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="applyMethod"
+                          checked={applyMethod === "url"}
+                          onChange={() => setApplyMethod("url")}
+                          className="w-4 h-4 text-blue-600"
+                        />
+                        <span className="text-sm">Apply at URL</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="applyMethod"
+                          checked={applyMethod === "phone"}
+                          onChange={() => setApplyMethod("phone")}
+                          className="w-4 h-4 text-blue-600"
+                        />
+                        <span className="text-sm">Call/WhatsApp</span>
+                      </label>
+                    </div>
+                    <Input
+                      placeholder={
+                        applyMethod === "email" 
+                          ? "careers@company.com" 
+                          : applyMethod === "url" 
+                            ? "https://company.com/careers" 
+                            : "+233 XX XXX XXXX"
+                      }
+                      value={applyValue}
+                      onChange={(e) => setApplyValue(e.target.value)}
+                      type={applyMethod === "email" ? "email" : applyMethod === "url" ? "url" : "tel"}
+                      className="h-11"
+                    />
+                  </div>
+
+                  <Button
+                    onClick={handleNextStep}
+                    className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    size="lg"
+                  >
+                    Continue
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </>
+              ) : (
+                <>
+                  {/* Contact Information - Step 2 */}
+                  <div className="p-4 rounded-lg bg-gradient-to-r from-green-50 to-blue-50 border border-green-100 space-y-4">
+                    <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                      <User className="w-4 h-4 text-green-600" />
+                      Your Information
+                    </h3>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="fullName">Full Name *</Label>
+                      <Input
+                        id="fullName"
+                        placeholder="e.g. Kwame Asante"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        className="h-10 bg-white"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email Address *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="e.g. kwame@company.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="h-10 bg-white"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone Number *</Label>
+                      <div className="flex gap-2">
+                        <Select value={countryCode} onValueChange={setCountryCode}>
+                          <SelectTrigger className="w-[130px] h-10 bg-white">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {COUNTRY_CODES.map((country) => (
+                              <SelectItem key={country.code} value={country.code}>
+                                {country.flag} {country.code}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="244 123 456"
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          className="h-10 bg-white flex-1"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Summary Card */}
+                  <div className="p-4 rounded-lg bg-gray-50 border space-y-2">
+                    <h4 className="font-medium text-gray-700 text-sm">Job Summary</h4>
+                    <div className="text-sm text-gray-600 space-y-1">
+                      <p><span className="text-gray-500">Title:</span> {jobTitle}</p>
+                      {companyName && <p><span className="text-gray-500">Company:</span> {companyName}</p>}
+                      {salaryMin && salaryMax && (
+                        <p><span className="text-gray-500">Salary:</span> {selectedCurrency?.symbol}{salaryMin} - {selectedCurrency?.symbol}{salaryMax}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Button
+                      onClick={() => setStep(1)}
+                      variant="outline"
+                      className="flex-1 h-12"
+                      size="lg"
+                    >
+                      <ArrowLeft className="w-5 h-5 mr-2" />
+                      Back
+                    </Button>
+                    <Button
+                      onClick={handleGenerate}
+                      disabled={isGenerating}
+                      className="flex-1 h-12 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                      size="lg"
+                    >
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          <Wand2 className="w-5 h-5 mr-2" />
+                          Generate
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
 
-          {/* Generated Content */}
+          {/* Generated Content / Loader */}
           <div className="space-y-6">
-            {generatedContent ? (
+            {isGenerating ? (
+              /* Fun Animated Loader */
+              <Card className="shadow-lg h-full min-h-[400px] flex items-center justify-center border-0 bg-white overflow-hidden">
+                <CardContent className="text-center py-12 px-8 relative">
+                  {/* Animated Background Circles */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-100 rounded-full opacity-50 animate-pulse" />
+                    <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-purple-100 rounded-full opacity-50 animate-pulse" style={{ animationDelay: "0.5s" }} />
+                    <div className="absolute top-1/2 right-1/3 w-16 h-16 bg-green-100 rounded-full opacity-50 animate-pulse" style={{ animationDelay: "1s" }} />
+                  </div>
+                  
+                  {/* Main Loader */}
+                  <div className="relative z-10">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center mx-auto mb-6 animate-pulse">
+                      <span className="text-4xl">{currentLoadingMessage.emoji}</span>
+                    </div>
+                    
+                    <h3 className="text-xl font-semibold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      Creating Magic
+                    </h3>
+                    
+                    <p className="text-gray-600 mb-6 min-h-[24px] transition-all duration-300">
+                      {currentLoadingMessage.text}
+                    </p>
+                    
+                    {/* Progress Dots */}
+                    <div className="flex justify-center gap-2 mb-4">
+                      {LOADING_MESSAGES.slice(0, 5).map((_, i) => (
+                        <div
+                          key={i}
+                          className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                            i <= loadingMessageIndex % 5
+                              ? "bg-gradient-to-r from-blue-600 to-purple-600"
+                              : "bg-gray-200"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    
+                    <p className="text-sm text-gray-400">
+                      This usually takes 15-30 seconds
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : generatedContent ? (
               <>
                 {/* Social Graphic */}
                 {generatedContent.imageUrl && (
@@ -532,7 +781,7 @@ const JobPostGenerator = () => {
                         className="bg-white/20 hover:bg-white/30 text-white border-0"
                       >
                         <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                         </svg>
                         LinkedIn
                       </Button>
@@ -545,7 +794,7 @@ const JobPostGenerator = () => {
                         <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                         </svg>
-                        X
+                        X/Twitter
                       </Button>
                       <Button
                         size="sm"
@@ -593,23 +842,63 @@ const JobPostGenerator = () => {
                   </CardContent>
                 </Card>
 
-                {/* Social Caption */}
+                {/* Social Post Preview */}
                 <Card className="shadow-lg border-0 bg-white">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-lg flex items-center justify-between">
-                      Social Caption
+                      Social Post Preview
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => copyToClipboard(generatedContent.socialCaption, "Caption")}
                       >
                         <Copy className="w-4 h-4 mr-1" />
-                        Copy
+                        Copy Caption
                       </Button>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600">{generatedContent.socialCaption}</p>
+                  <CardContent className="space-y-4">
+                    {/* Preview Card - mimics social media post */}
+                    <div className="border rounded-lg overflow-hidden bg-gray-50">
+                      {/* Post Header */}
+                      <div className="p-3 flex items-center gap-3 bg-white border-b">
+                        {logo ? (
+                          <img src={logo} alt="Company logo" className="w-10 h-10 rounded-full object-cover" />
+                        ) : (
+                          <div 
+                            className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
+                            style={{ backgroundColor: brandColor }}
+                          >
+                            {companyName ? companyName.charAt(0).toUpperCase() : "C"}
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-semibold text-sm">{companyName || "Your Company"}</p>
+                          <p className="text-xs text-gray-500">Just now • 🌍</p>
+                        </div>
+                      </div>
+                      
+                      {/* Post Caption */}
+                      <div className="p-3 bg-white">
+                        <p className="text-sm text-gray-700 whitespace-pre-wrap">{generatedContent.socialCaption}</p>
+                      </div>
+                      
+                      {/* Post Image */}
+                      {generatedContent.imageUrl && (
+                        <img
+                          src={generatedContent.imageUrl}
+                          alt="Job post graphic"
+                          className="w-full aspect-square object-cover"
+                        />
+                      )}
+                      
+                      {/* Post Actions - decorative */}
+                      <div className="p-3 flex items-center gap-6 bg-white border-t text-gray-500">
+                        <span className="text-xs flex items-center gap-1">👍 Like</span>
+                        <span className="text-xs flex items-center gap-1">💬 Comment</span>
+                        <span className="text-xs flex items-center gap-1">🔄 Share</span>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -659,64 +948,6 @@ const JobPostGenerator = () => {
         </footer>
       </main>
 
-      {/* Account Creation Modal */}
-      <Dialog open={showAccountModal} onOpenChange={setShowAccountModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <User className="w-5 h-5 text-blue-600" />
-              Create Job Poster Account
-            </DialogTitle>
-            <DialogDescription>
-              Create a free account to download your job post and access more features.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 pt-4">
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name *</Label>
-              <Input
-                id="fullName"
-                placeholder="e.g. Kwame Asante"
-                value={accountForm.fullName}
-                onChange={(e) => setAccountForm({ ...accountForm, fullName: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address *</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="e.g. kwame.asante@company.com"
-                value={accountForm.email}
-                onChange={(e) => setAccountForm({ ...accountForm, email: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number *</Label>
-              <Input
-                id="phone"
-                placeholder="e.g. +233 24 123 4567"
-                value={accountForm.phone}
-                onChange={(e) => setAccountForm({ ...accountForm, phone: e.target.value })}
-              />
-            </div>
-            <Button
-              onClick={handleCreateAccount}
-              disabled={isCreatingAccount}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-            >
-              {isCreatingAccount ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Creating Account...
-                </>
-              ) : (
-                "Create Account & Download"
-              )}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
