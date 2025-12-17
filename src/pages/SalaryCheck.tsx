@@ -374,7 +374,7 @@ const SalaryCheck = () => {
     if (result && !showWaitlistPopup) {
       const timer = setTimeout(() => {
         setShowWaitlistPopup(true);
-      }, 3000); // Show after 3 seconds
+      }, 12000); // Show after 12 seconds
       return () => clearTimeout(timer);
     }
   }, [result]);

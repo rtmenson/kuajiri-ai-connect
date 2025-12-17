@@ -132,7 +132,7 @@ const JobPostGenerator = () => {
     if (generatedContent && !showWaitlistPopup) {
       const timer = setTimeout(() => {
         setShowWaitlistPopup(true);
-      }, 5000); // Show after 5 seconds
+      }, 12000); // Show after 12 seconds
       return () => clearTimeout(timer);
     }
   }, [generatedContent]);
