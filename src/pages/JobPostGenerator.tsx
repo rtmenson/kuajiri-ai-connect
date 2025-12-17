@@ -86,6 +86,16 @@ const COUNTRY_CODES = [
   { code: "+61", country: "Australia", flag: "🇦🇺" },
 ];
 
+// Image content options
+const IMAGE_CONTENT_OPTIONS = [
+  { id: "jobTitle", label: "Job Title", required: true },
+  { id: "companyName", label: "Company Name", required: false },
+  { id: "salary", label: "Salary Range", required: false },
+  { id: "requirements", label: "Key Requirements", required: false },
+  { id: "applyMethod", label: "How to Apply", required: false },
+  { id: "hiringBadge", label: '"We\'re Hiring" Badge', required: false },
+];
+
 const JobPostGenerator = () => {
   const [step, setStep] = useState(1);
   const [fullName, setFullName] = useState("");
@@ -98,7 +108,8 @@ const JobPostGenerator = () => {
   const [req1, setReq1] = useState("");
   const [req2, setReq2] = useState("");
   const [req3, setReq3] = useState("");
-  const [brandColor, setBrandColor] = useState("#2563eb");
+  const [primaryColor, setPrimaryColor] = useState("#2563eb");
+  const [secondaryColor, setSecondaryColor] = useState<string | null>(null);
   const [logo, setLogo] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState("");
   const [currency, setCurrency] = useState("GHC");
@@ -109,9 +120,29 @@ const JobPostGenerator = () => {
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
   const [account, setAccount] = useState<JobPosterAccount | null>(null);
+  const [imageContentOptions, setImageContentOptions] = useState<string[]>(["jobTitle", "companyName", "salary", "hiringBadge"]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const rgb = hexToRgb(brandColor);
+  const rgb = hexToRgb(primaryColor);
+
+  const toggleImageOption = (optionId: string) => {
+    const option = IMAGE_CONTENT_OPTIONS.find(o => o.id === optionId);
+    if (option?.required) return; // Can't toggle required options
+    
+    setImageContentOptions(prev => 
+      prev.includes(optionId) 
+        ? prev.filter(id => id !== optionId)
+        : [...prev, optionId]
+    );
+  };
+
+  const handleSecondaryColorClick = (color: string) => {
+    if (secondaryColor === color) {
+      setSecondaryColor(null); // Deselect if clicking same color
+    } else if (color !== primaryColor) {
+      setSecondaryColor(color);
+    }
+  };
 
   // Cycle through loading messages
   useEffect(() => {
@@ -206,13 +237,15 @@ const JobPostGenerator = () => {
           salaryMin: salaryMin ? parseInt(salaryMin) : null,
           salaryMax: salaryMax ? parseInt(salaryMax) : null,
           requirements: [req1, req2, req3],
-          brandColor,
+          primaryColor,
+          secondaryColor,
           companyName: companyName || "Your Company",
           hasLogo: !!logo,
           currency,
           shortDescription,
           applyMethod,
           applyValue,
+          imageContentOptions,
         },
       });
 
@@ -400,48 +433,122 @@ const JobPostGenerator = () => {
                       )}
                     </div>
 
-                    {/* Brand Color */}
-                    <div className="space-y-2">
-                      <Label>Brand Color</Label>
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        {PRESET_COLORS.map((color) => (
-                          <button
-                            key={color.value}
-                            onClick={() => setBrandColor(color.value)}
-                            className={`w-8 h-8 rounded-full border-2 transition-all ${
-                              brandColor === color.value
-                                ? "border-gray-900 scale-110"
-                                : "border-transparent hover:scale-105"
-                            }`}
-                            style={{ backgroundColor: color.value }}
-                            title={color.name}
-                          />
-                        ))}
-                        <div className="relative">
-                          <input
-                            type="color"
-                            value={brandColor}
-                            onChange={(e) => setBrandColor(e.target.value)}
-                            className="w-8 h-8 rounded-full cursor-pointer border-2 border-gray-200"
-                          />
+                    {/* Brand Colors */}
+                    <div className="space-y-3">
+                      <Label>Brand Colors (Select 1-2)</Label>
+                      
+                      {/* Primary Color */}
+                      <div className="space-y-2">
+                        <span className="text-xs text-gray-500 font-medium">Primary Color *</span>
+                        <div className="flex flex-wrap gap-2">
+                          {PRESET_COLORS.map((color) => (
+                            <button
+                              key={color.value}
+                              onClick={() => {
+                                setPrimaryColor(color.value);
+                                if (secondaryColor === color.value) setSecondaryColor(null);
+                              }}
+                              className={`w-8 h-8 rounded-full border-2 transition-all ${
+                                primaryColor === color.value
+                                  ? "border-gray-900 scale-110 ring-2 ring-offset-2 ring-gray-400"
+                                  : "border-transparent hover:scale-105"
+                              }`}
+                              style={{ backgroundColor: color.value }}
+                              title={color.name}
+                            />
+                          ))}
+                          <div className="relative">
+                            <input
+                              type="color"
+                              value={primaryColor}
+                              onChange={(e) => {
+                                setPrimaryColor(e.target.value);
+                                if (secondaryColor === e.target.value) setSecondaryColor(null);
+                              }}
+                              className="w-8 h-8 rounded-full cursor-pointer border-2 border-gray-200"
+                            />
+                          </div>
                         </div>
                       </div>
-                      {/* Color Value Display */}
-                      <div className="flex items-center gap-3 p-2 bg-white rounded-lg border text-sm">
-                        <div
-                          className="w-6 h-6 rounded border"
-                          style={{ backgroundColor: brandColor }}
-                        />
-                        <div className="flex-1 grid grid-cols-2 gap-2 text-xs">
-                          <div className="font-mono">
-                            <span className="text-gray-500">HEX:</span> {brandColor.toUpperCase()}
-                          </div>
-                          {rgb && (
-                            <div className="font-mono">
-                              <span className="text-gray-500">RGB:</span> {rgb.r}, {rgb.g}, {rgb.b}
-                            </div>
+
+                      {/* Secondary Color */}
+                      <div className="space-y-2">
+                        <span className="text-xs text-gray-500 font-medium">Accent Color (Optional)</span>
+                        <div className="flex flex-wrap gap-2">
+                          {PRESET_COLORS.filter(c => c.value !== primaryColor).map((color) => (
+                            <button
+                              key={color.value}
+                              onClick={() => handleSecondaryColorClick(color.value)}
+                              className={`w-7 h-7 rounded-full border-2 transition-all ${
+                                secondaryColor === color.value
+                                  ? "border-gray-900 scale-110 ring-2 ring-offset-1 ring-gray-400"
+                                  : "border-transparent hover:scale-105 opacity-70 hover:opacity-100"
+                              }`}
+                              style={{ backgroundColor: color.value }}
+                              title={color.name}
+                            />
+                          ))}
+                          {secondaryColor && (
+                            <button
+                              onClick={() => setSecondaryColor(null)}
+                              className="w-7 h-7 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 hover:border-gray-400 hover:text-gray-500"
+                              title="Remove accent color"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
                           )}
                         </div>
+                      </div>
+
+                      {/* Color Value Display */}
+                      <div className="flex items-center gap-2 p-2 bg-white rounded-lg border text-sm">
+                        <div
+                          className="w-6 h-6 rounded border"
+                          style={{ backgroundColor: primaryColor }}
+                        />
+                        {secondaryColor && (
+                          <div
+                            className="w-6 h-6 rounded border"
+                            style={{ backgroundColor: secondaryColor }}
+                          />
+                        )}
+                        <div className="flex-1 text-xs font-mono">
+                          <span className="text-gray-500">Primary:</span> {primaryColor.toUpperCase()}
+                          {secondaryColor && (
+                            <span className="ml-2"><span className="text-gray-500">Accent:</span> {secondaryColor.toUpperCase()}</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Image Content Options */}
+                    <div className="space-y-2">
+                      <Label>What to show on the image</Label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {IMAGE_CONTENT_OPTIONS.map((option) => (
+                          <button
+                            key={option.id}
+                            onClick={() => toggleImageOption(option.id)}
+                            disabled={option.required}
+                            className={`p-2 rounded-lg border text-left text-sm transition-all ${
+                              imageContentOptions.includes(option.id)
+                                ? "bg-blue-50 border-blue-300 text-blue-700"
+                                : "bg-white border-gray-200 text-gray-600 hover:border-gray-300"
+                            } ${option.required ? "opacity-75 cursor-not-allowed" : "cursor-pointer"}`}
+                          >
+                            <span className="flex items-center gap-2">
+                              <span className={`w-4 h-4 rounded border flex items-center justify-center ${
+                                imageContentOptions.includes(option.id)
+                                  ? "bg-blue-500 border-blue-500 text-white"
+                                  : "border-gray-300"
+                              }`}>
+                                {imageContentOptions.includes(option.id) && "✓"}
+                              </span>
+                              {option.label}
+                              {option.required && <span className="text-xs text-gray-400">(required)</span>}
+                            </span>
+                          </button>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -867,7 +974,7 @@ const JobPostGenerator = () => {
                         ) : (
                           <div 
                             className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
-                            style={{ backgroundColor: brandColor }}
+                            style={{ backgroundColor: primaryColor }}
                           >
                             {companyName ? companyName.charAt(0).toUpperCase() : "C"}
                           </div>
