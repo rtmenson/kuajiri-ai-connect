@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { ArrowLeft, Share2, TrendingUp, TrendingDown, Users, Lock, Unlock, Mail, Briefcase, MapPin, Lightbulb, CheckCircle2, Download, Image, Loader2, Sparkles, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
+
+// IMPORTANT: Replace with your actual reCAPTCHA site key
+const RECAPTCHA_SITE_KEY = "YOUR_RECAPTCHA_SITE_KEY";
 
 const ghanaLocations = [
   "Accra",
@@ -368,8 +372,10 @@ const SalaryCheck = () => {
   
   // Waitlist popup state
   const [showWaitlistPopup, setShowWaitlistPopup] = useState(false);
-
-  // Show waitlist popup after results are displayed
+  
+  // reCAPTCHA state
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   useEffect(() => {
     if (result && !showWaitlistPopup) {
       const timer = setTimeout(() => {
@@ -402,6 +408,42 @@ const SalaryCheck = () => {
         description: "Please fill in all required fields.",
         variant: "destructive",
       });
+      return;
+    }
+
+    // Verify reCAPTCHA
+    if (!recaptchaToken) {
+      toast({
+        title: "Verification Required",
+        description: "Please complete the reCAPTCHA verification.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { data: verifyData, error: verifyError } = await supabase.functions.invoke("verify-recaptcha", {
+        body: { token: recaptchaToken },
+      });
+
+      if (verifyError || !verifyData?.success) {
+        toast({
+          title: "Verification Failed",
+          description: "reCAPTCHA verification failed. Please try again.",
+          variant: "destructive",
+        });
+        recaptchaRef.current?.reset();
+        setRecaptchaToken(null);
+        return;
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to verify reCAPTCHA. Please try again.",
+        variant: "destructive",
+      });
+      recaptchaRef.current?.reset();
+      setRecaptchaToken(null);
       return;
     }
 
@@ -818,11 +860,20 @@ const SalaryCheck = () => {
                 />
               </div>
 
+              <div className="flex justify-center">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={RECAPTCHA_SITE_KEY}
+                  onChange={(token) => setRecaptchaToken(token)}
+                  onExpired={() => setRecaptchaToken(null)}
+                />
+              </div>
+
               <Button 
                 onClick={calculateSalary} 
                 className="w-full" 
                 size="lg"
-                disabled={isLoading}
+                disabled={isLoading || !recaptchaToken}
               >
                 {isLoading ? "Calculating..." : "Check My Salary"}
               </Button>
