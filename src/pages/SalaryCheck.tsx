@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, Share2, TrendingUp, TrendingDown, Users, Lock, Unlock, Mail, Briefcase, MapPin, Lightbulb, CheckCircle2, Download, Image, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowLeft, Share2, TrendingUp, TrendingDown, Users, Lock, Unlock, Mail, Briefcase, MapPin, Lightbulb, CheckCircle2, Download, Image, Loader2, Sparkles, X } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 const ghanaLocations = [
   "Accra",
@@ -346,6 +347,7 @@ interface SalaryResult {
 }
 
 const SalaryCheck = () => {
+  const navigate = useNavigate();
   const [jobTitle, setJobTitle] = useState("");
   const [yearsExperience, setYearsExperience] = useState("");
   const [location, setLocation] = useState("");
@@ -363,6 +365,19 @@ const SalaryCheck = () => {
   const [isGeneratingGraphic, setIsGeneratingGraphic] = useState(false);
   const [generatedGraphicUrl, setGeneratedGraphicUrl] = useState<string | null>(null);
   const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
+  
+  // Waitlist popup state
+  const [showWaitlistPopup, setShowWaitlistPopup] = useState(false);
+
+  // Show waitlist popup after results are displayed
+  useEffect(() => {
+    if (result && !showWaitlistPopup) {
+      const timer = setTimeout(() => {
+        setShowWaitlistPopup(true);
+      }, 3000); // Show after 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [result]);
 
   const getExperienceLevel = (years: number): string => {
     if (years <= 1) return "entry";
@@ -1220,6 +1235,54 @@ const SalaryCheck = () => {
           </p>
         </div>
       </main>
+
+      {/* Waitlist Popup */}
+      <Dialog open={showWaitlistPopup} onOpenChange={setShowWaitlistPopup}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <DialogTitle className="text-center text-xl">
+              Get Early Access to Kuajiri AI
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Join thousands of job seekers using AI to land their dream jobs faster. Get personalized job matches, salary insights, and career coaching.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                <span>AI-powered job matching</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                <span>Personalized salary insights</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                <span>Interview preparation tools</span>
+              </div>
+            </div>
+            <Button 
+              onClick={() => navigate("/waitlist")}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            >
+              Join the Waitlist
+              <Sparkles className="w-4 h-4 ml-2" />
+            </Button>
+            <button 
+              onClick={() => setShowWaitlistPopup(false)}
+              className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Maybe later
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
