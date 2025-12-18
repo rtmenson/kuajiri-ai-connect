@@ -12,8 +12,7 @@ import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useJobPostRateLimit } from "@/hooks/use-rate-limit";
 
-// IMPORTANT: Replace with your actual reCAPTCHA site key
-const RECAPTCHA_SITE_KEY = "YOUR_RECAPTCHA_SITE_KEY";
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 import {
   Select,
   SelectContent,
