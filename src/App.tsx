@@ -41,7 +41,7 @@ const App = () => (
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/job-post-generator" element={<JobPostGenerator />} />
-            <Route path="/salary-check" element={<SalaryCheck />} />
+            <Route path="/salary-checker" element={<SalaryCheck />} />
             <Route path="/home" element={<Index />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

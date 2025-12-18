@@ -11,8 +11,7 @@ import { ArrowLeft, Share2, TrendingUp, TrendingDown, Users, Lock, Unlock, Mail,
 import { Link, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 
-// IMPORTANT: Replace with your actual reCAPTCHA site key
-const RECAPTCHA_SITE_KEY = "YOUR_RECAPTCHA_SITE_KEY";
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 const ghanaLocations = [
   "Accra",
