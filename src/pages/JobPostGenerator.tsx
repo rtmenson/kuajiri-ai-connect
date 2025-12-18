@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Copy, Download, Share2, Sparkles, Clock, Upload, Palette, X, User, ArrowRight, ArrowLeft, Briefcase, Wand2, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useJobPostRateLimit } from "@/hooks/use-rate-limit";
 
 // IMPORTANT: Replace with your actual reCAPTCHA site key
 const RECAPTCHA_SITE_KEY = "YOUR_RECAPTCHA_SITE_KEY";
@@ -104,6 +105,7 @@ const IMAGE_CONTENT_OPTIONS = [
 
 const JobPostGenerator = () => {
   const navigate = useNavigate();
+  const { checkRateLimit, recordRequest, formatTimeRemaining } = useJobPostRateLimit();
   const [step, setStep] = useState(1);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -219,6 +221,13 @@ const JobPostGenerator = () => {
   };
 
   const handleGenerate = async () => {
+    // Check rate limit
+    const rateLimitResult = checkRateLimit();
+    if (!rateLimitResult.isAllowed) {
+      toast.error(`Rate limit exceeded. Please try again in ${formatTimeRemaining(rateLimitResult.timeUntilReset)}.`);
+      return;
+    }
+
     if (!fullName || !email || !phoneNumber) {
       toast.error("Please fill in all required fields");
       return;
@@ -295,6 +304,7 @@ const JobPostGenerator = () => {
 
       if (error) throw error;
       
+      recordRequest(); // Track successful request for rate limiting
       setGeneratedContent(data);
       toast.success("Job post generated!");
     } catch (error: any) {
