@@ -9,6 +9,10 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Copy, Download, Share2, Sparkles, Clock, Upload, Palette, X, User, ArrowRight, ArrowLeft, Briefcase, Wand2, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
+
+// IMPORTANT: Replace with your actual reCAPTCHA site key
+const RECAPTCHA_SITE_KEY = "YOUR_RECAPTCHA_SITE_KEY";
 import {
   Select,
   SelectContent,
@@ -125,7 +129,9 @@ const JobPostGenerator = () => {
   const [account, setAccount] = useState<JobPosterAccount | null>(null);
   const [imageContentOptions, setImageContentOptions] = useState<string[]>(["jobTitle", "companyName", "salary", "hiringBadge"]);
   const [showWaitlistPopup, setShowWaitlistPopup] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   // Show waitlist popup after content is generated
   useEffect(() => {
@@ -221,6 +227,30 @@ const JobPostGenerator = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       toast.error("Please enter a valid email address");
+      return;
+    }
+
+    // Verify reCAPTCHA
+    if (!recaptchaToken) {
+      toast.error("Please complete the reCAPTCHA verification");
+      return;
+    }
+
+    try {
+      const { data: verifyData, error: verifyError } = await supabase.functions.invoke("verify-recaptcha", {
+        body: { token: recaptchaToken },
+      });
+
+      if (verifyError || !verifyData?.success) {
+        toast.error("reCAPTCHA verification failed. Please try again.");
+        recaptchaRef.current?.reset();
+        setRecaptchaToken(null);
+        return;
+      }
+    } catch (error) {
+      toast.error("Failed to verify reCAPTCHA. Please try again.");
+      recaptchaRef.current?.reset();
+      setRecaptchaToken(null);
       return;
     }
 
@@ -837,6 +867,16 @@ const JobPostGenerator = () => {
                     </div>
                   </div>
 
+                  {/* reCAPTCHA */}
+                  <div className="flex justify-center">
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      sitekey={RECAPTCHA_SITE_KEY}
+                      onChange={(token) => setRecaptchaToken(token)}
+                      onExpired={() => setRecaptchaToken(null)}
+                    />
+                  </div>
+
                   <div className="flex gap-3">
                     <Button
                       onClick={() => setStep(1)}
@@ -849,7 +889,7 @@ const JobPostGenerator = () => {
                     </Button>
                     <Button
                       onClick={handleGenerate}
-                      disabled={isGenerating}
+                      disabled={isGenerating || !recaptchaToken}
                       className="flex-1 h-12 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                       size="lg"
                     >
