@@ -42,6 +42,9 @@ const App = () => (
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/job-post-generator" element={<JobPostGenerator />} />
             <Route path="/salary-checker" element={<SalaryCheck />} />
+            <Route path="/salary-check" element={<SalaryCheck />} />
+            <Route path="/salarychecker" element={<SalaryCheck />} />
+            <Route path="/salarycheck" element={<SalaryCheck />} />
             <Route path="/home" element={<Index />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
