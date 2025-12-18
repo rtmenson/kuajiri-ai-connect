@@ -10,6 +10,7 @@ import { toast } from "@/hooks/use-toast";
 import { ArrowLeft, Share2, TrendingUp, TrendingDown, Users, Lock, Unlock, Mail, Briefcase, MapPin, Lightbulb, CheckCircle2, Download, Image, Loader2, Sparkles, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useSalaryCheckRateLimit } from "@/hooks/use-rate-limit";
 
 // IMPORTANT: Replace with your actual reCAPTCHA site key
 const RECAPTCHA_SITE_KEY = "YOUR_RECAPTCHA_SITE_KEY";
@@ -352,6 +353,7 @@ interface SalaryResult {
 
 const SalaryCheck = () => {
   const navigate = useNavigate();
+  const { checkRateLimit, recordRequest, formatTimeRemaining } = useSalaryCheckRateLimit();
   const [jobTitle, setJobTitle] = useState("");
   const [yearsExperience, setYearsExperience] = useState("");
   const [location, setLocation] = useState("");
@@ -402,6 +404,17 @@ const SalaryCheck = () => {
   };
 
   const calculateSalary = async () => {
+    // Check rate limit
+    const rateLimitResult = checkRateLimit();
+    if (!rateLimitResult.isAllowed) {
+      toast({
+        title: "Rate Limit Exceeded",
+        description: `Please try again in ${formatTimeRemaining(rateLimitResult.timeUntilReset)}.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!jobTitle || !yearsExperience || !location) {
       toast({
         title: "Missing Information",
@@ -538,6 +551,7 @@ const SalaryCheck = () => {
         { level: "Expert", salary: Math.round(baseSalaryData.expert * locationMultiplier) },
       ];
 
+      recordRequest(); // Track successful request for rate limiting
       setResult({
         lowRange: Math.round(lowRange),
         midRange: Math.round(marketAverage),
