@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, Share2, TrendingUp, TrendingDown, Users, Lock, Unlock, Mail, Briefcase, MapPin, Lightbulb, CheckCircle2, Download, Image, Loader2, Sparkles, X } from "lucide-react";
+import { ArrowLeft, Share2, TrendingUp, TrendingDown, Users, Lock, Unlock, Mail, Briefcase, MapPin, Lightbulb, CheckCircle2, Download, Image, Loader2, Sparkles, X, Shield } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useSalaryCheckRateLimit } from "@/hooks/use-rate-limit";
@@ -890,6 +890,14 @@ const SalaryCheck = () => {
               >
                 {isLoading ? "Calculating..." : "Check My Salary"}
               </Button>
+
+              {/* Privacy Notice */}
+              <div className="flex items-start gap-2 p-3 bg-muted/50 rounded-lg border border-border/50">
+                <Shield className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-muted-foreground">
+                  <span className="font-medium text-foreground">100% Anonymous.</span> We don't save or have access to your personal salary data. All calculations happen instantly and nothing is stored.
+                </p>
+              </div>
             </CardContent>
           </Card>
 
