@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CurrencyProvider } from "./contexts/CurrencyContext";
+import { useAnalytics } from "./hooks/useAnalytics";
 import Index from "./pages/Index";
 import JobseekerHomepage from "./pages/JobseekerHomepage";
 import RecruiterHomepage from "./pages/RecruiterHomepage";
@@ -22,6 +23,11 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const AnalyticsWrapper = ({ children }: { children: React.ReactNode }) => {
+  useAnalytics();
+  return <>{children}</>;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <CurrencyProvider>
@@ -29,26 +35,28 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<WaitlistLanding />} />
-            <Route path="/waitlist" element={<Waitlist />} />
-            <Route path="/jobseeker-homepage" element={<JobseekerHomepage />} />
-            <Route path="/recruiter" element={<RecruiterWaitlistLanding />} />
-            <Route path="/recruiter-waitlist" element={<RecruiterHomepage />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/demo" element={<Demo />} />
-            <Route path="/demo-video" element={<DemoVideo />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/job-post-generator" element={<JobPostGenerator />} />
-            <Route path="/salary-checker" element={<SalaryCheck />} />
-            <Route path="/salary-check" element={<SalaryCheck />} />
-            <Route path="/salarychecker" element={<SalaryCheck />} />
-            <Route path="/salarycheck" element={<SalaryCheck />} />
-            <Route path="/home" element={<Index />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AnalyticsWrapper>
+            <Routes>
+              <Route path="/" element={<WaitlistLanding />} />
+              <Route path="/waitlist" element={<Waitlist />} />
+              <Route path="/jobseeker-homepage" element={<JobseekerHomepage />} />
+              <Route path="/recruiter" element={<RecruiterWaitlistLanding />} />
+              <Route path="/recruiter-waitlist" element={<RecruiterHomepage />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/demo" element={<Demo />} />
+              <Route path="/demo-video" element={<DemoVideo />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/job-post-generator" element={<JobPostGenerator />} />
+              <Route path="/salary-checker" element={<SalaryCheck />} />
+              <Route path="/salary-check" element={<SalaryCheck />} />
+              <Route path="/salarychecker" element={<SalaryCheck />} />
+              <Route path="/salarycheck" element={<SalaryCheck />} />
+              <Route path="/home" element={<Index />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AnalyticsWrapper>
         </BrowserRouter>
       </TooltipProvider>
     </CurrencyProvider>
