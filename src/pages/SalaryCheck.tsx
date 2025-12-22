@@ -362,7 +362,6 @@ const SalaryCheck = () => {
   const [showContribute, setShowContribute] = useState(false);
   const [contributeSalary, setContributeSalary] = useState("");
   const [industry, setIndustry] = useState("");
-  const [onBehalfOf, setOnBehalfOf] = useState("");
   
   // Email gate state
   const [email, setEmail] = useState("");
@@ -823,21 +822,6 @@ const SalaryCheck = () => {
                   value={jobTitle}
                   onChange={(e) => setJobTitle(e.target.value)}
                 />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="onBehalfOf" className="text-muted-foreground">
-                  On Behalf Of <span className="text-xs">(Optional)</span>
-                </Label>
-                <Input
-                  id="onBehalfOf"
-                  placeholder="e.g., Company name you're recruiting for"
-                  value={onBehalfOf}
-                  onChange={(e) => setOnBehalfOf(e.target.value)}
-                />
-                <p className="text-xs text-muted-foreground">
-                  For recruiters hiring on behalf of a client company
-                </p>
               </div>
 
               <div className="space-y-2">
