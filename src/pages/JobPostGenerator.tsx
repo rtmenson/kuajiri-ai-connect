@@ -120,6 +120,7 @@ const JobPostGenerator = () => {
   const [secondaryColor, setSecondaryColor] = useState<string | null>(null);
   const [logo, setLogo] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState("");
+  const [onBehalfOf, setOnBehalfOf] = useState("");
   const [currency, setCurrency] = useState("GHC");
   const [shortDescription, setShortDescription] = useState("");
   const [applyMethods, setApplyMethods] = useState<("email" | "url" | "phone")[]>(["email"]);
@@ -449,6 +450,23 @@ const JobPostGenerator = () => {
                         onChange={(e) => setCompanyName(e.target.value)}
                         className="h-10 bg-white"
                       />
+                    </div>
+
+                    {/* On Behalf Of */}
+                    <div className="space-y-2">
+                      <Label htmlFor="onBehalfOf" className="text-muted-foreground">
+                        On Behalf Of <span className="text-xs">(Optional)</span>
+                      </Label>
+                      <Input
+                        id="onBehalfOf"
+                        placeholder="e.g. Client company you're recruiting for"
+                        value={onBehalfOf}
+                        onChange={(e) => setOnBehalfOf(e.target.value)}
+                        className="h-10 bg-white"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        For recruiters hiring on behalf of a client company
+                      </p>
                     </div>
 
                     {/* Logo Upload */}
