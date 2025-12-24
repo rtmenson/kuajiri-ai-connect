@@ -11,6 +11,7 @@ import { Loader2, Copy, Download, Share2, Sparkles, Clock, Upload, Palette, X, U
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useJobPostRateLimit } from "@/hooks/use-rate-limit";
+import { useLocation, CURRENCIES as LOCATION_CURRENCIES } from "@/hooks/use-location";
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 import {
@@ -49,20 +50,13 @@ const PRESET_COLORS = [
   { name: "Indigo", value: "#4f46e5" },
 ];
 
-const CURRENCIES = [
-  { code: "GHC", symbol: "GH₵", name: "Ghana Cedi" },
-  { code: "USD", symbol: "$", name: "US Dollar" },
-  { code: "EUR", symbol: "€", name: "Euro" },
-  { code: "GBP", symbol: "£", name: "British Pound" },
-  { code: "CFA", symbol: "CFA", name: "CFA Franc" },
-  { code: "AUD", symbol: "A$", name: "Australian Dollar" },
-];
+const CURRENCIES = LOCATION_CURRENCIES;
 
 const LOADING_MESSAGES = [
   { text: "Analyzing job requirements...", emoji: "🔍" },
   { text: "Crafting compelling copy...", emoji: "✍️" },
   { text: "Adding a sprinkle of creativity...", emoji: "✨" },
-  { text: "Making it Ghana-ready...", emoji: "🇬🇭" },
+  { text: "Making it market-ready...", emoji: "🌍" },
   { text: "Designing eye-catching graphics...", emoji: "🎨" },
   { text: "Optimizing for social media...", emoji: "📱" },
   { text: "Adding the perfect hashtags...", emoji: "#️⃣" },
@@ -82,14 +76,18 @@ const hexToRgb = (hex: string): { r: number; g: number; b: number } | null => {
 };
 
 const COUNTRY_CODES = [
-  { code: "+233", country: "Ghana", flag: "🇬🇭" },
-  { code: "+1", country: "USA", flag: "🇺🇸" },
+  { code: "+1", country: "USA/Canada", flag: "🇺🇸" },
   { code: "+44", country: "UK", flag: "🇬🇧" },
+  { code: "+61", country: "Australia", flag: "🇦🇺" },
+  { code: "+49", country: "Germany", flag: "🇩🇪" },
+  { code: "+33", country: "France", flag: "🇫🇷" },
+  { code: "+91", country: "India", flag: "🇮🇳" },
   { code: "+234", country: "Nigeria", flag: "🇳🇬" },
+  { code: "+233", country: "Ghana", flag: "🇬🇭" },
   { code: "+254", country: "Kenya", flag: "🇰🇪" },
   { code: "+27", country: "South Africa", flag: "🇿🇦" },
-  { code: "+225", country: "Ivory Coast", flag: "🇨🇮" },
-  { code: "+61", country: "Australia", flag: "🇦🇺" },
+  { code: "+971", country: "UAE", flag: "🇦🇪" },
+  { code: "+65", country: "Singapore", flag: "🇸🇬" },
 ];
 
 // Image content options
@@ -104,11 +102,12 @@ const IMAGE_CONTENT_OPTIONS = [
 
 const JobPostGenerator = () => {
   const navigate = useNavigate();
+  const locationData = useLocation();
   const { checkRateLimit, recordRequest, formatTimeRemaining } = useJobPostRateLimit();
   const [step, setStep] = useState(1);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [countryCode, setCountryCode] = useState("+233");
+  const [countryCode, setCountryCode] = useState("+1");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [salaryMin, setSalaryMin] = useState("");
@@ -121,7 +120,7 @@ const JobPostGenerator = () => {
   const [logo, setLogo] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState("");
   const [onBehalfOf, setOnBehalfOf] = useState("");
-  const [currency, setCurrency] = useState("GHC");
+  const [currency, setCurrency] = useState("USD");
   const [shortDescription, setShortDescription] = useState("");
   const [applyMethods, setApplyMethods] = useState<("email" | "url" | "phone")[]>(["email"]);
   const [applyValues, setApplyValues] = useState<{ email: string; url: string; phone: string }>({ email: "", url: "", phone: "" });
@@ -134,6 +133,16 @@ const JobPostGenerator = () => {
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [locationInitialized, setLocationInitialized] = useState(false);
+
+  // Set defaults based on detected location
+  useEffect(() => {
+    if (!locationData.isLoading && !locationInitialized) {
+      setCountryCode(locationData.phoneCode);
+      setCurrency(locationData.currency);
+      setLocationInitialized(true);
+    }
+  }, [locationData, locationInitialized]);
 
   // Show waitlist popup after content is generated
   useEffect(() => {

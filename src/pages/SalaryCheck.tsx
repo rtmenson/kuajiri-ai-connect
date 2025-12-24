@@ -793,7 +793,7 @@ const SalaryCheck = () => {
         {/* Hero Section */}
         <div className="text-center mb-10">
           <div className="inline-block px-4 py-1.5 bg-destructive/10 text-destructive rounded-full text-sm font-medium mb-4">
-            Are you being underpaid? 85% of Ghanaians are.
+            Are you being underpaid? Most professionals are.
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text text-transparent">
             Salary Reality Check
@@ -810,7 +810,7 @@ const SalaryCheck = () => {
             <CardHeader>
               <CardTitle>Enter Your Details</CardTitle>
               <CardDescription>
-                Get an instant salary comparison based on Ghana market data
+                Get an instant salary comparison based on market data
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -841,19 +841,13 @@ const SalaryCheck = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="location">Location in Ghana *</Label>
-                <Select value={location} onValueChange={setLocation}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your city" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ghanaLocations.map((loc) => (
-                      <SelectItem key={loc} value={loc}>
-                        {loc}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="location">Location *</Label>
+                <Input
+                  id="location"
+                  placeholder="e.g., New York, London, Accra"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
               </div>
 
               <div className="space-y-2">
