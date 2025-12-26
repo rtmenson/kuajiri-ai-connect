@@ -1,12 +1,19 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Menu, X, Zap } from 'lucide-react';
+import { Menu, X, Zap, ChevronDown, Calculator, FileText } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import CountryFlag from './CountryFlag';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isToolsOpen, setIsToolsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -54,6 +61,12 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
+  const handleToolClick = (path: string) => {
+    navigate(path);
+    setIsMenuOpen(false);
+    setIsToolsOpen(false);
+  };
+
   return (
     <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b z-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -86,6 +99,36 @@ const Header = () => {
                 How It Works
               </button>
               <button onClick={handleRecruiterClick} className="text-gray-600 hover:text-blue-600 transition-colors text-sm">For Recruiters</button>
+              
+              {/* Tools Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-1 text-gray-600 hover:text-blue-600 transition-colors text-sm outline-none">
+                  Tools
+                  <ChevronDown className="h-4 w-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="bg-white border shadow-lg z-50">
+                  <DropdownMenuItem 
+                    onClick={() => handleToolClick('/salary-checker')}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <Calculator className="h-4 w-4 text-blue-600" />
+                    <div>
+                      <p className="font-medium">Salary Checker</p>
+                      <p className="text-xs text-gray-500">Check your market value</p>
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => handleToolClick('/job-post-generator')}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <FileText className="h-4 w-4 text-purple-600" />
+                    <div>
+                      <p className="font-medium">Job Post Generator</p>
+                      <p className="text-xs text-gray-500">Create job posts with AI</p>
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </nav>
 
@@ -131,6 +174,36 @@ const Header = () => {
                 How It Works
               </button>
               <button onClick={handleRecruiterClick} className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 text-sm">For Recruiters</button>
+              
+              {/* Mobile Tools Section */}
+              <div className="border-t pt-2 mt-2">
+                <button 
+                  onClick={() => setIsToolsOpen(!isToolsOpen)}
+                  className="flex items-center justify-between w-full px-3 py-2 text-gray-600 hover:text-gray-900 text-sm"
+                >
+                  <span className="font-medium">Tools</span>
+                  <ChevronDown className={`h-4 w-4 transition-transform ${isToolsOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isToolsOpen && (
+                  <div className="pl-4 space-y-1">
+                    <button 
+                      onClick={() => handleToolClick('/salary-checker')}
+                      className="flex items-center gap-2 w-full px-3 py-2 text-gray-600 hover:text-blue-600 text-sm"
+                    >
+                      <Calculator className="h-4 w-4" />
+                      Salary Checker
+                    </button>
+                    <button 
+                      onClick={() => handleToolClick('/job-post-generator')}
+                      className="flex items-center gap-2 w-full px-3 py-2 text-gray-600 hover:text-blue-600 text-sm"
+                    >
+                      <FileText className="h-4 w-4" />
+                      Job Post Generator
+                    </button>
+                  </div>
+                )}
+              </div>
+              
               <div className="px-3 py-2 space-y-2">
                 <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
                   <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
