@@ -7,293 +7,226 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, Share2, TrendingUp, TrendingDown, Users, Lock, Unlock, Mail, Briefcase, MapPin, Lightbulb, CheckCircle2, Download, Image, Loader2, Sparkles, X, Shield, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Share2, TrendingUp, TrendingDown, Users, Lock, Unlock, Mail, Briefcase, MapPin, Lightbulb, CheckCircle2, Download, Image, Loader2, Sparkles, X, Shield, ShieldCheck, Globe } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useSalaryCheckRateLimit } from "@/hooks/use-rate-limit";
+import { salaryData2025, regionMultipliers, JobSalaryData } from "@/data/salaryData2025";
+import { JobTitleAutocomplete } from "@/components/JobTitleAutocomplete";
+import { useLocation as useGeoLocation } from "@/hooks/use-location";
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
-const ghanaLocations = [
-  "Accra",
-  "Kumasi",
-  "Takoradi",
-  "Tamale",
-  "Cape Coast",
-  "Ho",
-  "Koforidua",
-  "Sunyani",
-  "Tema",
-  "Other",
-];
+// Get all unique countries from region multipliers for autocomplete
+const allCountries = Object.keys(regionMultipliers);
 
 const experienceLevels = [
-  { value: "0", label: "0-1 years (Entry Level)" },
-  { value: "2", label: "2-3 years (Junior)" },
-  { value: "4", label: "4-6 years (Mid-Level)" },
-  { value: "7", label: "7-10 years (Senior)" },
-  { value: "11", label: "11+ years (Expert)" },
+  { value: "0", label: "0-2 years (Entry Level)", key: "entry" },
+  { value: "3", label: "3-5 years (Mid-Level)", key: "mid" },
+  { value: "6", label: "6-10 years (Senior)", key: "senior" },
+  { value: "11", label: "10+ years (Lead/Expert)", key: "lead" },
 ];
 
-// Baseline salary data for Ghana (in GHS monthly) - Updated for 2025
-const baselineSalaries: Record<string, Record<string, number>> = {
-  // Technology & Engineering
-  "software developer": { entry: 4000, junior: 6500, mid: 10000, senior: 16000, expert: 25000 },
-  "software engineer": { entry: 4200, junior: 6800, mid: 10500, senior: 17000, expert: 26000 },
-  "frontend developer": { entry: 3800, junior: 6000, mid: 9500, senior: 15000, expert: 23000 },
-  "backend developer": { entry: 4000, junior: 6500, mid: 10000, senior: 16000, expert: 25000 },
-  "full stack developer": { entry: 4200, junior: 7000, mid: 11000, senior: 17500, expert: 27000 },
-  "mobile developer": { entry: 4000, junior: 6500, mid: 10500, senior: 16500, expert: 25000 },
-  "devops engineer": { entry: 4500, junior: 7500, mid: 12000, senior: 18000, expert: 28000 },
-  "cloud engineer": { entry: 4500, junior: 7500, mid: 12000, senior: 18500, expert: 29000 },
-  "data scientist": { entry: 4500, junior: 7500, mid: 12000, senior: 18000, expert: 28000 },
-  "data analyst": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  "data engineer": { entry: 4200, junior: 7000, mid: 11000, senior: 17000, expert: 26000 },
-  "machine learning engineer": { entry: 5000, junior: 8000, mid: 13000, senior: 20000, expert: 32000 },
-  "ai engineer": { entry: 5000, junior: 8500, mid: 14000, senior: 22000, expert: 35000 },
-  "cybersecurity analyst": { entry: 4000, junior: 6500, mid: 10500, senior: 16000, expert: 24000 },
-  "network engineer": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 19000 },
-  "system administrator": { entry: 3200, junior: 5000, mid: 7500, senior: 11000, expert: 16000 },
-  "database administrator": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 19000 },
-  "qa engineer": { entry: 3200, junior: 5000, mid: 8000, senior: 12000, expert: 18000 },
-  "product manager": { entry: 4500, junior: 7500, mid: 12000, senior: 18000, expert: 28000 },
-  "technical writer": { entry: 2800, junior: 4200, mid: 6500, senior: 9500, expert: 14000 },
-  "it support": { entry: 2200, junior: 3200, mid: 4800, senior: 7000, expert: 10000 },
-  "it manager": { entry: 5000, junior: 7500, mid: 11000, senior: 16000, expert: 24000 },
-  "ui designer": { entry: 3000, junior: 4800, mid: 7500, senior: 11000, expert: 16000 },
-  "ux designer": { entry: 3200, junior: 5200, mid: 8000, senior: 12000, expert: 18000 },
-  "ui/ux designer": { entry: 3200, junior: 5200, mid: 8000, senior: 12000, expert: 18000 },
-  
-  // Finance & Accounting
-  "accountant": { entry: 2800, junior: 4200, mid: 6500, senior: 10000, expert: 16000 },
-  "senior accountant": { entry: 4000, junior: 5500, mid: 7500, senior: 11000, expert: 17000 },
-  "financial analyst": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  "finance manager": { entry: 5000, junior: 7500, mid: 11000, senior: 16000, expert: 24000 },
-  "auditor": { entry: 3000, junior: 4500, mid: 7000, senior: 11000, expert: 17000 },
-  "banker": { entry: 3200, junior: 5000, mid: 8000, senior: 12500, expert: 19000 },
-  "investment analyst": { entry: 4000, junior: 6500, mid: 10000, senior: 15000, expert: 23000 },
-  "tax consultant": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  "credit analyst": { entry: 3200, junior: 5000, mid: 7500, senior: 11000, expert: 16000 },
-  "treasury analyst": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 19000 },
-  "risk analyst": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  
-  // Marketing & Sales
-  "marketing manager": { entry: 3200, junior: 5000, mid: 8000, senior: 12000, expert: 18000 },
-  "digital marketing": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
-  "digital marketer": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
-  "content creator": { entry: 2000, junior: 3500, mid: 5500, senior: 8500, expert: 13000 },
-  "social media manager": { entry: 2200, junior: 3800, mid: 6000, senior: 9000, expert: 14000 },
-  "seo specialist": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
-  "brand manager": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  "sales executive": { entry: 2200, junior: 3800, mid: 6000, senior: 9500, expert: 15000 },
-  "sales manager": { entry: 4000, junior: 6000, mid: 9000, senior: 14000, expert: 21000 },
-  "business development": { entry: 3000, junior: 5000, mid: 8000, senior: 12500, expert: 19000 },
-  "account manager": { entry: 3000, junior: 4800, mid: 7500, senior: 11500, expert: 17000 },
-  "customer success": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
-  "public relations": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
-  
-  // Human Resources
-  "hr manager": { entry: 3200, junior: 5000, mid: 7500, senior: 11500, expert: 17000 },
-  "hr officer": { entry: 2200, junior: 3500, mid: 5200, senior: 7500, expert: 11000 },
-  "recruiter": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 13000 },
-  "talent acquisition": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
-  "compensation analyst": { entry: 3000, junior: 4800, mid: 7500, senior: 11000, expert: 16000 },
-  "training manager": { entry: 3000, junior: 4800, mid: 7500, senior: 11000, expert: 16000 },
-  
-  // Operations & Project Management
-  "project manager": { entry: 4000, junior: 6500, mid: 9500, senior: 15000, expert: 23000 },
-  "operations manager": { entry: 3800, junior: 6000, mid: 9000, senior: 14000, expert: 21000 },
-  "supply chain manager": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  "logistics manager": { entry: 3200, junior: 5000, mid: 7800, senior: 12000, expert: 18000 },
-  "procurement officer": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
-  "quality assurance": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
-  "business analyst": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  "management consultant": { entry: 4500, junior: 7500, mid: 12000, senior: 18000, expert: 28000 },
-  
-  // Healthcare
-  "doctor": { entry: 5500, junior: 8500, mid: 12000, senior: 18000, expert: 28000 },
-  "physician": { entry: 5500, junior: 8500, mid: 12000, senior: 18000, expert: 28000 },
-  "nurse": { entry: 2500, junior: 3800, mid: 5500, senior: 8000, expert: 11000 },
-  "registered nurse": { entry: 2800, junior: 4200, mid: 6000, senior: 8500, expert: 12000 },
-  "pharmacist": { entry: 4000, junior: 6000, mid: 8500, senior: 12000, expert: 17000 },
-  "lab technician": { entry: 2200, junior: 3500, mid: 5000, senior: 7500, expert: 11000 },
-  "medical officer": { entry: 5000, junior: 7500, mid: 10500, senior: 15000, expert: 22000 },
-  "dentist": { entry: 5000, junior: 7500, mid: 11000, senior: 16000, expert: 24000 },
-  "physiotherapist": { entry: 2800, junior: 4500, mid: 6500, senior: 9500, expert: 14000 },
-  
-  // Education
-  "teacher": { entry: 2000, junior: 2800, mid: 4000, senior: 5800, expert: 8500 },
-  "lecturer": { entry: 3500, junior: 5000, mid: 7000, senior: 10000, expert: 15000 },
-  "professor": { entry: 6000, junior: 8000, mid: 11000, senior: 15000, expert: 22000 },
-  "headteacher": { entry: 3500, junior: 5000, mid: 7000, senior: 10000, expert: 14000 },
-  "education administrator": { entry: 3000, junior: 4500, mid: 6500, senior: 9500, expert: 14000 },
-  "trainer": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 13000 },
-  
-  // Legal
-  "lawyer": { entry: 4000, junior: 6500, mid: 10000, senior: 16000, expert: 25000 },
-  "legal officer": { entry: 3500, junior: 5500, mid: 8000, senior: 12000, expert: 18000 },
-  "paralegal": { entry: 2200, junior: 3500, mid: 5200, senior: 7500, expert: 11000 },
-  "company secretary": { entry: 4000, junior: 6000, mid: 9000, senior: 14000, expert: 21000 },
-  
-  // Engineering (Non-Software)
-  "civil engineer": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  "mechanical engineer": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  "electrical engineer": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  "chemical engineer": { entry: 4000, junior: 6500, mid: 10000, senior: 15000, expert: 23000 },
-  "petroleum engineer": { entry: 6000, junior: 10000, mid: 16000, senior: 24000, expert: 38000 },
-  "mining engineer": { entry: 5000, junior: 8500, mid: 13000, senior: 20000, expert: 32000 },
-  "structural engineer": { entry: 3800, junior: 6000, mid: 9000, senior: 14000, expert: 21000 },
-  "architect": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  "quantity surveyor": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  
-  // Creative & Design
-  "graphic designer": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 13000 },
-  "creative director": { entry: 5000, junior: 7500, mid: 11000, senior: 16000, expert: 24000 },
-  "video editor": { entry: 2200, junior: 3500, mid: 5500, senior: 8500, expert: 13000 },
-  "photographer": { entry: 2000, junior: 3200, mid: 5000, senior: 8000, expert: 12000 },
-  "animator": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
-  "interior designer": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
-  "fashion designer": { entry: 2500, junior: 4000, mid: 6500, senior: 10000, expert: 15000 },
-  
-  // Administration & Support
-  "administrative assistant": { entry: 1800, junior: 2500, mid: 3500, senior: 5000, expert: 7500 },
-  "executive assistant": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 13000 },
-  "office manager": { entry: 2800, junior: 4200, mid: 6500, senior: 9500, expert: 14000 },
-  "receptionist": { entry: 1500, junior: 2000, mid: 2800, senior: 4000, expert: 5500 },
-  "personal assistant": { entry: 2200, junior: 3500, mid: 5200, senior: 7800, expert: 11000 },
-  "secretary": { entry: 1800, junior: 2600, mid: 3800, senior: 5500, expert: 8000 },
-  
-  // Customer Service
-  "customer service": { entry: 1800, junior: 2600, mid: 3800, senior: 5500, expert: 8000 },
-  "call center agent": { entry: 1600, junior: 2200, mid: 3200, senior: 4500, expert: 6500 },
-  "customer support": { entry: 1800, junior: 2600, mid: 3800, senior: 5500, expert: 8000 },
-  
-  // Hospitality & Tourism
-  "hotel manager": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  "chef": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 14000 },
-  "tour guide": { entry: 1500, junior: 2200, mid: 3200, senior: 4800, expert: 7000 },
-  "event planner": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 14000 },
-  "restaurant manager": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
-  
-  // Media & Communications
-  "journalist": { entry: 2200, junior: 3500, mid: 5500, senior: 8500, expert: 13000 },
-  "editor": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 14000 },
-  "communications manager": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  "copywriter": { entry: 2200, junior: 3500, mid: 5500, senior: 8500, expert: 13000 },
-  "broadcast journalist": { entry: 2500, junior: 4000, mid: 6000, senior: 9500, expert: 15000 },
-  
-  // Agriculture & Environment
-  "agronomist": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
-  "environmental officer": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 14000 },
-  "farm manager": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
-  
-  // Executive & Senior Management
-  "ceo": { entry: 15000, junior: 22000, mid: 32000, senior: 45000, expert: 65000 },
-  "cto": { entry: 12000, junior: 18000, mid: 26000, senior: 38000, expert: 55000 },
-  "cfo": { entry: 12000, junior: 18000, mid: 26000, senior: 38000, expert: 55000 },
-  "coo": { entry: 11000, junior: 17000, mid: 25000, senior: 36000, expert: 52000 },
-  "general manager": { entry: 7000, junior: 10000, mid: 15000, senior: 22000, expert: 32000 },
-  "director": { entry: 8000, junior: 12000, mid: 18000, senior: 26000, expert: 38000 },
-  "managing director": { entry: 10000, junior: 15000, mid: 22000, senior: 32000, expert: 45000 },
-  
-  // Banking & Insurance Specific
-  "bank teller": { entry: 2200, junior: 3200, mid: 4500, senior: 6500, expert: 9000 },
-  "relationship manager": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  "loan officer": { entry: 2800, junior: 4500, mid: 7000, senior: 10500, expert: 16000 },
-  "insurance agent": { entry: 2000, junior: 3200, mid: 5000, senior: 8000, expert: 12000 },
-  "underwriter": { entry: 3200, junior: 5000, mid: 7800, senior: 12000, expert: 18000 },
-  "claims officer": { entry: 2500, junior: 4000, mid: 6000, senior: 9000, expert: 14000 },
-  
-  // Telecom
-  "telecom engineer": { entry: 3800, junior: 6000, mid: 9500, senior: 14500, expert: 22000 },
-  "network administrator": { entry: 3200, junior: 5000, mid: 7800, senior: 12000, expert: 18000 },
-  
-  // Oil & Gas
-  "drilling engineer": { entry: 7000, junior: 12000, mid: 18000, senior: 28000, expert: 42000 },
-  "geologist": { entry: 4500, junior: 7500, mid: 12000, senior: 18000, expert: 28000 },
-  "hse officer": { entry: 3500, junior: 5500, mid: 8500, senior: 13000, expert: 20000 },
-  
-  // Construction & Real Estate
-  "construction manager": { entry: 4500, junior: 7000, mid: 10500, senior: 16000, expert: 24000 },
-  "site engineer": { entry: 3200, junior: 5000, mid: 7800, senior: 12000, expert: 18000 },
-  "real estate agent": { entry: 2000, junior: 3500, mid: 5500, senior: 8500, expert: 13000 },
-  "property manager": { entry: 3000, junior: 4800, mid: 7500, senior: 11000, expert: 17000 },
-  
-  // Drivers & Logistics
-  "driver": { entry: 1500, junior: 2000, mid: 2800, senior: 3800, expert: 5000 },
-  "dispatch rider": { entry: 1200, junior: 1600, mid: 2200, senior: 3000, expert: 4000 },
-  "warehouse supervisor": { entry: 2500, junior: 3800, mid: 5500, senior: 8000, expert: 12000 },
-  
-  // Internships (for completeness)
-  "intern": { entry: 800, junior: 1200, mid: 1500, senior: 2000, expert: 2500 },
-  "graduate trainee": { entry: 1800, junior: 2500, mid: 3500, senior: 4500, expert: 6000 },
-  
-  // Default for unlisted jobs
-  "default": { entry: 2800, junior: 4200, mid: 6500, senior: 10000, expert: 15000 },
+// Get currency symbol for a country
+const getCurrencySymbol = (country: string): { symbol: string; code: string } => {
+  const currencyMap: Record<string, { symbol: string; code: string }> = {
+    "United States": { symbol: "$", code: "USD" },
+    "United Kingdom": { symbol: "£", code: "GBP" },
+    "Germany": { symbol: "€", code: "EUR" },
+    "France": { symbol: "€", code: "EUR" },
+    "Netherlands": { symbol: "€", code: "EUR" },
+    "Switzerland": { symbol: "CHF", code: "CHF" },
+    "Ireland": { symbol: "€", code: "EUR" },
+    "Belgium": { symbol: "€", code: "EUR" },
+    "Austria": { symbol: "€", code: "EUR" },
+    "Denmark": { symbol: "kr", code: "DKK" },
+    "Sweden": { symbol: "kr", code: "SEK" },
+    "Norway": { symbol: "kr", code: "NOK" },
+    "Finland": { symbol: "€", code: "EUR" },
+    "Spain": { symbol: "€", code: "EUR" },
+    "Italy": { symbol: "€", code: "EUR" },
+    "Portugal": { symbol: "€", code: "EUR" },
+    "Greece": { symbol: "€", code: "EUR" },
+    "Poland": { symbol: "zł", code: "PLN" },
+    "Japan": { symbol: "¥", code: "JPY" },
+    "South Korea": { symbol: "₩", code: "KRW" },
+    "China": { symbol: "¥", code: "CNY" },
+    "Hong Kong": { symbol: "HK$", code: "HKD" },
+    "Singapore": { symbol: "S$", code: "SGD" },
+    "India": { symbol: "₹", code: "INR" },
+    "Australia": { symbol: "A$", code: "AUD" },
+    "New Zealand": { symbol: "NZ$", code: "NZD" },
+    "Canada": { symbol: "C$", code: "CAD" },
+    "Mexico": { symbol: "MX$", code: "MXN" },
+    "Brazil": { symbol: "R$", code: "BRL" },
+    "South Africa": { symbol: "R", code: "ZAR" },
+    "Nigeria": { symbol: "₦", code: "NGN" },
+    "Kenya": { symbol: "KSh", code: "KES" },
+    "Ghana": { symbol: "GH₵", code: "GHS" },
+    "United Arab Emirates": { symbol: "AED", code: "AED" },
+    "Saudi Arabia": { symbol: "SAR", code: "SAR" },
+    "Israel": { symbol: "₪", code: "ILS" },
+    "Turkey": { symbol: "₺", code: "TRY" },
+    "Egypt": { symbol: "E£", code: "EGP" },
+    "Russia": { symbol: "₽", code: "RUB" },
+    "Ukraine": { symbol: "₴", code: "UAH" },
+    "Philippines": { symbol: "₱", code: "PHP" },
+    "Thailand": { symbol: "฿", code: "THB" },
+    "Malaysia": { symbol: "RM", code: "MYR" },
+    "Indonesia": { symbol: "Rp", code: "IDR" },
+    "Vietnam": { symbol: "₫", code: "VND" },
+  };
+  return currencyMap[country] || { symbol: "$", code: "USD" };
 };
 
-// Salary validation thresholds - max multipliers from baseline by experience level
-const salaryValidationMultipliers: Record<string, number> = {
-  entry: 2.0,    // Max 2x the baseline for entry level
-  junior: 1.8,   // Max 1.8x the baseline for junior
-  mid: 1.6,      // Max 1.6x the baseline for mid-level
-  senior: 1.5,   // Max 1.5x the baseline for senior
-  expert: 1.4,   // Max 1.4x the baseline for expert
-};
-
-// Function to validate if a salary submission is within reasonable range
-const isValidSalarySubmission = (
-  jobTitle: string,
-  yearsExperience: number,
-  salary: number,
-  location: string
-): boolean => {
-  const normalizedTitle = jobTitle.toLowerCase().trim();
-  const experienceLevel = yearsExperience <= 1 ? "entry" : yearsExperience <= 3 ? "junior" : yearsExperience <= 6 ? "mid" : yearsExperience <= 10 ? "senior" : "expert";
+// Find best matching job from 2025 data
+const findMatchingJob = (title: string): JobSalaryData | null => {
+  const normalizedTitle = title.toLowerCase().trim();
   
-  // Find baseline salary for this job
-  let baseSalaryData = baselineSalaries["default"];
-  for (const [key, values] of Object.entries(baselineSalaries)) {
-    if (key === "default") continue;
-    if (normalizedTitle.includes(key) || key.includes(normalizedTitle)) {
-      baseSalaryData = values;
-      break;
+  // Exact match first
+  const exactMatch = salaryData2025.find(
+    (job) => job.title.toLowerCase() === normalizedTitle
+  );
+  if (exactMatch) return exactMatch;
+  
+  // Partial match
+  const partialMatch = salaryData2025.find(
+    (job) => 
+      job.title.toLowerCase().includes(normalizedTitle) ||
+      normalizedTitle.includes(job.title.toLowerCase())
+  );
+  if (partialMatch) return partialMatch;
+  
+  // Word-based matching
+  const words = normalizedTitle.split(/\s+/);
+  let bestMatch: JobSalaryData | null = null;
+  let bestScore = 0;
+  
+  for (const job of salaryData2025) {
+    const jobWords = job.title.toLowerCase().split(/\s+/);
+    let score = 0;
+    for (const word of words) {
+      if (word.length < 3) continue;
+      if (jobWords.some(jw => jw.includes(word) || word.includes(jw))) {
+        score++;
+      }
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = job;
     }
   }
   
-  const baseSalary = baseSalaryData[experienceLevel];
-  const locationMultiplier = locationMultipliers[location] || 1.0;
-  const adjustedBaseline = baseSalary * locationMultiplier;
-  
-  // Get max allowed multiplier for this experience level
-  const maxMultiplier = salaryValidationMultipliers[experienceLevel];
-  const maxAllowedSalary = adjustedBaseline * maxMultiplier;
-  const minAllowedSalary = adjustedBaseline * 0.4; // Minimum 40% of baseline
-  
-  return salary >= minAllowedSalary && salary <= maxAllowedSalary;
+  return bestScore > 0 ? bestMatch : null;
 };
 
-// Location multipliers
-const locationMultipliers: Record<string, number> = {
-  "Accra": 1.2,
-  "Tema": 1.15,
-  "Kumasi": 1.0,
-  "Takoradi": 1.05,
-  "Cape Coast": 0.95,
-  "Tamale": 0.9,
-  "Ho": 0.9,
-  "Koforidua": 0.92,
-  "Sunyani": 0.9,
-  "Other": 0.88,
-};
-
-// City comparison data
-const cityComparisons: Record<string, number> = {
-  "Accra": 1.2,
-  "Tema": 1.15,
-  "Kumasi": 1.0,
-  "Takoradi": 1.05,
-  "Cape Coast": 0.95,
+// Get region multiplier with fuzzy matching
+const getRegionMultiplier = (location: string): { multiplier: number; country: string } => {
+  const normalizedLocation = location.toLowerCase().trim();
+  
+  // Direct match
+  for (const [country, multiplier] of Object.entries(regionMultipliers)) {
+    if (country.toLowerCase() === normalizedLocation) {
+      return { multiplier, country };
+    }
+  }
+  
+  // Partial match
+  for (const [country, multiplier] of Object.entries(regionMultipliers)) {
+    if (
+      country.toLowerCase().includes(normalizedLocation) ||
+      normalizedLocation.includes(country.toLowerCase())
+    ) {
+      return { multiplier, country };
+    }
+  }
+  
+  // City to country mapping for common cities
+  const cityToCountry: Record<string, string> = {
+    "new york": "United States",
+    "san francisco": "United States",
+    "los angeles": "United States",
+    "seattle": "United States",
+    "austin": "United States",
+    "boston": "United States",
+    "chicago": "United States",
+    "london": "United Kingdom",
+    "manchester": "United Kingdom",
+    "birmingham": "United Kingdom",
+    "berlin": "Germany",
+    "munich": "Germany",
+    "hamburg": "Germany",
+    "paris": "France",
+    "lyon": "France",
+    "amsterdam": "Netherlands",
+    "rotterdam": "Netherlands",
+    "dublin": "Ireland",
+    "tokyo": "Japan",
+    "osaka": "Japan",
+    "seoul": "South Korea",
+    "beijing": "China",
+    "shanghai": "China",
+    "shenzhen": "China",
+    "bangalore": "India",
+    "mumbai": "India",
+    "delhi": "India",
+    "hyderabad": "India",
+    "chennai": "India",
+    "pune": "India",
+    "sydney": "Australia",
+    "melbourne": "Australia",
+    "toronto": "Canada",
+    "vancouver": "Canada",
+    "montreal": "Canada",
+    "singapore": "Singapore",
+    "hong kong": "Hong Kong",
+    "dubai": "United Arab Emirates",
+    "abu dhabi": "United Arab Emirates",
+    "tel aviv": "Israel",
+    "sao paulo": "Brazil",
+    "rio de janeiro": "Brazil",
+    "johannesburg": "South Africa",
+    "cape town": "South Africa",
+    "lagos": "Nigeria",
+    "nairobi": "Kenya",
+    "accra": "Ghana",
+    "kumasi": "Ghana",
+    "cairo": "Egypt",
+    "zurich": "Switzerland",
+    "geneva": "Switzerland",
+    "stockholm": "Sweden",
+    "copenhagen": "Denmark",
+    "oslo": "Norway",
+    "helsinki": "Finland",
+    "warsaw": "Poland",
+    "prague": "Czech Republic",
+    "vienna": "Austria",
+    "brussels": "Belgium",
+    "barcelona": "Spain",
+    "madrid": "Spain",
+    "rome": "Italy",
+    "milan": "Italy",
+    "lisbon": "Portugal",
+    "mexico city": "Mexico",
+    "buenos aires": "Argentina",
+    "santiago": "Chile",
+    "bogota": "Colombia",
+    "lima": "Peru",
+    "bangkok": "Thailand",
+    "jakarta": "Indonesia",
+    "ho chi minh city": "Vietnam",
+    "hanoi": "Vietnam",
+    "manila": "Philippines",
+    "kuala lumpur": "Malaysia",
+  };
+  
+  const matchedCountry = cityToCountry[normalizedLocation];
+  if (matchedCountry && regionMultipliers[matchedCountry]) {
+    return { multiplier: regionMultipliers[matchedCountry], country: matchedCountry };
+  }
+  
+  // Default to US if no match found
+  return { multiplier: 1.0, country: "United States" };
 };
 
 // Negotiation tips by experience level
@@ -305,32 +238,25 @@ const negotiationTips: Record<string, string[]> = {
     "Negotiate non-monetary benefits like training opportunities",
     "Show enthusiasm but don't undersell - know your worth",
   ],
-  junior: [
+  mid: [
     "Document your achievements with specific metrics and numbers",
     "Research what competitors are paying for similar roles",
     "Ask about performance bonuses and clear promotion paths",
     "Negotiate flexible working arrangements as part of the package",
     "Time your negotiation after completing a successful project",
   ],
-  mid: [
+  senior: [
     "Lead with your proven track record and quantified achievements",
     "Benchmark against senior roles to show your readiness to grow",
     "Negotiate project leadership opportunities and team mentoring",
     "Ask for professional development budgets and certifications",
     "Consider the total package: equity, bonuses, and benefits",
   ],
-  senior: [
+  lead: [
     "Emphasize your strategic impact and leadership capabilities",
     "Negotiate for equity or profit-sharing arrangements",
     "Ask for executive-level benefits and signing bonuses",
     "Leverage competing offers professionally",
-    "Negotiate your title alongside compensation for long-term value",
-  ],
-  expert: [
-    "Position yourself as a strategic asset, not just an employee",
-    "Negotiate consulting-style arrangements or advisory roles",
-    "Ask for board visibility or C-suite interaction opportunities",
-    "Leverage your network and industry reputation",
     "Consider deferred compensation and long-term incentives",
   ],
 };
@@ -343,17 +269,23 @@ interface SalaryResult {
   underpaidAmount?: number;
   jobTitle: string;
   location: string;
+  country: string;
   experience: string;
   experienceLevel: string;
   dataPoints: number;
-  cityComparisons: { city: string; salary: number }[];
+  countryComparisons: { country: string; salary: number }[];
   experienceBreakdown: { level: string; salary: number }[];
+  currencySymbol: string;
+  currencyCode: string;
+  isAnnual: boolean;
 }
 
 const SalaryCheck = () => {
   const navigate = useNavigate();
+  const geoLocation = useGeoLocation();
   const { checkRateLimit, recordRequest, formatTimeRemaining } = useSalaryCheckRateLimit();
   const [jobTitle, setJobTitle] = useState("");
+  const [matchedJob, setMatchedJob] = useState<JobSalaryData | null>(null);
   const [yearsExperience, setYearsExperience] = useState("");
   const [location, setLocation] = useState("");
   const [currentSalary, setCurrentSalary] = useState("");
@@ -377,29 +309,35 @@ const SalaryCheck = () => {
   // reCAPTCHA state
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
+
+  // Set location based on geo-detection
+  useEffect(() => {
+    if (geoLocation.countryName && !location) {
+      setLocation(geoLocation.countryName);
+    }
+  }, [geoLocation.countryName]);
+
   useEffect(() => {
     if (result && !showWaitlistPopup) {
       const timer = setTimeout(() => {
         setShowWaitlistPopup(true);
-      }, 12000); // Show after 12 seconds
+      }, 12000);
       return () => clearTimeout(timer);
     }
   }, [result]);
 
-  const getExperienceLevel = (years: number): string => {
-    if (years <= 1) return "entry";
-    if (years <= 3) return "junior";
-    if (years <= 6) return "mid";
+  const getExperienceLevel = (years: number): "entry" | "mid" | "senior" | "lead" => {
+    if (years <= 2) return "entry";
+    if (years <= 5) return "mid";
     if (years <= 10) return "senior";
-    return "expert";
+    return "lead";
   };
 
   const getExperienceLabel = (years: number): string => {
-    if (years <= 1) return "Entry Level";
-    if (years <= 3) return "Junior";
-    if (years <= 6) return "Mid-Level";
+    if (years <= 2) return "Entry Level";
+    if (years <= 5) return "Mid-Level";
     if (years <= 10) return "Senior";
-    return "Expert";
+    return "Lead/Expert";
   };
 
   const calculateSalary = async () => {
@@ -465,105 +403,85 @@ const SalaryCheck = () => {
     try {
       const years = parseInt(yearsExperience);
       const experienceLevel = getExperienceLevel(years);
-      const normalizedTitle = jobTitle.toLowerCase().trim();
-
-      // Get baseline salary
-      let baseSalaryData = baselineSalaries["default"];
-      for (const [key, values] of Object.entries(baselineSalaries)) {
-        if (normalizedTitle.includes(key) || key.includes(normalizedTitle)) {
-          baseSalaryData = values;
-          break;
-        }
-      }
-      const baseSalary = baseSalaryData[experienceLevel];
-
-      // Apply location multiplier
-      const locationMultiplier = locationMultipliers[location] || 1.0;
-      const adjustedSalary = baseSalary * locationMultiplier;
-
-      // Fetch crowdsourced data for better accuracy
-      const { data: crowdsourcedData, error } = await supabase
-        .from("salary_submissions")
-        .select("current_salary, expected_salary, years_experience")
-        .ilike("job_title", `%${normalizedTitle}%`)
-        .eq("location", location)
-        .gte("years_experience", years - 2)
-        .lte("years_experience", years + 2);
-
-      let dataPoints = 0;
-      let crowdsourcedAverage = adjustedSalary;
-
-      if (!error && crowdsourcedData && crowdsourcedData.length > 0) {
-        // Filter out outliers using validation logic
-        const validSalaries = crowdsourcedData
-          .filter((d) => {
-            if (!d.current_salary) return false;
-            const salary = Number(d.current_salary);
-            // Validate salary is within reasonable range for this job/experience
-            return isValidSalarySubmission(
-              normalizedTitle, 
-              d.years_experience, 
-              salary, 
-              location
-            );
-          })
-          .map((d) => Number(d.current_salary));
-        
-        dataPoints = validSalaries.length;
-        if (validSalaries.length > 0) {
-          crowdsourcedAverage = validSalaries.reduce((a, b) => a + b, 0) / validSalaries.length;
-        }
-      }
-
-      // Calculate ranges
-      const marketAverage = dataPoints > 5 
-        ? (adjustedSalary * 0.3 + crowdsourcedAverage * 0.7) 
-        : adjustedSalary;
       
-      const lowRange = marketAverage * 0.75;
-      const highRange = marketAverage * 1.35;
+      // Find matching job from 2025 data
+      const jobData = matchedJob || findMatchingJob(jobTitle);
+      
+      if (!jobData) {
+        toast({
+          title: "Job Not Found",
+          description: "We couldn't find salary data for this job title. Try a different title or browse our suggestions.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+      
+      // Get region multiplier
+      const { multiplier: regionMultiplier, country } = getRegionMultiplier(location);
+      const { symbol: currencySymbol, code: currencyCode } = getCurrencySymbol(country);
+      
+      // Calculate base salary in USD (annual)
+      const baseMedian = jobData.salaryUSD.median;
+      const experienceMultiplier = jobData.experienceMultipliers[experienceLevel];
+      const adjustedUSD = baseMedian * experienceMultiplier;
+      
+      // Apply regional adjustment
+      const regionalSalary = adjustedUSD * regionMultiplier;
+      
+      // Calculate ranges
+      const lowRangeRatio = jobData.salaryUSD.min / jobData.salaryUSD.median;
+      const highRangeRatio = jobData.salaryUSD.max / jobData.salaryUSD.median;
+      
+      const lowRange = regionalSalary * lowRangeRatio * experienceMultiplier;
+      const highRange = regionalSalary * highRangeRatio * experienceMultiplier;
+      const marketAverage = regionalSalary;
 
-      // Calculate if underpaid
+      // Calculate if underpaid (convert user input to annual if needed)
       let underpaidAmount: number | undefined;
       if (currentSalary) {
         const current = parseFloat(currentSalary);
+        // Assume user enters annual salary
         if (current < marketAverage) {
           underpaidAmount = marketAverage - current;
         }
       }
 
-      // Generate city comparisons
-      const cityComparisonData = Object.entries(cityComparisons)
-        .filter(([city]) => city !== location)
-        .map(([city, multiplier]) => ({
-          city,
-          salary: Math.round(baseSalary * multiplier),
-        }))
-        .slice(0, 4);
+      // Generate country comparisons
+      const compareCountries = ["United States", "United Kingdom", "Germany", "Singapore", "India"].filter(
+        (c) => c !== country
+      );
+      const countryComparisonData = compareCountries.map((c) => ({
+        country: c,
+        salary: Math.round(baseMedian * experienceMultiplier * (regionMultipliers[c] || 1)),
+      })).slice(0, 4);
 
       // Generate experience breakdown
       const experienceBreakdown = [
-        { level: "Entry Level", salary: Math.round(baseSalaryData.entry * locationMultiplier) },
-        { level: "Junior", salary: Math.round(baseSalaryData.junior * locationMultiplier) },
-        { level: "Mid-Level", salary: Math.round(baseSalaryData.mid * locationMultiplier) },
-        { level: "Senior", salary: Math.round(baseSalaryData.senior * locationMultiplier) },
-        { level: "Expert", salary: Math.round(baseSalaryData.expert * locationMultiplier) },
+        { level: "Entry Level", salary: Math.round(baseMedian * jobData.experienceMultipliers.entry * regionMultiplier) },
+        { level: "Mid-Level", salary: Math.round(baseMedian * jobData.experienceMultipliers.mid * regionMultiplier) },
+        { level: "Senior", salary: Math.round(baseMedian * jobData.experienceMultipliers.senior * regionMultiplier) },
+        { level: "Lead/Expert", salary: Math.round(baseMedian * jobData.experienceMultipliers.lead * regionMultiplier) },
       ];
 
-      recordRequest(); // Track successful request for rate limiting
+      recordRequest();
       setResult({
         lowRange: Math.round(lowRange),
         midRange: Math.round(marketAverage),
         highRange: Math.round(highRange),
         marketAverage: Math.round(marketAverage),
         underpaidAmount: underpaidAmount ? Math.round(underpaidAmount) : undefined,
-        jobTitle,
+        jobTitle: jobData.title,
         location,
+        country,
         experience: getExperienceLabel(years),
         experienceLevel,
-        dataPoints,
-        cityComparisons: cityComparisonData,
+        dataPoints: 0,
+        countryComparisons: countryComparisonData,
         experienceBreakdown,
+        currencySymbol,
+        currencyCode,
+        isAnnual: true,
       });
 
     } catch (error) {
@@ -646,23 +564,6 @@ const SalaryCheck = () => {
 
     const salaryAmount = parseFloat(contributeSalary);
     const years = parseInt(yearsExperience);
-    
-    // Validate the salary submission before storing
-    const isValidSubmission = isValidSalarySubmission(
-      jobTitle,
-      years,
-      salaryAmount,
-      location
-    );
-
-    if (!isValidSubmission) {
-      // Still store it but flag it - or show a warning
-      toast({
-        title: "Unusual Salary",
-        description: "Your salary seems outside the typical range for this role. We'll still record it for review.",
-        variant: "default",
-      });
-    }
 
     try {
       const { error } = await supabase.from("salary_submissions").insert({
@@ -678,9 +579,7 @@ const SalaryCheck = () => {
 
       toast({
         title: "Thank You!",
-        description: isValidSubmission 
-          ? "Your contribution helps others get accurate salary data."
-          : "Your data has been recorded for review.",
+        description: "Your contribution helps others get accurate salary data.",
       });
       setShowContribute(false);
       setContributeSalary("");
@@ -694,8 +593,10 @@ const SalaryCheck = () => {
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return `GH₵${amount.toLocaleString()}`;
+  const formatCurrency = (amount: number, annual: boolean = true) => {
+    const symbol = result?.currencySymbol || "$";
+    const formatted = amount.toLocaleString();
+    return `${symbol}${formatted}${annual ? "/year" : ""}`;
   };
 
   const generateShareableGraphic = async () => {
@@ -816,12 +717,19 @@ const SalaryCheck = () => {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="jobTitle">Job Title *</Label>
-                <Input
-                  id="jobTitle"
-                  placeholder="e.g., Software Developer, Accountant"
+                <JobTitleAutocomplete
                   value={jobTitle}
-                  onChange={(e) => setJobTitle(e.target.value)}
+                  onChange={(value, matched) => {
+                    setJobTitle(value);
+                    if (matched) setMatchedJob(matched);
+                  }}
                 />
+                {matchedJob && jobTitle && (
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <CheckCircle2 className="h-3 w-3 text-green-500" />
+                    Matched: {matchedJob.title} ({matchedJob.category})
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -841,22 +749,31 @@ const SalaryCheck = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="location">Location *</Label>
+                <Label htmlFor="location" className="flex items-center gap-2">
+                  <Globe className="h-4 w-4" />
+                  Country/Location *
+                </Label>
                 <Input
                   id="location"
-                  placeholder="e.g., New York, London, Accra"
+                  placeholder="e.g., United States, Germany, India"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                 />
+                {geoLocation.countryName && location === geoLocation.countryName && (
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <CheckCircle2 className="h-3 w-3 text-green-500" />
+                    Detected: {geoLocation.flagEmoji} {geoLocation.countryName}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="currentSalary">Your Current Salary (GH₵/month)</Label>
+                <Label htmlFor="currentSalary">Your Current Annual Salary (optional)</Label>
                 <Input
                   id="currentSalary"
                   type="number"
                   min="0"
-                  placeholder="Optional - to see if you're underpaid"
+                  placeholder="To see if you're underpaid"
                   value={currentSalary}
                   onChange={(e) => {
                     const value = e.target.value;
@@ -1096,16 +1013,16 @@ const SalaryCheck = () => {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex justify-between items-center p-3 rounded-lg bg-primary/10 border-2 border-primary/30">
-                      <span className="font-semibold text-primary">{result.location} (You)</span>
+                      <span className="font-semibold text-primary">{result.country} (You)</span>
                       <span className="font-bold text-primary">{formatCurrency(result.midRange)}</span>
                     </div>
-                    {result.cityComparisons.map((city) => (
+                    {result.countryComparisons.map((item) => (
                       <div 
-                        key={city.city}
+                        key={item.country}
                         className="flex justify-between items-center p-3 rounded-lg bg-muted/30"
                       >
-                        <span className="text-muted-foreground">{city.city}</span>
-                        <span className="font-medium">{formatCurrency(city.salary)}</span>
+                        <span className="text-muted-foreground">{item.country}</span>
+                        <span className="font-medium">{formatCurrency(item.salary)}</span>
                       </div>
                     ))}
                   </CardContent>
