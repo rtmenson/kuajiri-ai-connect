@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useJobPostRateLimit } from "@/hooks/use-rate-limit";
 import { useLocation, CURRENCIES as LOCATION_CURRENCIES } from "@/hooks/use-location";
+import { SEO, getJobPostGeneratorSEO } from "@/components/SEO";
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 import {
@@ -367,8 +368,13 @@ const JobPostGenerator = () => {
 
   const currentLoadingMessage = LOADING_MESSAGES[loadingMessageIndex];
 
+  // Get SEO config based on user's location
+  const seoConfig = getJobPostGeneratorSEO(locationData.countryName);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <>
+      <SEO {...seoConfig} />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-center">
@@ -1245,6 +1251,7 @@ const JobPostGenerator = () => {
         </DialogContent>
       </Dialog>
     </div>
+    </>
   );
 };
 

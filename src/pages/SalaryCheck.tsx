@@ -14,6 +14,7 @@ import { useSalaryCheckRateLimit } from "@/hooks/use-rate-limit";
 import { salaryData2025, regionMultipliers, JobSalaryData } from "@/data/salaryData2025";
 import { JobTitleAutocomplete } from "@/components/JobTitleAutocomplete";
 import { useLocation as useGeoLocation } from "@/hooks/use-location";
+import { SEO, getSalaryCheckerSEO } from "@/components/SEO";
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
@@ -671,8 +672,13 @@ const SalaryCheck = () => {
     }
   };
 
+  // Get SEO config based on user's location
+  const seoConfig = getSalaryCheckerSEO(location || geoLocation.countryName);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+    <>
+      <SEO {...seoConfig} />
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       {/* Header */}
       <header className="border-b border-border/40 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -1279,6 +1285,7 @@ const SalaryCheck = () => {
         </DialogContent>
       </Dialog>
     </div>
+    </>
   );
 };
 
