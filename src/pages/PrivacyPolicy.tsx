@@ -19,20 +19,20 @@ const PrivacyPolicy = () => {
             
             <div className="prose prose-lg max-w-none">
               <p className="text-gray-600 mb-6">
-                Effective Date: 4th July, 2025
+                Effective Date: 29th December, 2025
               </p>
               
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-900">Introduction</h2>
                 <p className="text-gray-600 mb-4">
-                  Kuajiri ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI-based application. By using our services, you consent to the data practices described in this policy.
+                  Kuajiri ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI-based application and related tools. By using our services, you consent to the data practices described in this policy.
                 </p>
               </section>
               
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-900">Information We Collect</h2>
                 <p className="text-gray-600 mb-4">
-                  When you interact with our AI product, we may collect the following personal information:
+                  When you interact with our AI product and tools, we may collect the following personal information:
                 </p>
                 <ul className="list-disc list-inside text-gray-600 space-y-2">
                   <li>Name</li>
@@ -41,6 +41,22 @@ const PrivacyPolicy = () => {
                   <li>Gender</li>
                   <li>Religion</li>
                   <li>Job history</li>
+                </ul>
+                <p className="text-gray-600 mt-4 mb-2">
+                  When using our Salary Checker tool, we may also collect:
+                </p>
+                <ul className="list-disc list-inside text-gray-600 space-y-2">
+                  <li>Job title and industry</li>
+                  <li>Years of experience</li>
+                  <li>Location</li>
+                  <li>Current and expected salary (optional)</li>
+                </ul>
+                <p className="text-gray-600 mt-4 mb-2">
+                  When using our Job Post Generator tool, we may collect:
+                </p>
+                <ul className="list-disc list-inside text-gray-600 space-y-2">
+                  <li>Company name and contact information</li>
+                  <li>Job details and requirements</li>
                 </ul>
               </section>
               
@@ -55,6 +71,8 @@ const PrivacyPolicy = () => {
                   <li>Improve our application and customer support</li>
                   <li>Communicate updates and notifications</li>
                   <li>Conduct research and data analysis</li>
+                  <li>Generate salary benchmarking insights through our Salary Checker tool</li>
+                  <li>Create AI-generated job postings through our Job Post Generator tool</li>
                   <li>Comply with legal and regulatory requirements</li>
                 </ul>
               </section>
