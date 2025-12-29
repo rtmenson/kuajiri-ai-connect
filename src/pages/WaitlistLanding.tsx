@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, Users, Clock, Shield, Star, ArrowRight, Zap } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import ToolsPromoModal from '../components/ToolsPromoModal';
 import { Link } from 'react-router-dom';
 
 const WaitlistLanding = () => {
   return (
     <div className="min-h-screen bg-background">
+      <ToolsPromoModal />
       <Header />
       
       {/* Hero Section */}
