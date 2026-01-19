@@ -31,12 +31,12 @@ const RecruiterWaitlistLanding = () => {
             </p>
             
             <div className="flex flex-col gap-4 justify-center items-center mb-14">
-              <Link to="/waitlist">
+              <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
                 <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-base">
-                  Join the Waitlist
+                  Sign up
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-              </Link>
+              </a>
               <Link to="/">
                 <Button variant="outline" size="sm" className="text-sm">
                   For Job Seekers →
