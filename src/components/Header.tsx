@@ -138,9 +138,9 @@ const Header = () => {
               <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
                 <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
               </a>
-              <Link to="/waitlist">
-                <Button className="text-sm">Join the Waitlist</Button>
-              </Link>
+              <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
+                <Button className="text-sm">Sign up</Button>
+              </a>
             </div>
           </div>
 
@@ -209,9 +209,9 @@ const Header = () => {
                   <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
                 </a>
                 <div></div>
-                <Link to="/waitlist">
-                  <Button className="w-full text-sm">Join the Waitlist</Button>
-                </Link>
+                <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
+                  <Button className="w-full text-sm">Sign up</Button>
+                </a>
               </div>
             </div>
           </div>
