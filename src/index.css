@@ -7,8 +7,8 @@
 @layer base {
   :root {
     /* Premium Typography */
-    --font-display: 'Instrument Serif', Georgia, serif;
-    --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
     
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;

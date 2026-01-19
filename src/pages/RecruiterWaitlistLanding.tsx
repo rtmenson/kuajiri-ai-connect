@@ -218,7 +218,7 @@ const RecruiterWaitlistLanding = () => {
               <div className="space-y-4">
                 <div className="flex items-start">
                   <CheckCircle className="h-5 w-5 text-blue-600 mt-1 mr-3 flex-shrink-0" />
-                  <span className="text-gray-700">14-day free trial - prove ROI before you pay</span>
+                  <span className="text-gray-700">Free trial - prove ROI before you pay</span>
                 </div>
                 <div className="flex items-start">
                   <CheckCircle className="h-5 w-5 text-purple-600 mt-1 mr-3 flex-shrink-0" />
@@ -307,7 +307,7 @@ const RecruiterWaitlistLanding = () => {
               <div className="grid md:grid-cols-2 gap-4 text-left">
                 <div className="flex items-start text-white">
                   <CheckCircle className="h-5 w-5 text-blue-200 mt-1 mr-3 flex-shrink-0" />
-                  <span>14-day free trial (no credit card required)</span>
+                  <span>Free trial (no credit card required)</span>
                 </div>
                 <div className="flex items-start text-white">
                   <CheckCircle className="h-5 w-5 text-blue-200 mt-1 mr-3 flex-shrink-0" />
@@ -324,15 +324,15 @@ const RecruiterWaitlistLanding = () => {
               </div>
             </div>
             
-            <Link to="/waitlist">
+            <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
               <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 text-lg font-bold">
-                Join the Waitlist
+                Sign up
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            </Link>
+            </a>
             
             <p className="text-blue-100 mt-4 text-sm">
-              Join 500+ companies already using Kuajiri AI for smarter hiring
+              Join several companies already using Kuajiri AI for smarter hiring
             </p>
           </div>
         </div>
