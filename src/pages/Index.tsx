@@ -245,7 +245,7 @@ const Index = () => {
                   ))}
                 </div>
                 <p className="text-gray-700 mb-4">"Got 3 interview calls in my first week. The quality of matches is incredible - every job was exactly what I was looking for."</p>
-                <div className="text-sm text-gray-500">Sarah K., Software Engineer</div>
+                <div className="text-sm text-gray-500">Akosua Mensah, Software Engineer</div>
               </div>
               
               <div className="bg-white rounded-xl p-6 shadow-sm">
@@ -255,7 +255,7 @@ const Index = () => {
                   ))}
                 </div>
                 <p className="text-gray-700 mb-4">"Finally landed my dream role after 6 months of failed applications elsewhere. Kuajiri found opportunities I never would have discovered."</p>
-                <div className="text-sm text-gray-500">Michael R., Marketing Manager</div>
+                <div className="text-sm text-gray-500">Kwame Asante, Marketing Manager</div>
               </div>
               
               <div className="bg-white rounded-xl p-6 shadow-sm">
@@ -265,7 +265,7 @@ const Index = () => {
                   ))}
                 </div>
                 <p className="text-gray-700 mb-4">"The ROI is insane. Paid for itself with my salary increase from the first job they matched me with."</p>
-                <div className="text-sm text-gray-500">Jennifer L., Data Analyst</div>
+                <div className="text-sm text-gray-500">Ama Boateng, Data Analyst</div>
               </div>
             </div>
             

@@ -38,11 +38,11 @@ const Hero = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/waitlist">
+              <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
                 <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-base w-full sm:w-auto">
-                  Join the Waitlist
+                  Sign Up
                 </Button>
-              </Link>
+              </a>
               <Link to="/recruiter">
                 <Button variant="outline" className="px-8 py-3 text-base border-2 w-full sm:w-auto">
                   For Recruiters
