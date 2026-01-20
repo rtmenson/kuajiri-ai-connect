@@ -7,7 +7,7 @@
 @layer base {
   :root {
     /* Premium Typography */
-  --font-display: 'Lucida Console', Monaco, monospace;
+  --font-display: 'DM Serif Display', Georgia, serif;
   --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
     
     --background: 0 0% 100%;
