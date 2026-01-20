@@ -1,14 +1,11 @@
-
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Users, Clock, Shield, Star, ArrowRight, Zap } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ToolsPromoModal from '../components/ToolsPromoModal';
 import { Link } from 'react-router-dom';
-
 const WaitlistLanding = () => {
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       <ToolsPromoModal />
       <Header />
       
@@ -35,7 +32,8 @@ const WaitlistLanding = () => {
             <div className="flex flex-col gap-4 justify-center items-center mb-14">
               <Link to="/waitlist">
                 <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-base">
-                  Join the Waitlist
+                  Sign up 
+  
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -243,9 +241,7 @@ const WaitlistLanding = () => {
             <div className="grid md:grid-cols-3 gap-8">
               <div className="bg-white rounded-xl p-6 shadow-sm">
                 <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                  ))}
+                  {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />)}
                 </div>
                 <p className="text-gray-700 mb-4">"Got 3 interview calls in my first week. The quality of matches is incredible - every job was exactly what I was looking for."</p>
                 <div className="text-sm text-gray-500">Sarah K., Software Engineer</div>
@@ -253,9 +249,7 @@ const WaitlistLanding = () => {
               
               <div className="bg-white rounded-xl p-6 shadow-sm">
                 <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                  ))}
+                  {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />)}
                 </div>
                 <p className="text-gray-700 mb-4">"Finally landed my dream role after 6 months of failed applications elsewhere. Kuajiri found opportunities I never would have discovered."</p>
                 <div className="text-sm text-gray-500">Michael R., Marketing Manager</div>
@@ -263,9 +257,7 @@ const WaitlistLanding = () => {
               
               <div className="bg-white rounded-xl p-6 shadow-sm">
                 <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                  ))}
+                  {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />)}
                 </div>
                 <p className="text-gray-700 mb-4">"The ROI is insane. Paid for itself with my salary increase from the first job they matched me with."</p>
                 <div className="text-sm text-gray-500">Jennifer L., Data Analyst</div>
@@ -336,8 +328,6 @@ const WaitlistLanding = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default WaitlistLanding;
