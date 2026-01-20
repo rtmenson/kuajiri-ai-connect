@@ -176,118 +176,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Risk Reversal Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-gray-900">
-              "But Does It Actually Work?"
-            </h2>
-            <p className="text-xl text-gray-600">
-              We get it. You've been burned by job search "solutions" before. Here's why Kuajiri AI is different:
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-12 mb-16">
-            <div className="ml-8">
-              <h3 className="text-2xl font-bold mb-6 text-gray-900">Your Concerns (We've Heard Them All)</h3>
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <div className="w-2 h-2 bg-red-500 rounded-full mt-3 mr-3 flex-shrink-0"></div>
-                  <span className="text-gray-700">"Another platform that doesn't understand my industry"</span>
-                </div>
-                <div className="flex items-start">
-                  <div className="w-2 h-2 bg-red-500 rounded-full mt-3 mr-3 flex-shrink-0"></div>
-                  <span className="text-gray-700">"Too expensive for what I get back"</span>
-                </div>
-                <div className="flex items-start">
-                  <div className="w-2 h-2 bg-red-500 rounded-full mt-3 mr-3 flex-shrink-0"></div>
-                  <span className="text-gray-700">"Takes too long to set up and see results"</span>
-                </div>
-                <div className="flex items-start">
-                  <div className="w-2 h-2 bg-red-500 rounded-full mt-3 mr-3 flex-shrink-0"></div>
-                  <span className="text-gray-700">"Just sends me the same jobs I can find myself"</span>
-                </div>
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-2xl font-bold mb-6 text-gray-900">Here's The Truth</h3>
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-blue-600 mt-1 mr-3 flex-shrink-0" />
-                  <span className="text-gray-700">30-day free trial - see results before you pay anything</span>
-                </div>
-                <div className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-purple-600 mt-1 mr-3 flex-shrink-0" />
-                  <span className="text-gray-700">Setup takes 5 minutes, matches start within 24 hours</span>
-                </div>
-                <div className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-indigo-600 mt-1 mr-3 flex-shrink-0" />
-                  <span className="text-gray-700">Cancel anytime, no long-term contracts</span>
-                </div>
-                <div className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-violet-600 mt-1 mr-3 flex-shrink-0" />
-                  <span className="text-gray-700">Access to hidden job market - 70% of our matches aren't publicly posted</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Social Proof */}
-          <div className="bg-gray-50 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold mb-8 text-center text-gray-900">What Our Users Say</h3>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white rounded-xl p-6 shadow-sm">
-                <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <p className="text-gray-700 mb-4">"Got 3 interview calls in my first week. The quality of matches is incredible - every job was exactly what I was looking for."</p>
-                <div className="text-sm text-gray-500">Akosua Mensah, Software Engineer</div>
-              </div>
-              
-              <div className="bg-white rounded-xl p-6 shadow-sm">
-                <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <p className="text-gray-700 mb-4">"Finally landed my dream role after 6 months of failed applications elsewhere. Kuajiri found opportunities I never would have discovered."</p>
-                <div className="text-sm text-gray-500">Kwame Asante, Marketing Manager</div>
-              </div>
-              
-              <div className="bg-white rounded-xl p-6 shadow-sm">
-                <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <p className="text-gray-700 mb-4">"The ROI is insane. Paid for itself with my salary increase from the first job they matched me with."</p>
-                <div className="text-sm text-gray-500">Ama Boateng, Data Analyst</div>
-              </div>
-            </div>
-            
-            <div className="mt-8 text-center">
-              <div className="flex items-center justify-center space-x-8">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">4.9/5</div>
-                  <div className="text-sm text-gray-600">User Rating</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">2.3x</div>
-                  <div className="text-sm text-gray-600">Faster Job Placement</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">89%</div>
-                  <div className="text-sm text-gray-600">Success Rate</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Risk Reversal Section - Hidden */}
 
       {/* Call to Action Section */}
       <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
@@ -324,7 +213,7 @@ const Index = () => {
             
             <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
               <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 text-lg font-bold">
-                Start Your Free 30-Day Trial
+                Sign Up
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </a>
