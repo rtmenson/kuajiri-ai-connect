@@ -32,7 +32,7 @@ const WaitlistLanding = () => {
             <div className="flex flex-col gap-4 justify-center items-center mb-14">
               <Link to="/waitlist">
                 <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-base">
-                  Sign up 
+                  Join Waitlist  
   
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
