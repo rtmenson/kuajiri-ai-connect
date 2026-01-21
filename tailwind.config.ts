@@ -19,7 +19,7 @@ export default {
 		},
 	extend: {
 			fontFamily: {
-				display: ['Instrument Serif', 'Georgia', 'serif'],
+				display: ['Orelega One', 'Georgia', 'serif'],
 				body: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
 			},
 			colors: {
