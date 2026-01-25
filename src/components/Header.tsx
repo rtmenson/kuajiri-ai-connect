@@ -143,9 +143,9 @@ const Header = () => {
                   <Button className="text-sm">Sign up</Button>
                 </a>
               ) : (
-                <Link to="/waitlist">
-                  <Button className="text-sm">Join Waitlist</Button>
-                </Link>
+              <a href="https://app.kuajiriapp.com/job-seeker/register" target="_blank" rel="noopener noreferrer">
+                  <Button className="text-sm">Sign Up</Button>
+                </a>
               )}
             </div>
           </div>
@@ -220,9 +220,9 @@ const Header = () => {
                     <Button className="w-full text-sm">Sign up</Button>
                   </a>
                 ) : (
-                  <Link to="/waitlist">
-                    <Button className="w-full text-sm">Join Waitlist</Button>
-                  </Link>
+                <a href="https://app.kuajiriapp.com/job-seeker/register" target="_blank" rel="noopener noreferrer">
+                    <Button className="w-full text-sm">Sign Up</Button>
+                  </a>
                 )}
               </div>
             </div>
