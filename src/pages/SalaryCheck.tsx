@@ -1237,7 +1237,7 @@ const SalaryCheck = () => {
         </div>
       </main>
 
-      {/* Waitlist Popup */}
+      {/* Sign Up Popup */}
       <Dialog open={showWaitlistPopup} onOpenChange={setShowWaitlistPopup}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -1247,14 +1247,15 @@ const SalaryCheck = () => {
               </div>
             </div>
             <DialogTitle className="text-center text-xl">
-              Get Early Access to Kuajiri AI
+              Unlock More with Kuajiri AI
             </DialogTitle>
             <DialogDescription className="text-center">
-              Join thousands of job seekers using AI to land their dream jobs faster. Get personalized job matches, salary insights, and career coaching.
+              Whether you're looking for your next opportunity or hiring top talent, Kuajiri AI has you covered.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 mt-4">
             <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+              <p className="font-medium text-foreground">For Job Seekers:</p>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-green-500" />
                 <span>AI-powered job matching</span>
@@ -1263,18 +1264,41 @@ const SalaryCheck = () => {
                 <CheckCircle2 className="w-4 h-4 text-green-500" />
                 <span>Personalized salary insights</span>
               </div>
+              <p className="font-medium text-foreground mt-2">For Employers:</p>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-green-500" />
-                <span>Interview preparation tools</span>
+                <span>Find qualified candidates faster</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                <span>AI-powered applicant screening</span>
               </div>
             </div>
-            <Button 
-              onClick={() => navigate("/waitlist")}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-            >
-              Join the Waitlist
-              <Sparkles className="w-4 h-4 ml-2" />
-            </Button>
+            <div className="flex flex-col gap-2">
+              <a 
+                href="https://app.kuajiriapp.com/job-seeker/register"
+                className="w-full"
+              >
+                <Button 
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                >
+                  Sign Up as Job Seeker
+                  <Sparkles className="w-4 h-4 ml-2" />
+                </Button>
+              </a>
+              <a 
+                href="https://app.kuajiriapp.com/recruiter/register"
+                className="w-full"
+              >
+                <Button 
+                  variant="outline"
+                  className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
+                >
+                  Sign Up as Employer
+                  <Briefcase className="w-4 h-4 ml-2" />
+                </Button>
+              </a>
+            </div>
             <button 
               onClick={() => setShowWaitlistPopup(false)}
               className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
