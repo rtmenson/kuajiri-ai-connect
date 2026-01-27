@@ -20,7 +20,7 @@ const ToolsPromoModal = () => {
         setIsOpen(true);
         sessionStorage.setItem('toolsPromoModalSeen', 'true');
       }
-    }, 5000);
+    }, 20000);
 
     return () => clearTimeout(timer);
   }, []);
