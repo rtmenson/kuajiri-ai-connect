@@ -1203,7 +1203,7 @@ const JobPostGenerator = () => {
         </footer>
       </main>
 
-      {/* Waitlist Popup for Job Posters */}
+      {/* Sign Up Popup for Job Posters */}
       <Dialog open={showWaitlistPopup} onOpenChange={setShowWaitlistPopup}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -1216,7 +1216,7 @@ const JobPostGenerator = () => {
               Supercharge Your Hiring with Kuajiri AI
             </DialogTitle>
             <DialogDescription className="text-center">
-              Join our waitlist to access AI-powered recruitment tools that help you find the best candidates faster.
+              Sign up to access AI-powered recruitment tools that help you find the best candidates faster.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 mt-4">
@@ -1234,13 +1234,17 @@ const JobPostGenerator = () => {
                 <span>Smart applicant screening</span>
               </div>
             </div>
-            <Button 
-              onClick={() => navigate("/waitlist")}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            <a 
+              href="https://app.kuajiriapp.com/recruiter/register"
+              className="w-full block"
             >
-              Join the Waitlist
-              <Sparkles className="w-4 h-4 ml-2" />
-            </Button>
+              <Button 
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              >
+                Sign Up Now
+                <Sparkles className="w-4 h-4 ml-2" />
+              </Button>
+            </a>
             <button 
               onClick={() => setShowWaitlistPopup(false)}
               className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
