@@ -135,9 +135,6 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             <CountryFlag />
             <div className="flex items-center space-x-2">
-              <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
-              </a>
               {location.pathname === '/recruiter' ? (
                 <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
                   <Button className="text-sm">Sign up</Button>
@@ -211,10 +208,6 @@ const Header = () => {
               </div>
               
               <div className="px-3 py-2 space-y-2">
-                <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" className="text-sm border-blue-600 text-blue-600 hover:bg-blue-50">Sign In</Button>
-                </a>
-                <div></div>
                 {location.pathname === '/recruiter' ? (
                   <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
                     <Button className="w-full text-sm">Sign up</Button>
