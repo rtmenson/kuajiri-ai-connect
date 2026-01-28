@@ -143,8 +143,8 @@ const Header = () => {
                   <Button className="text-sm">Sign up</Button>
                 </a>
               ) : (
-              <a href="https://app.kuajiriapp.com/job-seeker/register" target="_blank" rel="noopener noreferrer">
-                  <Button className="text-sm">Sign Up</Button>
+              <a href="https://discord.gg/r9r2ntjV" target="_blank" rel="noopener noreferrer">
+                  <Button className="text-sm">Join our community</Button>
                 </a>
               )}
             </div>
@@ -220,8 +220,8 @@ const Header = () => {
                     <Button className="w-full text-sm">Sign up</Button>
                   </a>
                 ) : (
-                <a href="https://app.kuajiriapp.com/job-seeker/register" target="_blank" rel="noopener noreferrer">
-                    <Button className="w-full text-sm">Sign Up</Button>
+                <a href="https://discord.gg/r9r2ntjV" target="_blank" rel="noopener noreferrer">
+                    <Button className="w-full text-sm">Join our community</Button>
                   </a>
                 )}
               </div>
