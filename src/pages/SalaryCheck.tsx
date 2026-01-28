@@ -1237,68 +1237,51 @@ const SalaryCheck = () => {
         </div>
       </main>
 
-      {/* Sign Up Popup */}
+      {/* Community Invite Popup */}
       <Dialog open={showWaitlistPopup} onOpenChange={setShowWaitlistPopup}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <div className="flex items-center justify-center mb-4">
               <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
-                <Sparkles className="w-8 h-8 text-white" />
+                <Users className="w-8 h-8 text-white" />
               </div>
             </div>
             <DialogTitle className="text-center text-xl">
-              Unlock More with Kuajiri AI
+              You're Not Alone
             </DialogTitle>
-            <DialogDescription className="text-center">
-              Whether you're looking for your next opportunity or hiring top talent, Kuajiri AI has you covered.
+            <DialogDescription className="text-center space-y-3">
+              <p>Job hunting in 2026 can be daunting. It can be lonely. It can be exhausting.</p>
+              <p>It can feel like you're making all the progress and no progress at the same time.</p>
+              <p className="font-medium text-foreground">But you're not alone.</p>
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 mt-4">
-            <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-              <p className="font-medium text-foreground">For Job Seekers:</p>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-green-500" />
-                <span>AI-powered job matching</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-green-500" />
-                <span>Personalized salary insights</span>
-              </div>
-              <p className="font-medium text-foreground mt-2">For Employers:</p>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-green-500" />
-                <span>Find qualified candidates faster</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-green-500" />
-                <span>AI-powered applicant screening</span>
-              </div>
+            <div className="text-sm text-muted-foreground space-y-3">
+              <p>
+                Almost <span className="font-semibold text-foreground">60% of the global population</span> is looking for jobs. 
+                And they, more likely than not, share the exact same sentiments.
+              </p>
+              <p>
+                We're building a community to support you during your job hunting journey. 
+                Join us and lean on the type of community that helps you learn and grow with the best tips, answers to questions, and more.
+              </p>
+              <p className="font-medium text-foreground">
+                We can experience a better employment seeking experience—one that is effortless, and works on your behalf.
+              </p>
             </div>
-            <div className="flex flex-col gap-2">
-              <a 
-                href="https://app.kuajiriapp.com/job-seeker/register"
-                className="w-full"
+            <a 
+              href="https://discord.gg/r9r2ntjV"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full block"
+            >
+              <Button 
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
               >
-                <Button 
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                >
-                  Sign Up as Job Seeker
-                  <Sparkles className="w-4 h-4 ml-2" />
-                </Button>
-              </a>
-              <a 
-                href="https://app.kuajiriapp.com/recruiter/register"
-                className="w-full"
-              >
-                <Button 
-                  variant="outline"
-                  className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
-                >
-                  Sign Up as Employer
-                  <Briefcase className="w-4 h-4 ml-2" />
-                </Button>
-              </a>
-            </div>
+                Join Our Community
+                <Users className="w-4 h-4 ml-2" />
+              </Button>
+            </a>
             <button 
               onClick={() => setShowWaitlistPopup(false)}
               className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
