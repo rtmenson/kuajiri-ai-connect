@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -65,6 +66,7 @@ const waitlistSchema = z.object(baseSchema).refine(
 type WaitlistFormData = z.infer<typeof waitlistSchema>;
 
 const Waitlist = () => {
+  const [searchParams] = useSearchParams();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isAlreadyOnList, setIsAlreadyOnList] = useState(false);
   const [formData, setFormData] = useState<WaitlistFormData | null>(null);
@@ -74,6 +76,9 @@ const Waitlist = () => {
   const [shareCountryCode, setShareCountryCode] = useState("+233");
   const [phoneNumber, setPhoneNumber] = useState("");
   const { toast } = useToast();
+
+  // Pre-select user type from URL query param
+  const defaultUserType = searchParams.get("type") === "jobposter" ? "jobposter" : undefined;
 
   // Detect country from IP
   useEffect(() => {
@@ -118,6 +123,7 @@ const Waitlist = () => {
     defaultValues: {
       phone: "",
       companyName: "",
+      userType: defaultUserType,
     },
   });
 
