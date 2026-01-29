@@ -135,10 +135,10 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             <CountryFlag />
             <div className="flex items-center space-x-2">
-              {location.pathname === '/recruiter' ? (
-                <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
-                  <Button className="text-sm">Sign up</Button>
-                </a>
+            {location.pathname === '/recruiter' ? (
+                <Link to="/waitlist?type=jobposter">
+                  <Button className="text-sm">Get Updates</Button>
+                </Link>
               ) : (
               <a href="https://discord.gg/r9r2ntjV" target="_blank" rel="noopener noreferrer">
                   <Button className="text-sm">Join our community</Button>
@@ -209,9 +209,9 @@ const Header = () => {
               
               <div className="px-3 py-2 space-y-2">
                 {location.pathname === '/recruiter' ? (
-                  <a href="https://app.kuajiriapp.com/" target="_blank" rel="noopener noreferrer">
-                    <Button className="w-full text-sm">Sign up</Button>
-                  </a>
+                  <Link to="/waitlist?type=jobposter">
+                    <Button className="w-full text-sm">Get Updates</Button>
+                  </Link>
                 ) : (
                 <a href="https://discord.gg/r9r2ntjV" target="_blank" rel="noopener noreferrer">
                     <Button className="w-full text-sm">Join our community</Button>
